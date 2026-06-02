@@ -27,7 +27,7 @@ Nyt sapluuna on siis normaali - paitsi aineistona on juuri tehty taulukko.
 ```{r}
 keskiarvot <- ESS2023 |> group_by(Syntymävuosi) |> summarise(C1_keskiarvo = mean(C1, na.rm = TRUE))
 
-keskiarvot |> ggplot(keskiarvot, aes(x = Syntymävuosi, y = C1_keskiarvo)) + 
+keskiarvot |> ggplot(aes(x = Syntymävuosi, y = C1_keskiarvo)) + 
   geom_line()
 ```
 

@@ -13,3 +13,6 @@ kuvio.png
 site_libs/
 *.html
 
+
+/.quarto/
+**/*.quarto_ipynb
