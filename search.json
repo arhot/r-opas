@@ -1,0 +1,988 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "R-opas",
+    "section": "",
+    "text": "Esimerkkien ja harjoitusten aineisto\nTämä opas neuvoo, kuinka toteutat tilastollisia analyysejä R-ympäristössä. R on ilmainen, avoimen lähdekoodin ohjelmointikieli, jota käytetään laajalti yhteiskuntatieteellissä tilastollisessa analyysissä.\nTämä opas on saanut inspiraationsa Tietoarkiston ylläpitämästä SPSS-oppimisympäristöstä: se kattaa samat aihepiirit samassa järjestyksessä, mutta SPSS-valikkotoimintojen sijasta käytetään R:ää ja erityisesti tidyverse-pakettiperhettä. Rakenne ei ole täsmälleen sama, mutta lähtökohtaisesti opas kattaa samat toiminnot.\nEsimerkkiaineistona ja harjoituksissa käytetään European Social Survey 2023 -tutkimuksen Suomen aineistoa (ESS 2023, Suomi). Aineistossa on 1 563 vastaajaa ja 354 muuttujaa. Muuttujat käsittelevät mm. poliittista osallistumista, hyvinvointia, sosiaalisia suhteita ja taustamuuttujia.\nAineisto on tallennettu SPSS-muotoon (.sav) ja luetaan R:ään haven-paketilla. Muuttujat on tallennettu numeerisina, ja muuttuja-arvot saa käännettyä teksteiksi as_factor()-funktiolla.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Lukijalle</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#tarvittavat-ohjelmat",
+    "href": "index.html#tarvittavat-ohjelmat",
+    "title": "R-opas",
+    "section": "Tarvittavat ohjelmat",
+    "text": "Tarvittavat ohjelmat\n\nR (versio 4.1.0 tai uudempi): https://cran.r-project.org\nRStudio: https://posit.co/download/rstudio-desktop/",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Lukijalle</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#tarvittavat-paketit",
+    "href": "index.html#tarvittavat-paketit",
+    "title": "R-opas",
+    "section": "Tarvittavat paketit",
+    "text": "Tarvittavat paketit\nAsenna seuraavat paketit kerran R-konsoliin kirjoittamalla:\ninstall.packages(c(\n  \"tidyverse\",  # dplyr, ggplot2, tidyr, readr, forcats, stringr...\n  \"haven\",      # SPSS- ja Stata-tiedostojen lukeminen\n  \"janitor\",    # Frekvenssitaulukot ja aineiston siistiminen\n  \"broom\",      # Mallitulosten siistiminen taulukoksi\n  \"psych\",      # Faktorianalyysi ja kuvailevia tunnuslukuja\n  \"corrr\",      # Korrelaatiot tidyverse-tyyliin\n  \"scales\",     # Akseleiden muotoilu kuvioissa\n  \"knitr\",      # Taulukoiden tulostus\n  \"writexl\"     # Taulukoiden tallennus Excel-muotoon\n))\nKun paketit on asennettu, ne otetaan käyttöön library()-komennolla kunkin R-istunnon alussa (tai skriptin alussa).",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Lukijalle</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#oppaan-rakenne",
+    "href": "index.html#oppaan-rakenne",
+    "title": "R-opas",
+    "section": "Oppaan rakenne",
+    "text": "Oppaan rakenne\nOpas jakautuu neljään osaan:\n\nR- ja RStudio-perusteet — ohjelmiston ikkunat, projektit, skriptit ja paketit\nHavaintoaineiston käsittely — aineiston avaaminen, muunnokset ja tallennus\nKuviot ggplot2:lla — eri kuviotyypit ja niiden muokkaaminen\nAnalyysimenetelmät — frekvenssit, ristiintaulukointi, korrelaatio, regressio jne.\n\nLuvut on tarkoitettu luettaviksi järjestyksessä, mutta myöhempiä lukuja voi käyttää myös yksittäisinä ohjeina.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Lukijalle</span>"
+    ]
+  },
+  {
+    "objectID": "01-rstudio-ikkunat.html",
+    "href": "01-rstudio-ikkunat.html",
+    "title": "R-kieli, RStudio ja näiden käytöt",
+    "section": "",
+    "text": "RStudion neljä paneelia\nR on ohjelmointikieli, joka on erityisen suosittu tilastollisessa analyysissä ja datatieteessä. Jokainen vaihe R-analyysissa tehdään siis R-kielisellä komennolla. Onneksi suurin osa komennoista hyödyntää englanninkielisiä sanoja - komento summary() tekee yhteenvedon pyydetystä asiasta, ja tämä on helppo ymmärtää ja muistaakin, ja helppo löytää jos asia unohtuu. Kun komennot pitää joka tapauksessa kirjoittaa muistiin, ne jäävät itselle muistiin ja ne voi saavutettavasti siirtää toiselle käyttäjälle.\nKomento voi siis näyttää esimerkiksi tältä:\nVaikka komennossa onkin paljon teknisiä yksityiskohtia, perusrakenne on kuitenkin aika selkeä: European Social Survey ryhmitellään ikäryhmittäin, ja lasketaan ikäryhmittäin keskiarvo tyytyväisyydestä elämään.\nValitettavasti tietokone on kuitenkin pilkuntarkka - komennot on kirjoitettava täsmälleen oikein. Tietokone ei aina ole avulias kertoessaan missä ongelma on. Useimmat asiat olisi myös mahdollista tehdä monella eri tavalla - R on aito ohjelmointikieli, jolla pystyy tekemään mitä vaan. Tyhjästä paperista aloittaminen on (millä tahansa kielellä) vaikeaa, ja kun tämä yhdistetään vaadittuun tarkkuuteen ja kielen rajoittamattomuuteen, on R-käytön oppimisessa kieltämättä haasteensa.\nTämä versio ei sitten enää toimisikaan (komennossa on kolme tyypillistä virhettä: puuttuva pilkku, sulku väärässä paikassa ja kirjoitusvirhe):\nTässä oppaassa yritetään madaltaa kynnystä kolmella konstilla: ensinnäkin oppaassa pyritään käyttämään tiettyjä sapluunoja. Oppaan komennoissa on tiettyjä toistuvia rakenteita. Vaikka nämä eivät olekaan ainoa tapa tehdä asioita R:ssä, niiden tarkoitus on auttaa aloittavaa käyttäjää ja toimia yksinkertaisena hakuteoksena. Toiseksi, oppaassa pyritään mahdollisimman paljon hyödyntämään englanninkielisiä komentoja, ei hankalasti luettavia matriisimerkintöjä. Nämä kaksi kohtaa konkreettisesti tarkoittavat, että oppaassa käytetään tidyverse-paketin komentoja - paketeista ja tidyversestä voit lukea luvussa @sec:paketit.\nKolmantena - ja ehkä tärkeimpänä - oppaassa opastetaan viisaaseen tekoälykalujen hyödyntämiseen. Modernit tekoälykalut ovat parhaimmillaan ohjelmointityyppisissä asioissa, sillä juuri siihen niitä on koulutettu. Nykyisin pilkkuvirheiden korjaukset hoituvat paljolti näillä työkaluilla, ja usein tekoälyltä voi pyytää suomen kielellä tarvittavan R-kielisen komennon. Ihminen on kuitenkin aina vastuussa oman koodinsa tuloksista, joten kokonaan ei voida välttyä komentojen ymmärtämiseltä ja oppimiselta. Luvussa @sec:tekoaly kerrotaan erilaisten tekoälykalujen hyödyntämisestä R-kielen oppimisessa ja käytössä huomioitavista yksityisyys- ja eettisistä näkökohdista.\nKuten mitä tahansa luonnollista puhuttua kieltäkin, R:ää voisi periaatteessa kirjoittaa missä tahansa tekstieditorissa. Käytännössä kuitenkin ohjelmointikieliä kirjoitetaan ja käytetään ns. integroiduissa kehitysympäristöissä (Integrated Development Environment IDE), jotka on suunniteltu helpottamaan ohjelmointia. Siinä missä tekstinkäsittelyohjelmiin on kerätty toimintoja, jotka helpottavat luonnollisen kielen kirjoittamista, IDE:ihin on kerätty toimintoja, jotka helpottavat koodin kirjoittamista, suorittamista ja tulosten tarkastelua.\nR:lle suosituin IDE on RStudio, joka on ilmainen ja avoimen lähdekoodin ohjelma. RStudio tarjoaa käyttäjälleen monia hyödyllisiä ominaisuuksia, kuten koodin korostuksen, virheiden tarkistuksen, aineistojen lataukset, kuvioiden tarkastelut ja tallennukset ja paljon muuta. Se on saatavilla Windowsille, Macille ja Linuxille. Tässä oppaassa opastetaan R-kielen käyttöön RStudion avulla. Samat toiminnallisuudet löytyvät toki muistakin IDE:sta.\nRStudion näkymä on oletuksena jaettu neljään paneeliin, joita voi tarvittaessa muuttaa ja järjestellä uudelleen omien työskentelytapojensa mukaan.\nOletusnäkymässä vasemmassa yläpaneelissa on lähdekoodi eli työstettävä analyysitiedosto tai -tiedostot. Tänne kirjoitetaan ja muokataan koodia. Samassa paneelissa voi myös tarkastella aineistoja taulukkonäkymässä. Tiedostoja voi olla auki useampia välilehdillä. Täällä voi muokata mitä tahansa tekstitiedostoja, mutta yleensä työstetään joko .R -tiedostoja, joissa on pelkkää R-koodia tai .Rmd -tiedostoja, joissa on R-koodia, ihmisen luettavaksi tarkoitettua tekstiä sekä taittokomentoja (otsikoinnit, lihavoinnit..) sekaisin. Suorittaessasi .R -tiedostosta komentoja tulosteet tulevat näkyviin vasemman alapaneelin konsoliin ja oikean alapaneelin Plots -välilehteen. .Rmd -tiedostosta saat sen sijaan halutessasi tulosteet näkyviin samaan välilehteen.\nOikeassa yläpaneelissa on oletusvälilehtenä Environment, jossa näkyy käyttömuistissa olevat tiedot, eli konkreettisesti ladatut aineistot, tehdyt mallit ja vastaavat. Samassa paneelissa välilehtinä on myös History, jossa näkyy kaikki aiemmin kirjoitetut komennot sekä versionhallinta.\nVasemmassa alapaneelissa on nk. konsoli, jonne oletuksena R-kielen komennot lähetetään ja tulokset näkyvät. Tänne voi kirjoittaakin komentoja, jolloin ne suoritetaan heti, mutta eivät jää mihinkään talteen. Yleensä käytännössä kaikki kannattaa kirjoittaa suoraan tiedostoon ja suorittaa sieltä.\nOikeassa alapaneelissa on useampia hyödyllisiä välilehtiä: Files näyttää tiedostokansion, ja täältä voi esim. ladata aineistoja. Plots näyttää piirtämäsi kuviot ja grafiikat, ja ne voi tallentaakin täältä kautta. Packages -välilehdellä on asentamasi työkalut eli paketit ja Help -välilehti puolestaan on haku R-kielen dokumentaatioon. Nykyisin toki apua yleensä haetaan verkosta tai tekoälykalujen avulla, mutta dokumentaatiosta voi hyvin tarkastaa miten jotain komentoa käytetään.",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>R-kieli, RStudio ja näiden käytöt</span>"
+    ]
+  },
+  {
+    "objectID": "01-rstudio-ikkunat.html#asennusohjeet",
+    "href": "01-rstudio-ikkunat.html#asennusohjeet",
+    "title": "R-kieli, RStudio ja näiden käytöt",
+    "section": "Asennusohjeet",
+    "text": "Asennusohjeet\nR-kieli ja RStudio asennetaan erikseen, mutta molemmat ovat ilmaisia ja avoimen lähdekoodin ohjelmia. Löydät käyttöjärjestelmällesi tarvittavat versiot näistä linkeistä: - R (versio 4.1.0 tai uudempi): https://cran.r-project.org - RStudio: https://posit.co/download/rstudio-desktop/",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>R-kieli, RStudio ja näiden käytöt</span>"
+    ]
+  },
+  {
+    "objectID": "02-r-projekti-skripti.html",
+    "href": "02-r-projekti-skripti.html",
+    "title": "Kooditiedostot (.R, .Rmd), R-projekti ja skriptit",
+    "section": "",
+    "text": "Kooditiedostot\nTässä luvussa esitellään keskeisimmät tiedostotyypit, joita R-käytössä tarvitaan: erilaiset tiedostot, joihin analyysikoodeja voidaan kirjoittaa ja kerätä, tyypilliset aineistotiedostot, joissa dataa tuodaan R:ään ja tallennetaan, sekä tyypilliset tuotostiedostot, joihin analyysien tuloksia tallennetaan. Lisäksi esitellään R-projekti, joka on R-käytössä hyödyllinen tapa organisoida ja hallita analyysitiedostoja, aineistoja ja tuotoksia.\nLuku on sijoitettu oppaan alkuun muiden ylätason asioiden kanssa. Jos olet ensimmäistä kertaa tutustumassa R:n käyttöön, suosittelen kuitenkin aloittamaan perusanalyyseistä!",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Kooditiedostot (.R, .Rmd), R-projekti ja skriptit</span>"
+    ]
+  },
+  {
+    "objectID": "02-r-projekti-skripti.html#r-projekti",
+    "href": "02-r-projekti-skripti.html#r-projekti",
+    "title": "Kooditiedostot (.R, .Rmd), R-projekti ja skriptit",
+    "section": "R-projekti",
+    "text": "R-projekti\nprojektihakemisto työhakemisto",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Kooditiedostot (.R, .Rmd), R-projekti ja skriptit</span>"
+    ]
+  },
+  {
+    "objectID": "02-r-projekti-skripti.html#skriptitiedosto",
+    "href": "02-r-projekti-skripti.html#skriptitiedosto",
+    "title": "Kooditiedostot (.R, .Rmd), R-projekti ja skriptit",
+    "section": "Skriptitiedosto",
+    "text": "Skriptitiedosto\nfunktio\nobjekti\nargumentti\n$\n|&gt;\naineisto &lt;- aineisto |&gt; muokkaukset",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Kooditiedostot (.R, .Rmd), R-projekti ja skriptit</span>"
+    ]
+  },
+  {
+    "objectID": "02-r-projekti-skripti.html#kommentit-ja-koodin-rakenne",
+    "href": "02-r-projekti-skripti.html#kommentit-ja-koodin-rakenne",
+    "title": "Kooditiedostot (.R, .Rmd), R-projekti ja skriptit",
+    "section": "Kommentit ja koodin rakenne",
+    "text": "Kommentit ja koodin rakenne\n.r .RMD ## Koodin ajaminen",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Kooditiedostot (.R, .Rmd), R-projekti ja skriptit</span>"
+    ]
+  },
+  {
+    "objectID": "02-r-projekti-skripti.html#aineistotiedostot",
+    "href": "02-r-projekti-skripti.html#aineistotiedostot",
+    "title": "Kooditiedostot (.R, .Rmd), R-projekti ja skriptit",
+    "section": "Aineistotiedostot",
+    "text": "Aineistotiedostot",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Kooditiedostot (.R, .Rmd), R-projekti ja skriptit</span>"
+    ]
+  },
+  {
+    "objectID": "02-r-projekti-skripti.html#tuotostiedostot-kuviot-taulukot-raportit",
+    "href": "02-r-projekti-skripti.html#tuotostiedostot-kuviot-taulukot-raportit",
+    "title": "Kooditiedostot (.R, .Rmd), R-projekti ja skriptit",
+    "section": "Tuotostiedostot: kuviot, taulukot, raportit",
+    "text": "Tuotostiedostot: kuviot, taulukot, raportit",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Kooditiedostot (.R, .Rmd), R-projekti ja skriptit</span>"
+    ]
+  },
+  {
+    "objectID": "03-paketit.html",
+    "href": "03-paketit.html",
+    "title": "Paketit",
+    "section": "",
+    "text": "Paketit\nTämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Paketit</span>"
+    ]
+  },
+  {
+    "objectID": "03-paketit.html#mikä-on-r-paketti",
+    "href": "03-paketit.html#mikä-on-r-paketti",
+    "title": "Paketit",
+    "section": "Mikä on R-paketti?",
+    "text": "Mikä on R-paketti?",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Paketit</span>"
+    ]
+  },
+  {
+    "objectID": "03-paketit.html#paketin-asentaminen",
+    "href": "03-paketit.html#paketin-asentaminen",
+    "title": "Paketit",
+    "section": "Paketin asentaminen",
+    "text": "Paketin asentaminen",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Paketit</span>"
+    ]
+  },
+  {
+    "objectID": "03-paketit.html#paketin-lataaminen-käyttöön",
+    "href": "03-paketit.html#paketin-lataaminen-käyttöön",
+    "title": "Paketit",
+    "section": "Paketin lataaminen käyttöön",
+    "text": "Paketin lataaminen käyttöön",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Paketit</span>"
+    ]
+  },
+  {
+    "objectID": "03-paketit.html#tässä-oppaassa-käytettävät-paketit",
+    "href": "03-paketit.html#tässä-oppaassa-käytettävät-paketit",
+    "title": "Paketit",
+    "section": "Tässä oppaassa käytettävät paketit",
+    "text": "Tässä oppaassa käytettävät paketit",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Paketit</span>"
+    ]
+  },
+  {
+    "objectID": "04-oppaan_kayttajalle.html",
+    "href": "04-oppaan_kayttajalle.html",
+    "title": "Opiskeluohjeita ja lisäresursseja",
+    "section": "",
+    "text": "Yleistä oppaan käytöstä\nTämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Opiskeluohjeita ja lisäresursseja</span>"
+    ]
+  },
+  {
+    "objectID": "04-oppaan_kayttajalle.html#sec-tekoaly",
+    "href": "04-oppaan_kayttajalle.html#sec-tekoaly",
+    "title": "Opiskeluohjeita ja lisäresursseja",
+    "section": "Tekoälyn hyödyntämisestä",
+    "text": "Tekoälyn hyödyntämisestä",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Opiskeluohjeita ja lisäresursseja</span>"
+    ]
+  },
+  {
+    "objectID": "04-oppaan_kayttajalle.html#sec-spss-r",
+    "href": "04-oppaan_kayttajalle.html#sec-spss-r",
+    "title": "Opiskeluohjeita ja lisäresursseja",
+    "section": "SPSS-ympäristöstä R:ään siirtyvälle",
+    "text": "SPSS-ympäristöstä R:ään siirtyvälle",
+    "crumbs": [
+      "Osa 1: R- ja RStudio-perusteet",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Opiskeluohjeita ja lisäresursseja</span>"
+    ]
+  },
+  {
+    "objectID": "05-aineiston-lukeminen.html",
+    "href": "05-aineiston-lukeminen.html",
+    "title": "Aineiston lukeminen R:ään ja tallentaminen",
+    "section": "",
+    "text": "Aineiston lukeminen R:ään\nR lukee aineiston mistä tahansa tiedostotyypistä, ja yksi sen vahvuuksista onkin laaja tuki erilaisille aineistomuodoille ja erityisesti erilaisten aineistolähteiden yhdistelylle. Tässä oppaassa keskitytään kuitenkin perustilanteeseen, jossa aineisto on jo siistissä taulukkomuodossa eli yksi rivi on yksi havainto ja yksi sarake on yksi muuttuja. Tällainen aineisto voi olla tallennettu esimerkiksi CSV-tiedostona, Excel-tiedostona tai SPSS-tiedostona, ja nämä esimerkit käydään tässä läpi. Tiedostot voivat olla tallennettuina omalle tietokoneelle, mutta R:ään voi lukea aineistoja myös suoraan verkosta.\nRStudiossa on aineiston lukemiseen valikkopohjainen polku, jossa on myös esikatselu, jonka perusteella voi muokata latauskomentoa ennen suoritusta. Valikkopolku generoi automaattisesti R-koodin, jonka voi kopioida ja liittää omaan skriptiin. Hyvä toimintatapa on ensimmäisellä latauksella käyttää tätä valikkopohjaista polkua, jotta näkee miten R-koodi muodostuu, ja sen jälkeen tallettaa koodi oman analyysitiedoston alkuun, josta sitä voi sitten muokata ja käyttää uudestaan.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Aineiston lukeminen R:ään ja tallentaminen</span>"
+    ]
+  },
+  {
+    "objectID": "05-aineiston-lukeminen.html#csv-tiedostot",
+    "href": "05-aineiston-lukeminen.html#csv-tiedostot",
+    "title": "Aineiston lukeminen R:ään ja tallentaminen",
+    "section": "CSV-tiedostot",
+    "text": "CSV-tiedostot\nComma Separated Values (CSV) on yleinen, tekstipohjainen ja ohjelmistoriippumaton tiedostomuoto taulukkomuotoisen aineiston lataamiseen. Tiedosto on yksinkertainen - siinä on ainoastaan yksi tekstimuotoinen arvo jokaista muuttujan arvoa kohden (tai tyhjä puuttuvat tieto). Pilkun sijasta erottimena käytetään usein puolipistettä (jos pilkku on varattu desimaalierottimeksi), ja komento pitää valita tämän mukaan - read_csv()-komento pilkkuerotetuille tiedostoille ja read_csv2()-komento puolipiste-erotetuille tiedostoille. CSV-tiedostossa tiedot ovat aina siistissä muodossa ja aineistot latautuvat yleensä ongelmitta. Tiedostoon ei ole kuitenkaan kirjattu muuttujien tyyppejä, ja aina R:n arvio muuttujatyypistä ei osu oikeaan ja ne pitää muokata tarvittaessa.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Aineiston lukeminen R:ään ja tallentaminen</span>"
+    ]
+  },
+  {
+    "objectID": "05-aineiston-lukeminen.html#excel-tiedostot",
+    "href": "05-aineiston-lukeminen.html#excel-tiedostot",
+    "title": "Aineiston lukeminen R:ään ja tallentaminen",
+    "section": "Excel-tiedostot",
+    "text": "Excel-tiedostot\nExcel-tiedostot voi lukea R:ään readxl-paketin read_excel()-komennolla. Yhdessä Excel-tiedostossa voi olla useampia taulukkomuotoisia aineistoja, jotka sijaitsevat eri välilehdillä ja luettava välilehti pitää määritellä.\nExcel-tiedostot eivät välttämättä ole siistejä: muuttujien nimet eivät ole välttämättä ensimmäisellä rivillä, ja tiedostossa voi olla kaikkea muutakin kuin varsinaista tietoa - ihmiset jättävät tiedostoihin muistiinpanoja, tyhjää tilaa ja muuta ylimääräistä. Usein Excel-tiedostoja joutuu siis muokkaamaan ennen latausta (ja tässä tulee helposti virheitä).",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Aineiston lukeminen R:ään ja tallentaminen</span>"
+    ]
+  },
+  {
+    "objectID": "05-aineiston-lukeminen.html#spss-tiedostot",
+    "href": "05-aineiston-lukeminen.html#spss-tiedostot",
+    "title": "Aineiston lukeminen R:ään ja tallentaminen",
+    "section": "SPSS-tiedostot",
+    "text": "SPSS-tiedostot\nSPSS-tiedostot voi lukea R:ään haven-paketin read_sav()-komennolla. SPSS-tiedostoissa on muutama edullinen ominaisuus: niihin on tallennettu muuttujien tyypit ja niissä on käytössä labelled-muuttujat, joissa on tallennettu myös muuttujien ja niiden arvojen selitteet. Muuttujatyypitkin usein perustuvat SPSS:n arvauksiin, joten jos käyttämässäsi aineistossa ei ole ihmisen tarkistamia muuttujatietoja, kannattaa ne tarkastaa.\nR:n omissa muuttujatyypeissä jokainen tieto kirjataan vain yhdessä formaatissa - sukupuolen kirjaus voi siis olla tekstimuotoinen “mies” ja “nainen”, tai numeerinen 1 ja 2, mutta ei molempia. labelled tuo R:ään ominaisuuden, jossa voidaan kirjata sekä tekstimuotoinen että numeerinen arvo, kuten SPSS:ssä toimitaan. Samalla mahdollistuu selitetekstien kirjaaminen sekä kysymykselle että kunkin arvon merkitykselle ja useamman erilaisen puuttuvan tiedon huomiointi (esim. “en halua vastata” vs. “en tiedä”). Oletuksena labelled-muuttujat latautuvat R:ään numeerisina, ja analyysit tehdään numerojen perusteella, ja muuttuja pitää ensin muokata luokitelluksi as_factor()-komennolla, jonka jälkeen käytetään selitetekstejä.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Aineiston lukeminen R:ään ja tallentaminen</span>"
+    ]
+  },
+  {
+    "objectID": "05-aineiston-lukeminen.html#aineiston-lataus-verkosta",
+    "href": "05-aineiston-lukeminen.html#aineiston-lataus-verkosta",
+    "title": "Aineiston lukeminen R:ään ja tallentaminen",
+    "section": "Aineiston lataus verkosta",
+    "text": "Aineiston lataus verkosta\nR:ään voi lukea aineistoja suoraan verkosta, jos tiedostolla on julkinen URL-osoite. Tämä on kätevää, sillä tällöin ei tarvitse ladata aineistoa ensin omalle koneelle ja määritellä oikeaa tiedostopolkua. Verkko-osoitteesta luettaessa pitää kuitenkin huomioida, että URL-osoitteen pitää olla suora linkki tiedostoon, eikä esimerkiksi linkki verkkosivulle, josta tiedosto löytyy.\nTämän oppaan esimerkeissä käytetään European Social Survey (ESS) 2023 Suomen aineistoa, jonka suomennettu versio on jaossa ei-kaupalliseen käyttöön CC BY-NC-SA 4.0 -lisenssin mukaisesti osoitteessa # korjaa osoite(data/ESS2023_Suomi.sav).\n\n# add a reference to everywhere \n# Ladataan muokkaamaton aineisto verkosta \nlibrary(haven)\nESS2023 &lt;- read_sav(\"data/ESS2023_Suomi.sav\")\n\nKun aineistoa on työstetty, se kannattaa tallentaa omalle koneelle, jotta sitä ei tarvitse ladata uudestaan verkosta joka ikiselle analyysille.\nTämä komento tallentaa muokatun aineiston omalle koneelle SPSS-tiedostona, jolloin kaikki muuttujatyyppitiedot ja selitetekstit säilyvät. Tiedosto tallennetaan komennolla työhakemistoon. Voit muuttaa työhakemiston esim. valikosta Session &gt; Set Working Directory &gt; Choose Directory, tai määritellä tiedostopolun suoraan komennossa, jolloin tiedosto tallentuu määritettyyn paikkaan.\n\n# Tallennetaan muokattu aineisto omalle koneelle .sav-tiedostona\nwrite_sav(ESS2023, \"ESS2023_Suomi.sav\")",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Aineiston lukeminen R:ään ja tallentaminen</span>"
+    ]
+  },
+  {
+    "objectID": "06-aineistoon-tutustuminen.html",
+    "href": "06-aineistoon-tutustuminen.html",
+    "title": "Aineistoon tutustuminen",
+    "section": "",
+    "text": "Aineiston rakenne\nMuista ladata aineisto luvun 5 ohjeiden mukaisesti.\nUuden aineiston kanssa työskentely alkaa tutustumalla siihen. Tärkeämpää kuin tässä tapahtuva ladatun aineiston tarkastelu on aineiston dokumentaatioon tutustuminen, eli lue aineiston kanssa jaettu koodikirja tai vastaava dokumentaatio.\nAinakin kolmella tavalla voi varmistaa R:ssä, että aineisto on latautunut oikein:\nhead() -komennolla näkee aineiston ensimmäiset rivit (oletuksena 6 riviä) ja sarakkeet (määrä riippuu näytön koosta), ja näin varmistuu, että aineisto on ladattu ja että se näyttää siltä kuin pitääkin. Tulosteessa sarakkeiden nimien alla näkyy muuttujan tyyppi kulmasulkeissa &lt;&gt;. dbl eli double tarkoittaa numeerista muuttujaa, chr eli character tarkoittaa tekstimuotoista muuttujaa, fct eli factor tarkoittaa luokiteltua tekstiä, jossa on määritettynä selitetekstit kullekin arvolle ja lbl tarkoittaa labelled-muuttujaa, jossa on tallennettu sekä numeerinen että tekstimuotoinen arvo ja selitetekstit.\nESS-aineiston osalta esimerkiksi voimme tarkistaa, että sukupuoli on latautunut labelled-muuttujana, jossa on tallennettu sekä numeerinen että tekstimuotoinen arvo ja selitetekstit, ja että syntymävuosi on latautunut numeerisena muuttujana.\nhead(ESS2023)\n\n# A tibble: 6 × 354\n  aineisto esskierros  idno asetelmapaino analyysipaino_suomi Sukupuoli \n  &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;               &lt;dbl&gt; &lt;dbl+lbl&gt; \n1 ESS11e03         11 50003             1               0.941 1 [Mies]  \n2 ESS11e03         11 50031             1               1.53  2 [Nainen]\n3 ESS11e03         11 50064             1               1.22  2 [Nainen]\n4 ESS11e03         11 50096             1               1.99  1 [Mies]  \n5 ESS11e03         11 50113             1               0.576 2 [Nainen]\n6 ESS11e03         11 50133             1               0.884 1 [Mies]  \n# ℹ 348 more variables: Syntymävuosi &lt;dbl&gt;, Ammatti_pääluokka &lt;dbl+lbl&gt;,\n#   Ammatti_alaluokka &lt;dbl+lbl&gt;, Maakunta &lt;chr+lbl&gt;, A1_min &lt;dbl&gt;,\n#   A2 &lt;dbl+lbl&gt;, A3_min &lt;dbl&gt;, A4 &lt;dbl+lbl&gt;, A5 &lt;dbl+lbl&gt;, A6 &lt;dbl+lbl&gt;,\n#   B1 &lt;dbl+lbl&gt;, B2 &lt;dbl+lbl&gt;, B3 &lt;dbl+lbl&gt;, B4 &lt;dbl+lbl&gt;, B5 &lt;dbl+lbl&gt;,\n#   B6 &lt;dbl+lbl&gt;, B7 &lt;dbl+lbl&gt;, B8 &lt;dbl+lbl&gt;, B9 &lt;dbl+lbl&gt;, B10 &lt;dbl+lbl&gt;,\n#   B11 &lt;dbl+lbl&gt;, B12 &lt;dbl+lbl&gt;, B13 &lt;dbl+lbl&gt;, B14 &lt;dbl+lbl&gt;, B15 &lt;dbl+lbl&gt;,\n#   B16 &lt;dbl+lbl&gt;, B17 &lt;dbl+lbl&gt;, B18 &lt;dbl+lbl&gt;, B19 &lt;dbl+lbl&gt;, …\nnames() -komennolla näkee aineiston sarakkeiden nimet, ja näin varmistuu, että kaikki sarakkeet ovat ladattu ja että ne on nimetty oikein. Tässä esimerkkiaineistossa eräät rekisteritiedot on jo nimetty selkeillä suomenkielisillä nimillä, mutta suurin osa muuttujista on nimetty koodikirjan mukaisesti, joka ei välttämättä ole kovin kuvaava. Koodikirja kannattaa siis pitää auki, jotta ymmärtää mitä kukin muuttuja tarkoittaa.\nnames(ESS2023)\n\n  [1] \"aineisto\"                   \"esskierros\"                \n  [3] \"idno\"                       \"asetelmapaino\"             \n  [5] \"analyysipaino_suomi\"        \"Sukupuoli\"                 \n  [7] \"Syntymävuosi\"               \"Ammatti_pääluokka\"         \n  [9] \"Ammatti_alaluokka\"          \"Maakunta\"                  \n [11] \"A1_min\"                     \"A2\"                        \n [13] \"A3_min\"                     \"A4\"                        \n [15] \"A5\"                         \"A6\"                        \n [17] \"B1\"                         \"B2\"                        \n [19] \"B3\"                         \"B4\"                        \n [21] \"B5\"                         \"B6\"                        \n [23] \"B7\"                         \"B8\"                        \n [25] \"B9\"                         \"B10\"                       \n [27] \"B11\"                        \"B12\"                       \n [29] \"B13\"                        \"B14\"                       \n [31] \"B15\"                        \"B16\"                       \n [33] \"B17\"                        \"B18\"                       \n [35] \"B19\"                        \"B20\"                       \n [37] \"B21\"                        \"B22\"                       \n [39] \"B23\"                        \"B24\"                       \n [41] \"B25\"                        \"B26\"                       \n [43] \"B27\"                        \"B28\"                       \n [45] \"B29\"                        \"B30\"                       \n [47] \"B31\"                        \"B32\"                       \n [49] \"B33\"                        \"B34\"                       \n [51] \"B35\"                        \"B36\"                       \n [53] \"B37\"                        \"B38\"                       \n [55] \"B39\"                        \"B40\"                       \n [57] \"B41\"                        \"B42\"                       \n [59] \"B43\"                        \"B44\"                       \n [61] \"B45\"                        \"C1\"                        \n [63] \"C2\"                         \"C3\"                        \n [65] \"C4\"                         \"C5\"                        \n [67] \"C6\"                         \"C7\"                        \n [69] \"C8\"                         \"C9\"                        \n [71] \"C10\"                        \"C11\"                       \n [73] \"C12\"                        \"C13\"                       \n [75] \"C14\"                        \"C15\"                       \n [77] \"C16\"                        \"C17\"                       \n [79] \"C18\"                        \"C19_1\"                     \n [81] \"C19_2\"                      \"C19_3\"                     \n [83] \"C19_4\"                      \"C19_5\"                     \n [85] \"C19_6\"                      \"C19_7\"                     \n [87] \"C19_8\"                      \"C19_9\"                     \n [89] \"C19_10\"                     \"C19_13\"                    \n [91] \"C20\"                        \"C21\"                       \n [93] \"C23\"                        \"C25\"                       \n [95] \"C28\"                        \"C30\"                       \n [97] \"C31\"                        \"C32\"                       \n [99] \"Koeryhmä\"                   \"C34\"                       \n[101] \"C35\"                        \"C36\"                       \n[103] \"C37\"                        \"C38\"                       \n[105] \"C39\"                        \"C40\"                       \n[107] \"C41\"                        \"C42\"                       \n[109] \"C43\"                        \"D1\"                        \n[111] \"D2\"                         \"D3\"                        \n[113] \"D4\"                         \"D5\"                        \n[115] \"D6\"                         \"D7\"                        \n[117] \"D8\"                         \"D10\"                       \n[119] \"D11_cm\"                     \"D12\"                       \n[121] \"D13_1\"                      \"D13_2\"                     \n[123] \"D13_3\"                      \"D13_4\"                     \n[125] \"D13_5\"                      \"D13_6\"                     \n[127] \"D14\"                        \"D15_1\"                     \n[129] \"D15_2\"                      \"D15_3\"                     \n[131] \"D15_4\"                      \"D15_5\"                     \n[133] \"D15_6\"                      \"D15_7\"                     \n[135] \"D15_8\"                      \"D16\"                       \n[137] \"D17\"                        \"D18\"                       \n[139] \"D19_1\"                      \"D19_2\"                     \n[141] \"D19_3\"                      \"D19_4\"                     \n[143] \"D19_5\"                      \"D19_6\"                     \n[145] \"D19_7\"                      \"D19_8\"                     \n[147] \"D19_9\"                      \"D19_10\"                    \n[149] \"D19_11\"                     \"D19_12\"                    \n[151] \"D19_13\"                     \"D20\"                       \n[153] \"D21\"                        \"D22\"                       \n[155] \"D23\"                        \"D24\"                       \n[157] \"D25\"                        \"D26\"                       \n[159] \"D27\"                        \"D28_1\"                     \n[161] \"D28_2\"                      \"D28_3\"                     \n[163] \"D28_4\"                      \"D28_5\"                     \n[165] \"D28_6\"                      \"D28_7\"                     \n[167] \"D28_8\"                      \"D28_9\"                     \n[169] \"D28_10\"                     \"D28_11\"                    \n[171] \"D28_12\"                     \"D29_1\"                     \n[173] \"D29_2\"                      \"D29_3\"                     \n[175] \"D29_4\"                      \"D29_5\"                     \n[177] \"D29_6\"                      \"D29_7\"                     \n[179] \"D29_8\"                      \"D29_9\"                     \n[181] \"D29_10\"                     \"D29_11\"                    \n[183] \"D29_12\"                     \"D29_13\"                    \n[185] \"D30\"                        \"D31\"                       \n[187] \"D32\"                        \"D33\"                       \n[189] \"F35a_1\"                     \"F35a_2\"                    \n[191] \"F35a_3\"                     \"F35a_4\"                    \n[193] \"F35a_5\"                     \"F35a_6\"                    \n[195] \"F35b_1\"                     \"F35b_2\"                    \n[197] \"F35b_3\"                     \"F35b_4\"                    \n[199] \"F35b_5\"                     \"F35b_6\"                    \n[201] \"F35b_7\"                     \"F35b_8\"                    \n[203] \"E1\"                         \"E2\"                        \n[205] \"E3\"                         \"E4\"                        \n[207] \"E5\"                         \"E6\"                        \n[209] \"E7\"                         \"E8\"                        \n[211] \"E9\"                         \"E10\"                       \n[213] \"E11\"                        \"E12\"                       \n[215] \"E13\"                        \"E14\"                       \n[217] \"E15\"                        \"E16\"                       \n[219] \"E17\"                        \"E18\"                       \n[221] \"E19\"                        \"E20\"                       \n[223] \"E21\"                        \"E22\"                       \n[225] \"E23\"                        \"E24\"                       \n[227] \"E25\"                        \"E26\"                       \n[229] \"E27\"                        \"E28\"                       \n[231] \"F1\"                         \"F2_sp\"                     \n[233] \"F3_sp\"                      \"F4_sp\"                     \n[235] \"F5_sp\"                      \"F6_sp\"                     \n[237] \"F7_sp\"                      \"F2_syntymävuosi\"           \n[239] \"F3_syntymävuosi\"            \"F4_syntymävuosi\"           \n[241] \"F5_syntymävuosi\"            \"F6_syntymävuosi\"           \n[243] \"F7_syntymävuosi\"            \"F2_suhde\"                  \n[245] \"F3_suhde\"                   \"F4_suhde\"                  \n[247] \"F5_suhde\"                   \"F6_suhde\"                  \n[249] \"F7_suhde\"                   \"F6\"                        \n[251] \"F7\"                         \"F8\"                        \n[253] \"F11\"                        \"F13\"                       \n[255] \"F14\"                        \"F14a_1\"                    \n[257] \"F14a_2\"                     \"F14a_3\"                    \n[259] \"F14a_4\"                     \"F14a_5\"                    \n[261] \"F14a_6\"                     \"F14a_7\"                    \n[263] \"F14a_8\"                     \"F14a_9\"                    \n[265] \"F14a_10\"                    \"F15\"                       \n[267] \"F16\"                        \"F17a_1\"                    \n[269] \"F17a_2\"                     \"F17a_3\"                    \n[271] \"F17a_4\"                     \"F17a_5\"                    \n[273] \"F17a_6\"                     \"F17a_7\"                    \n[275] \"F17a_8\"                     \"F17c\"                      \n[277] \"F18\"                        \"F19\"                       \n[279] \"F20\"                        \"F21\"                       \n[281] \"F22\"                        \"F23\"                       \n[283] \"F24\"                        \"F25\"                       \n[285] \"F26\"                        \"F27\"                       \n[287] \"F28\"                        \"F29\"                       \n[289] \"F30\"                        \"F32\"                       \n[291] \"F35\"                        \"F36\"                       \n[293] \"F37\"                        \"F38\"                       \n[295] \"F39\"                        \"F40\"                       \n[297] \"F41\"                        \"F42\"                       \n[299] \"F44\"                        \"F45a_1\"                    \n[301] \"F45a_2\"                     \"F45a_3\"                    \n[303] \"F45a_4\"                     \"F45a_5\"                    \n[305] \"F45a_6\"                     \"F45a_8\"                    \n[307] \"F45a_9\"                     \"F45c\"                      \n[309] \"F46\"                        \"F50\"                       \n[311] \"F51\"                        \"Puolison_ammatti_pääluokka\"\n[313] \"Puolison_ammatti_alaluokka\" \"F52\"                       \n[315] \"F53\"                        \"F54\"                       \n[317] \"F55\"                        \"F56\"                       \n[319] \"F57\"                        \"F58\"                       \n[321] \"H1a\"                        \"H1b\"                       \n[323] \"H1c\"                        \"H1d\"                       \n[325] \"H1e\"                        \"H1f\"                       \n[327] \"H1g\"                        \"H1h\"                       \n[329] \"H1i\"                        \"H1j\"                       \n[331] \"H1k\"                        \"H1l\"                       \n[333] \"H1m\"                        \"H1n\"                       \n[335] \"H1o\"                        \"H1p\"                       \n[337] \"H1q\"                        \"H1r\"                       \n[339] \"H1s\"                        \"H1t\"                       \n[341] \"H1u\"                        \"I1\"                        \n[343] \"I2\"                         \"I3\"                        \n[345] \"I4\"                         \"I5\"                        \n[347] \"I6\"                         \"I7\"                        \n[349] \"I8\"                         \"I9\"                        \n[351] \"K1\"                         \"K2\"                        \n[353] \"K3\"                         \"K4\"\nview() -komennolla näkee aineiston taulukkonäkymässä RStudiossa. Saman näkymän voi avata myös hiirellä klikkaamalla aineiston nimeä Environment-paneelissa.\nview(ESS2023)",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Aineistoon tutustuminen</span>"
+    ]
+  },
+  {
+    "objectID": "06-aineistoon-tutustuminen.html#sec-tutustuminen",
+    "href": "06-aineistoon-tutustuminen.html#sec-tutustuminen",
+    "title": "Aineistoon tutustuminen",
+    "section": "Muuttujien tarkastelu",
+    "text": "Muuttujien tarkastelu\nSeuraavaksi on hyvä tarkastella mielenkiinnon kohteena olevia muuttujia. Pikaiseen tarkasteluun tutkijan näytöllä toimii esimerkiksi summary() -komento, joka antaa muuttujista keski- ja hajontalukuja.\nOtetaan siis aineisto, sitten valitaan komennolla select()-komennolla tarkasteltavat muuttujat, ja lopuksi summary()-komennolla saadaan jakaumaa kuvaavat keski- ja hajontaluvut sekä puuttuvien tietojen määrä. Poimitaan nyt aineiston muuttujista syntymävuosi, sukupuoli ja koettu onnellisuus C1.\n\nESS2023 |&gt; select(Syntymävuosi, Sukupuoli, C1) |&gt; summary()\n\n  Syntymävuosi    Sukupuoli           C1        \n Min.   :1934   Min.   :1.000   Min.   : 0.000  \n 1st Qu.:1954   1st Qu.:1.000   1st Qu.: 8.000  \n Median :1969   Median :2.000   Median : 8.000  \n Mean   :1970   Mean   :1.507   Mean   : 8.074  \n 3rd Qu.:1986   3rd Qu.:2.000   3rd Qu.: 9.000  \n Max.   :2008   Max.   :2.000   Max.   :10.000  \n                                NA's   :3       \n\n\nSyntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa, sillä se on luokiteltu teksti, jossa on määritettynä selitetekstit kullekin arvolle. Luokitelluista muuttujista halutun tiedon voi poimia esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.\n\nESS2023 |&gt; count(Sukupuoli)\n\n# A tibble: 2 × 2\n  Sukupuoli      n\n  &lt;dbl+lbl&gt;  &lt;int&gt;\n1 1 [Mies]     770\n2 2 [Nainen]   793\n\n\nsummary on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa {@sec:muuttujien_esittely_taulukot}.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Aineistoon tutustuminen</span>"
+    ]
+  },
+  {
+    "objectID": "07-muuttujamuunnokset.html",
+    "href": "07-muuttujamuunnokset.html",
+    "title": "Muuttujamuunnokset",
+    "section": "",
+    "text": "Muuttujamuunnokset tidyverse-tyyliin\nTässä oppaassa käytetään kaikkien muuttujamuunnostentekemiseen samaa perussapluunaa, joka on muotoa:\naineisto &lt;- aineisto |&gt; mutate(uusi_muuttuja = komento(vanha_muuttuja))\nmutate() -komennolla luodaan uusi muuttuja, joka tallennetaan vanhan muuttujan perään. Komennon sisällä määritellään uuden muuttujan nimi ja laskukaava, joka kertoo miten uusi muuttuja lasketaan vanhasta.\nKoska muuttujamuunnos halutaan käyttöön seuraavissa analyyseissä, tallennetaan uusi aineisto vanhan päälle. Näin kaikki myöhemmät komennot käyttävät uutta muuttujaa, joka on laskettu vanhasta.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Muuttujamuunnokset</span>"
+    ]
+  },
+  {
+    "objectID": "07-muuttujamuunnokset.html#yksikertaiset-laskutoimitukset",
+    "href": "07-muuttujamuunnokset.html#yksikertaiset-laskutoimitukset",
+    "title": "Muuttujamuunnokset",
+    "section": "Yksikertaiset laskutoimitukset",
+    "text": "Yksikertaiset laskutoimitukset\nVastaajan ikä voidaan laskea suoralla vähennyslaskulla. ESS 2023 on kerätty vuonna 2023, joten laskutoimitus on 2023 - Syntymävuosi. Tulos tallennetaan uudeksi muuttujaksi mutate()-komennolla.\nLaskutoimintoja kuten +, -, *, / ja ^ voidaan käyttää sellaisenaan eli niihin ei tarvita erillistä funktiota.\n\nESS2023 &lt;- ESS2023 |&gt; \n  mutate(Ikä = 2023 - Syntymävuosi)\n\nTämä komento ei tulosta mitään näytölle, vaan ainoastaan aineistoon. Siksi kannattaa heti tarkastaa mitä tuli tehtyä.\n\nESS2023 |&gt; select(Ikä) |&gt; summary()\n\n      Ikä       \n Min.   :15.00  \n 1st Qu.:37.00  \n Median :54.00  \n Mean   :52.83  \n 3rd Qu.:69.00  \n Max.   :89.00",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Muuttujamuunnokset</span>"
+    ]
+  },
+  {
+    "objectID": "07-muuttujamuunnokset.html#luokitelluksi-merkitseminen",
+    "href": "07-muuttujamuunnokset.html#luokitelluksi-merkitseminen",
+    "title": "Muuttujamuunnokset",
+    "section": "Luokitelluksi merkitseminen",
+    "text": "Luokitelluksi merkitseminen\nUsein on tarpeen muuttaa muuttuja luokitelluksi, ilman että mitään varsinaisia muutoksia tehdään. Erityisen tärkeää tämä on labelled-muuttujien kanssa, joissa on sekä numero- että tekstiarvo tallennettuna. Toimenpiteen jälkeen R tietää, että kyseistä muuttujaa kohdellaan luokiteltuna.\n\nESS2023 &lt;- ESS2023 |&gt; \n  mutate(Sukupuoli = as_factor(Sukupuoli))\n\n\nESS2023 |&gt; select(Sukupuoli) |&gt; summary()\n\n  Sukupuoli  \n Mies  :770  \n Nainen:793",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Muuttujamuunnokset</span>"
+    ]
+  },
+  {
+    "objectID": "07-muuttujamuunnokset.html#numeroiden-luokittelu",
+    "href": "07-muuttujamuunnokset.html#numeroiden-luokittelu",
+    "title": "Muuttujamuunnokset",
+    "section": "Numeroiden luokittelu",
+    "text": "Numeroiden luokittelu\nJatkuva muuttuja voidaan jakaa luokkiin komennolla cut(). Argumentti breaks määrittelee luokkarajat ja labels niiden nimet. Luokkia syntyy aina yksi vähemmän kuin rajakohtia — 4 rajakohtaa tuottaa siis 3 luokkaa.\nRyhmien määrittelyssä pitää huomioida, että luokkarajan kohdalla oleva arvo menee pienempään ryhmään. Ensimmäisen rajakohdan on siis oltava pienempi kuin aineiston pienin arvo (ei sama kuin pienin arvo!), jotta se ei jää luokittelun ulkopuolelle. Kaikki arvot ensimmäisen rajakohdan alapuolella tai viimeisen yläpuolella muuttuvat automaattisesti puuttuviksi (NA).\n\nESS2023 &lt;- ESS2023 |&gt; \n  mutate(Ikäryhmä = cut(Ikä,\n                        breaks = c(0, 35, 59, 99),\n                        labels = c(\"Alle 35\", \"35-59\", \"60 ja yli\")))\n\nESS2023 |&gt; count(Ikäryhmä)\n\n# A tibble: 3 × 2\n  Ikäryhmä      n\n  &lt;fct&gt;     &lt;int&gt;\n1 Alle 35     363\n2 35-59       544\n3 60 ja yli   656",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Muuttujamuunnokset</span>"
+    ]
+  },
+  {
+    "objectID": "07-muuttujamuunnokset.html#muuttujan-uudelleenkoodaus",
+    "href": "07-muuttujamuunnokset.html#muuttujan-uudelleenkoodaus",
+    "title": "Muuttujamuunnokset",
+    "section": "Muuttujan uudelleenkoodaus",
+    "text": "Muuttujan uudelleenkoodaus",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Muuttujamuunnokset</span>"
+    ]
+  },
+  {
+    "objectID": "07-muuttujamuunnokset.html#uudelleenkoodaus-muuttujan-arvojen-uudelleensuuntaaminen-laskemalla",
+    "href": "07-muuttujamuunnokset.html#uudelleenkoodaus-muuttujan-arvojen-uudelleensuuntaaminen-laskemalla",
+    "title": "Muuttujamuunnokset",
+    "section": "Uudelleenkoodaus: muuttujan arvojen uudelleensuuntaaminen laskemalla",
+    "text": "Uudelleenkoodaus: muuttujan arvojen uudelleensuuntaaminen laskemalla\nUsein halutaavan kääntää muuttujan asteikko. Esimerkiksi Likert-väittämien vastaukset on usein koodattu niin, että pieni arvo tarkoittaa positiivista mielipidettä ja suuri negatiivista — tai päinvastoin. Ennen kuin muuttujia yhdistetään summamuuttujaksi, niiden suunnan on oltava sama.\nAsteikolla 1–5 suunta käännetään yksinkertaisella laskutoimituksella: uusi_arvo = 6 - vanha_arvo. Arvo 1 muuttuu arvoksi 5, arvo 2 arvoksi 4 ja niin edelleen — asteikon keskikohta 3 pysyy paikallaan.\n\n# Yksi muuttuja kerrallaan\nESS2023 &lt;- ESS2023 |&gt; \n  mutate(B33_kaannetty = 6 - B33)\n\nTässä kuitenkin menetetään muuttujaryhmien selitteet ja laskutoimituksen tuloksena on vain numeroita.\n\nESS2023 |&gt; select(B33, B33_kaannetty) |&gt; head()\n\n# A tibble: 6 × 2\n  B33                      B33_kaannetty\n  &lt;dbl+lbl&gt;                        &lt;dbl&gt;\n1 NA                                  NA\n2  1 [Täysin samaa mieltä]             5\n3  2 [Samaa mieltä]                    4\n4  4 [Eri mieltä]                      2\n5  2 [Samaa mieltä]                    4\n6  1 [Täysin samaa mieltä]             5\n\n\nJos käännetään useampia muuttujia kerralla, across() toistaa saman laskutoimituksen kaikille valituille. Lambda-funktio \\(x) 6 - x kertoo, mitä kullekin muuttujalle tehdään, ja .names = \"{col}_kaannetty\" tallentaa tulokset uusiin muuttujiin alkuperäisten nimien perään — jolloin alkuperäiset säilyvät aineistossa muuttumattomina. Alkuperäiset muuttujat A4, A5 ja A6 mittasivat luottamusta (isommat arvot tarkoittivat enemmän luottamusta), ja nyt uudet muuttujat A4_kaannetty, A5_kaannetty ja A6_kaannetty mittaavat epäluottamusta (isommat arvot tarkoittavat enemmän epäluottamusta).\n\nESS2023 &lt;- ESS2023 |&gt; \n  mutate(across(c(A4, A5, A6), \\(x) 10 - x, .names = \"{col}_kaannetty\"))",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Muuttujamuunnokset</span>"
+    ]
+  },
+  {
+    "objectID": "07-muuttujamuunnokset.html#summamuuttujan-laskeminen",
+    "href": "07-muuttujamuunnokset.html#summamuuttujan-laskeminen",
+    "title": "Muuttujamuunnokset",
+    "section": "Summamuuttujan laskeminen",
+    "text": "Summamuuttujan laskeminen\nSummamuuttuja on useammasta muuttujasta summana tai keskiarvona laskettu uusi muuttuja. Senkin voi sinänsä laskea ihan yksinkertaisena laskutoimituksena:\n\nESS2023 &lt;- ESS2023 |&gt; \n  mutate(epäluottamus_summamuuttuja_suora_keskiarvo = (A4_kaannetty+A5_kaannetty+A6_kaannetty)/3)\n\nUsein kuitenkin halutaan huomioida puuttuvat tiedot, jolloin laskukaava on hieman monimutkaisempi. Tällöin rowMeans()-komentoa käytetään laskukaavana. rowMeans()laskee nimensä mukaisesti jokaiselle riville eli vastaajalle oman keskiarvon. Kun puuttuvat tiedot jätetään huomiotta keskiarvon laskennassa argumentilla na.rm = TRUE, saadaan keskiarvo laskettua niillekin vastaajille, joilta puuttuu osa tiedoista.\n\nESS2023 &lt;- ESS2023 |&gt;\n  mutate(\n    epäluottamus_summamuuttuja_keskiarvo_puuttuvat =  \n      pick(A4_kaannetty, A5_kaannetty, A6_kaannetty) |&gt;\n      rowMeans(na.rm = TRUE))\n\nVerrataan vielä eroa - nyt ensimmäisellä tavalla muutama vastaaja putosi pois summamuuttujasta, koska heiltä puuttui tieto jostain kolmesta alkuperäisestä muuttujasta, mutta toisella tavalla he saivat keskiarvon niistä tiedoista, jotka heiltä oli saatu.\n\nESS2023 |&gt; select(epäluottamus_summamuuttuja_suora_keskiarvo, epäluottamus_summamuuttuja_keskiarvo_puuttuvat) |&gt; summary()\n\n epäluottamus_summamuuttuja_suora_keskiarvo\n Min.   : 0.000                            \n 1st Qu.: 2.333                            \n Median : 3.000                            \n Mean   : 3.203                            \n 3rd Qu.: 4.000                            \n Max.   :10.000                            \n NA's   :4                                 \n epäluottamus_summamuuttuja_keskiarvo_puuttuvat\n Min.   : 0.000                                \n 1st Qu.: 2.333                                \n Median : 3.000                                \n Mean   : 3.207                                \n 3rd Qu.: 4.000                                \n Max.   :10.000",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Muuttujamuunnokset</span>"
+    ]
+  },
+  {
+    "objectID": "07-muuttujamuunnokset.html#myönteisten-vastausten-lukumäärä-muuttujajoukossa",
+    "href": "07-muuttujamuunnokset.html#myönteisten-vastausten-lukumäärä-muuttujajoukossa",
+    "title": "Muuttujamuunnokset",
+    "section": "Myönteisten vastausten lukumäärä muuttujajoukossa",
+    "text": "Myönteisten vastausten lukumäärä muuttujajoukossa\nJos halutaan laskea, kuinka monesta väittämästä vastaaja on vastannut tietyllä tavalla - tässä siis “Kyllä” poliittisen aktiivisuuden kysymyksiin, voidaan käyttää rowSums()-komentoa, joka laskee rivittäisen summan.\nNyt pitää määritellä muuttujat vähän monimutkaisemmin kuin summamuuttujassa, sillä pitää kertoa mistä arvo “Kyllä” löytyy. Nyt sen numeroarvo oli 1. Argumentti across(B15:B22, ~ . == 1) kertoo, että laskettavaksi valitaan muuttujat B15–B22 ja että niistä lasketaan vain ne, joissa arvo on 1 (myönteinen vastaus).\nArgumentti na.rm = TRUE kertoo, että puuttuvat tiedot jätetään huomiotta laskennassa.\nJos muuttuja olisi määritelty luokitelluksi aiemmin, numeron 1 sijasta voisi käyttää selitetekstiä “Kyllä”, jolloin laskukaava olisi across(B15:B22, ~ . == \"Kyllä\").\n\nESS2023 &lt;- ESS2023 |&gt;\n  mutate(\n    myönteisten_vastausten_lukumäärä = rowSums(\n      across(B15:B22, \n      ~ . == 1),\n      na.rm = TRUE\n    )\n  )",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Muuttujamuunnokset</span>"
+    ]
+  },
+  {
+    "objectID": "07-muuttujamuunnokset.html#uudelleenkoodaus-luokkien-nimien-perusteella",
+    "href": "07-muuttujamuunnokset.html#uudelleenkoodaus-luokkien-nimien-perusteella",
+    "title": "Muuttujamuunnokset",
+    "section": "Uudelleenkoodaus: luokkien nimien perusteella",
+    "text": "Uudelleenkoodaus: luokkien nimien perusteella\nJos haluat operoida luokiteltujen muuttujien arvoilla, voit käyttää fct_recode()-komentoa. Tässä muutetaan ensin muuttuja F14 luokitelluksi komennolla as_factor() ja sitten muokataan luokkien nimiä uudelleenkoodauksella, jossa annetaan ensin uuden luokan nimi ja sitten vanhan, aineistossa jo olevan. Esimerkiksi luokka “Suuri kaupunki” muutetaan muotoon “Suurkaupunki”. Samalla yhdistetään kaksi luokkaa antamalla niille sama uusi nimi “Pieni kaupunki”. Jos jotain luokkaa ei mainita, sen nimi jää ennalleen.\n\nESS2023&lt;- ESS2023|&gt;\n  mutate(\n    Asuinalue = F14 |&gt;\n      as_factor() |&gt;\n      fct_recode(\n        \"Suurkaupunki\" = \"Suuri kaupunki\",\n        \"Taajama\" = \"Suuren kaupungin lähiö tai lähiseutu\",\n        \"Pieni kaupunki\" = \"Pieni tai keskikokoinen kaupunki tai kunta\",\n        \"Pieni kaupunki\" = \"Pienempi taajama tai kunta\"\n      )\n  )\n\nTarkastetaan mitä tuli tehtyä:\n\nESS2023 |&gt; count(Asuinalue)\n\n# A tibble: 4 × 2\n  Asuinalue                      n\n  &lt;fct&gt;                      &lt;int&gt;\n1 Suurkaupunki                 226\n2 Taajama                      372\n3 Pieni kaupunki               758\n4 Maaseutu / haja-asutusalue   207",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Muuttujamuunnokset</span>"
+    ]
+  },
+  {
+    "objectID": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html",
+    "href": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html",
+    "title": "Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio",
+    "section": "",
+    "text": "Frekvenssijakauma, yksi muuttuja\nTässä luvussa käydään läpi komennot, joiden avulla voit tehdä julkaisuvalmista, APA:n ohjeistuksen mukaista, taulukkoa muuttujien esittelyyn lukijalle raportissa tai tehtävässä. Aineistoon tutustumiseen sopivat lyhyet ja nopeat komennot esiteltiin luvussa Muuttujien tarkastelu.\nLuokiteltujen muuttujien osalta esitellään vastaajamääriä ja prosenttijakaumia kuvaava frekvenssitaulukko, ja numeeristen muuttujien osalta esitellään keski- ja hajontalukuja kuvaava tunnuslukutaulukko.\nMonipuolisia työkaluja julkaisuvalmiiden frekvenssi- ja ristiintaulukkojen tekemiseen tarjoaa janitor-paketin tabyl()-komento. Komento itsessään tekee frekvenssitaulukon, ja joukko adorn_*-komentoja mahdollistaa monipuoliset muokkaustyökalut. Tällä kertaa muokataan prosenttien muotoa komennolla adorn_pct_formatting() ja nimetään sarakkeet uudestaan suomenkielisiksi rename()-komennolla.\ntaulukko1 &lt;- ESS2023 |&gt;\n  tabyl(C1) |&gt;\n  adorn_pct_formatting(digits = 1) |&gt;\n  rename(\n    n = n,\n    `%` = percent, \n    `% vastanneista` = valid_percent\n  )\n\ntaulukko1\n\n C1   n     % % vastanneista\n  0   1  0.1%           0.1%\n  1   2  0.1%           0.1%\n  2  10  0.6%           0.6%\n  3  22  1.4%           1.4%\n  4  30  1.9%           1.9%\n  5  36  2.3%           2.3%\n  6  47  3.0%           3.0%\n  7 198 12.7%          12.7%\n  8 543 34.7%          34.8%\n  9 515 32.9%          33.0%\n 10 156 10.0%          10.0%\n NA   3  0.2%              -\nKun taulukko on valmis, se voidaan tallentaa Excel-muodossa write_xlsx()-komennolla, jolloin sen voi liittää raporttiin tai tehtävään.\nwrite_xlsx(taulukko1, \"taulukko1.xlsx\")",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio</span>"
+    ]
+  },
+  {
+    "objectID": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-ristiintaulukko",
+    "href": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-ristiintaulukko",
+    "title": "Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio",
+    "section": "Frekvenssijakauma ryhmittäin eli ristiintaulukko",
+    "text": "Frekvenssijakauma ryhmittäin eli ristiintaulukko\nRistiintaulukko on frekvenssijakauma, joka on jaettu ryhmittäin. Ristiintaulukko voidaan tehdä tabyl()-komennolla, jossa määritellään kaksi muuttujaa, joiden perusteella taulukko jaetaan. Tässä esimerkissä tarkastellaan kiinnostusta politiikkaan sukupuolen mukaan.\ntabyl() tekee ristiintaulukon, kun sille annetaan kaksi muuttujaa. Ensimmäinen muuttuja tulee riveille, toinen sarakkeille. Sen jälkeen taulukosta voi muokata haluamansa näköisen adorn_*-komentojen avulla.\nAloitetaan merkitsemällä kiinnostus politiikkaan ja sukupuoli tekijämuuttujiksi mutate()-komennolla, jotta saamme niihin selitetekstit näkyviin.\nSen jälkeen tehdään ristiintaulukko tabyl()-komennolla, ja lisätään siihen Yhteensä-sarake ja -rivi adorn_totals()-komennolla.\nLaitetaan prosenttiosuudet näkyviin sarakkeittain adorn_percentages(\"col\")-komennolla. Vaihtoehtoisesti prosenttiosuudet voisi laskea myös riveittäin adorn_percentages(\"row\")-komennolla, jolloin prosenttiosuudet laskettaisiin kunkin rivin sisällä, tai koko taulukon osuutena adorn_percentages(\"all\")-komennolla, jolloin prosenttiosuudet laskettaisiin koko taulukon osuutena. Nyt halutaan tietää miten kiinnostus jakautuu miesten joukossa, naisten joukossa, ja kokonaisuudessaan, joten prosenttiosuudet lasketaan sarakkeittain. Pyöristetään vielä prosenttiosuudet yhden desimaalin tarkkuuteen adorn_pct_formatting(digits = 1)-komennolla.\nLisätään vielä vastaajamäärät näkyviin adorn_ns(position = \"rear\")-komennolla, jolloin vastaajamäärät tulevat sulkuihin prosenttiosuuksien jälkeen. position=\"front\"-komennolla vastaajamäärät tulisivat ennen prosenttiosuuksia.\n\nESS2023 &lt;- ESS2023 |&gt; mutate(`Kiinnostus politiikkaan` = as_factor(B1), Sukupuoli = as_factor(Sukupuoli))\n\ntaulukko2 &lt;- ESS2023 |&gt;\n  tabyl(`Kiinnostus politiikkaan`, Sukupuoli) |&gt;\n  adorn_totals(c(\"col\", \"row\"), name=\"Yhteensä\") |&gt;\n  adorn_percentages(\"col\") |&gt;\n  adorn_pct_formatting(digits = 1) |&gt;\n  adorn_ns(position = \"rear\")\n\ntaulukko2\n\n  Kiinnostus politiikkaan         Mies       Nainen       Yhteensä\n    Erittäin kiinnostunut  16.0% (123)  16.8% (133)  16.4%   (256)\n       Melko kiinnostunut  54.8% (422)  50.4% (400)  52.6%   (822)\n    Et kovin kiinnostunut  24.2% (186)  26.7% (212)  25.5%   (398)\n Et lainkaan kiinnostunut   5.1%  (39)   5.9%  (47)   5.5%    (86)\n                     &lt;NA&gt;   0.0%   (0)   0.1%   (1)   0.1%     (1)\n                 Yhteensä 100.0% (770) 100.0% (793) 100.0% (1,563)\n\nwrite_xlsx(taulukko2, \"taulukko2.xlsx\")",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio</span>"
+    ]
+  },
+  {
+    "objectID": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-tunnuslukutaulukko",
+    "href": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-tunnuslukutaulukko",
+    "title": "Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio",
+    "section": "Tunnuslukutaulukko, yksi muuttuja",
+    "text": "Tunnuslukutaulukko, yksi muuttuja\nJulkaisukelpoisen ja tarpeen mukaan muokattavan tunnuslukutaulukon voi tehdä summarise()-komennolla, jossa määritellään halutut tunnusluvut. (Erotuksena summary()-komennosta, joka antaa vain tietyt luvut, ja jota käytetään aineiston nopeaan tarkasteluun luvun Muuttujien tarkastelu ohjeen mukaan.\nEsittelytaulukko voi yksinkertaisimmillaan olla vain keskiarvo ja keskihajonta, mutta tässä laitetaan lisäksi minimi ja maksimi. Mitä tahansa haluttuja tunnuslukuja voi lisätä samalla logiikalla.\n\ntaulukko3 &lt;- ESS2023 |&gt; summarise(\n  Muuttuja = \"Onnellisuus\",\n  keskiarvo = mean(C1, na.rm = TRUE),\n  keskihajonta = sd(C1, na.rm = TRUE),\n  minimi = min(C1, na.rm = TRUE),\n  maksimi = max(C1, na.rm = TRUE)\n)\n\ntaulukko3\n\n# A tibble: 1 × 5\n  Muuttuja    keskiarvo keskihajonta minimi               maksimi               \n  &lt;chr&gt;           &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl+lbl&gt;            &lt;dbl+lbl&gt;             \n1 Onnellisuus      8.07         1.48 0 [Erittäin onneton] 10 [Erittäin onnellin…",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio</span>"
+    ]
+  },
+  {
+    "objectID": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-tunnuslukutaulukko-useampi",
+    "href": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-tunnuslukutaulukko-useampi",
+    "title": "Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio",
+    "section": "Tunnuslukutaulukko, useampia muuttujia samassa taulukossa",
+    "text": "Tunnuslukutaulukko, useampia muuttujia samassa taulukossa\nJos halutaan useampia muuttujia samaan taulukkoon, voidaan tehdä erikseen taulukko jokaisesta muuttujasta ja yhdistää ne sitten bind_rows()-komennolla. Tällöin on hyvä määritellä muuttujan nimi omaksi muuttujakseen, jotta taulukko on selkeä.\nNumeeriset sarakkeet voi pyöristää halutun tarkkuisiksi mutate()-komennolla, jossa määritellään across(where(is.numeric), ~ round(.x, 2)), jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.\n\ntaulukko4 &lt;- ESS2023 |&gt; summarise(\n  Muuttuja = \"Kiinnostus politiikkaan\",\n  keskiarvo = mean(B1, na.rm = TRUE),\n  keskihajonta = sd(B1, na.rm = TRUE),\n  minimi = min(B1, na.rm = TRUE),\n  maksimi = max(B1, na.rm = TRUE),\n)\n\ntaulukko4\n\n# A tibble: 1 × 5\n  Muuttuja                keskiarvo keskihajonta minimi                  maksimi\n  &lt;chr&gt;                       &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl+lbl&gt;               &lt;dbl+l&gt;\n1 Kiinnostus politiikkaan      2.20        0.774 1 [Erittäin kiinnostun… 4 [Et …\n\nyhdistetty_taulukko &lt;- bind_rows(taulukko3, taulukko4) |&gt;\n  mutate(\n    across(where(is.numeric), ~ round(.x, 2))\n  )\n\nyhdistetty_taulukko\n\n# A tibble: 2 × 5\n  Muuttuja                keskiarvo keskihajonta minimi maksimi\n  &lt;chr&gt;                       &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;\n1 Onnellisuus                  8.07         1.48      0      10\n2 Kiinnostus politiikkaan      2.2          0.77      1       4\n\nwrite_xlsx(yhdistetty_taulukko, \"yhdistetty_taulukko.xlsx\")",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio</span>"
+    ]
+  },
+  {
+    "objectID": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-tunnuslukutaulukko-ryhmittain",
+    "href": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-tunnuslukutaulukko-ryhmittain",
+    "title": "Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio",
+    "section": "Tunnuslukutaulukko, ryhmittäin",
+    "text": "Tunnuslukutaulukko, ryhmittäin\nJos halutaan tunnuslukutaulukko, joka on jaettu ryhmittäin, voidaan käyttää group_by()-komentoa, jolla määritellään ryhmittelymuuttuja, ja sitten summarise()-komentoa, jolla määritellään halutut tunnusluvut.\n\ntaulukko5 &lt;- ESS2023 |&gt; group_by(Sukupuoli) |&gt; summarise(\n  keskiarvo = mean(C1, na.rm = TRUE),\n  keskihajonta = sd(C1, na.rm = TRUE),\n  minimi = min(C1, na.rm = TRUE),\n  maksimi = max(C1, na.rm = TRUE)\n)\n\ntaulukko5\n\n# A tibble: 2 × 5\n  Sukupuoli keskiarvo keskihajonta minimi               maksimi                 \n  &lt;fct&gt;         &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl+lbl&gt;            &lt;dbl+lbl&gt;               \n1 Mies           8.01         1.48 1 [1]                10 [Erittäin onnellinen]\n2 Nainen         8.14         1.47 0 [Erittäin onneton] 10 [Erittäin onnellinen]\n\nwrite_xlsx(taulukko5, \"taulukko5.xlsx\")",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio</span>"
+    ]
+  },
+  {
+    "objectID": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-korrelaatio",
+    "href": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-korrelaatio",
+    "title": "Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio",
+    "section": "Korrelaatio",
+    "text": "Korrelaatio",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio</span>"
+    ]
+  },
+  {
+    "objectID": "09-painottaminen.html",
+    "href": "09-painottaminen.html",
+    "title": "Painottaminen",
+    "section": "",
+    "text": "Miksi painotetaan?\nTutkimuksessa on joskus tarpeen antaa yksittäiselle vastaajalle suurempi tai pienempi paino kuin muille. Ensimmäinen - ja tärkeämpi - syy on se, että aineiston otosrakenne on sellainen, että kaikilla populaation osilla ei ole yhtä suurta todennäköisyyttä tulla valituksi otokseen. Kaikkialla ei esimerkiksi ole selvää väestörekisteriä, josta otantaa tehdä, tai joskus halutaan varmistaa, että joku väestönosa tai vähemmistö tulee edustetuksi aineistossa, vaikka analyysin halutaankin vastaavan koko väestöä. Tällöin painotetaan, jotta saadaan otos vastaamaan paremmin populaatiota. Tätä painoa kutsutaan asetelmapainoksi. Tällainen paino täytyy aina huomioida tai analyysi vääristyy.\nToinen syy painottamiseen on se, että vaikka otannassa kuka tahansa voi tulla poimituksi, vastauskato ei jakaudu tasaisesti väestöryhmien kesken. Esimerkiksi kyselytutkimuksessa nuoret miehet saattavat vastata harvemmin kuin muut. Tällöin voidaan tehdä oletus, että sellainen nuori mies joka on vastannut on samanlainen kuin sellainen nuori mies joka ei vastannut. Jos oletus pätee, voidaan laskea otannan ja toteutuneen aineiston perusteella painokerroin, joka antaa vastanneelle nuorelle miehelle suuremman painoin kuin muille. Tätä painoa kutsutaan analyysipainoksi. Tällaisten painojen käytöstä on erilaisia koulukuntia.\nHenkilökohtaisesti tämän oppaan kirjoittaja ei yleensä käytä tällaisia painoja - Andrew Gelmanin sanoin “Survey Weighting is a mess” (Gelman 2007): useimmissa tutkimusmenetelmissä painon huomiointi on yllättävän hankalaa, ja oletus siitä, että muutaman demografisen tekijän osalta samanlainen vastaaja on samanlainen kuin vastaamatta jättänyt, pitää harvoin paikkaansa. Lisäksi painotettaessa pitäisi huomioida se, että keskivirheet pitäisi laskea eri tavalla, mitä esimerkiksi SPSS:n painotus ei tee.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Painottaminen</span>"
+    ]
+  },
+  {
+    "objectID": "09-painottaminen.html#painomuuttuja-ess-aineistossa",
+    "href": "09-painottaminen.html#painomuuttuja-ess-aineistossa",
+    "title": "Painottaminen",
+    "section": "Painomuuttuja ESS-aineistossa",
+    "text": "Painomuuttuja ESS-aineistossa\nEuropean Social Survey (ESS) Suomi 2023 -aineistossa on kaksi painomuuttujaa: asetelmapaino, jonka arvo on kaikille vastaajille 1 (koska Suomessa on helppo tehdä väestörekisteristä edustava otanta) sekä analyysipaino, joka on laskettu ikäryhmän, sukupuolen, koulutustason ja asuinalueen perusteella.\nAsetelmapainoa ei tarvitse huomioida, koska se on kaikille sama, mutta analyysipainoa voi halutessaan käyttää.\nR:ssä painot voidaan huomioida useammalla eri tavalla: monessa tavallisessa komennossa on argumentti, jolla voidaan huomioida yksinkertainen tapausten painotus. Tämä vastaa SPSS:n painotusta. Yleensä tämä argumentti on nimeltään weight=analyysipaino tai wt=analyysipaino, mutta jokaisen komennon osalta pitää tarkistaa oikea argumentti dokumentaatiosta.\nToinen tapa huomioida painot on käyttää svydesign-pakettia, joka on suunniteltu erityisesti painotettujen aineistojen analysointiin. Tällä voidaan huomioida monimutkaiset ryväsotannat ja vastaavat asetelmat tavalla, joka huomioi keskivirheiden laskun asiallisesti.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Painottaminen</span>"
+    ]
+  },
+  {
+    "objectID": "09-painottaminen.html#viitteet",
+    "href": "09-painottaminen.html#viitteet",
+    "title": "Painottaminen",
+    "section": "Viitteet",
+    "text": "Viitteet\nGelman, A. (2007). Struggles with Survey Weighting and Regression Modeling. Statistical Science, 153-164.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Painottaminen</span>"
+    ]
+  },
+  {
+    "objectID": "osa2-harjoitukset.html",
+    "href": "osa2-harjoitukset.html",
+    "title": "Osa 2: Harjoitustehtävät",
+    "section": "",
+    "text": "Tämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Osa 2: Harjoitustehtävät</span>"
+    ]
+  },
+  {
+    "objectID": "10-ggplot2-perusteet.html",
+    "href": "10-ggplot2-perusteet.html",
+    "title": "Tilastografiikan perusteet",
+    "section": "",
+    "text": "Grafiikan kielioppi (Grammar of Graphics)\nTässä osiossa esitellään yksi tapa tehdä kuvioita R:ssä. Se ei ole ainoa tapa, ja moni R-komento tekee sivutuotoksenakin kuvioita, mutta tämä on yleinen ja kaikkeen grafiikkaan soveltuva tapa, joka on hyvä osata. Kyseessä on ggplot2-paketin toteuttama grafiikan kielioppi (Grammar of Graphics). R:ssä ggplot2-paketti on Hadley Wickhamin kehittämä toteutus, joka on osa tidyverse-pakettikokoelmaa.\nPerusajatus on se, että jokainen tilastokuvio voidaan rakentaa samanlaisista rakennuspalikoista. Riippumatta siitä mikä kuvio on kyseessä, se koostuu samanlaisista komponenteista, joita voidaan lisäillä kuvioihin.",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Tilastografiikan perusteet</span>"
+    ]
+  },
+  {
+    "objectID": "10-ggplot2-perusteet.html#perustoiminnot-ggplot-aes-geom_",
+    "href": "10-ggplot2-perusteet.html#perustoiminnot-ggplot-aes-geom_",
+    "title": "Tilastografiikan perusteet",
+    "section": "Perustoiminnot: ggplot(), aes(), geom_*()",
+    "text": "Perustoiminnot: ggplot(), aes(), geom_*()\nggplot2-grafiikan peruskomponentit ovat ggplot(), aes() ja geom_*(). Näiden avulla voidaan rakentaa mikä tahansa tilastokuvio.\nggplot()-komennolla luodaan tyhjä grafiikka, johon määritellään aineisto.\nKuvion “estetiikka” määrittää, mihin muuttujia tai tunnuslukuja kuviossa sijoitellaan. Tämä määritellään aes()-komennolla. Komennolla määritellään esimerkiksi mitkä muuttujat asetetaan x- ja y-akselille, mikä määrittää (viivojen, pylväiden, pisteiden) väriä tai muotoa, ja niin edelleen.\ngeom_*()-komennot lisäävät kuvioon varsinaiset tilastografiikan elementit: esimerkiksi lisää kuvioon geom_point() hajontakuvion pisteet, geom_line() viivakuvion viivat tai geom_bar() pylväsdiagrammin pylväät.\nAsioita lisätään kuvioon yksinkertaisesti +-merkillä erottamalla.\nYksinkertaisessa tapauksessa tarvitaan vain nämä kolme peruskomponenttia - esimerkiksi pylväskuvio syntyisi näin:\n\nESS2023 |&gt; ggplot(aes(x = C1)) + \n    geom_bar()\n\n\n\n\n\n\n\n\nPerussapluuna kuviolle on siis\naineisto |&gt; ggplot(aes(x = x-muuttuja, y = y-muuttuja, väri = väri-muuttuja, …)) + geom_*()\nTätä sapluunaa voi laajentaa mielivaltaisesti. Lisätään esimerkiksi pylväskuvioon kolmanneksi muuttujaksi sukupuoli ja tehdään kuvioon otsikot sekä selitteet ja valitaan vielä teemaksi minimal, joka poistaa kuvion ylimääräiset elementit:\n\nESS2023 |&gt; ggplot(aes(x = C1, fill = Sukupuoli)) + \n    geom_bar(position = \"dodge\") + \n    labs(title = \"Onnellisuus sukupuolittain\", x = \"Koettu onnellisuus\", y = \"Havaintojen määrä\", fill = \"Sukupuoli\") + \n    theme_minimal()\n\n\n\n\n\n\n\n\nTässä oppaassa esitellään kuvioita koskevissa luvuissa kunkin kuvion perussapluuna, ja sitten laajennetaan sitä erilaisilla tavoilla. Kuvion muokkaamisesta on oma lukunsa {@sec:kuvion-muokkaaminen}, jossa esitellään erilaisia tapoja muuttaa kuvion ulkoasua.",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Tilastografiikan perusteet</span>"
+    ]
+  },
+  {
+    "objectID": "10-ggplot2-perusteet.html#kuvion-tallentaminen",
+    "href": "10-ggplot2-perusteet.html#kuvion-tallentaminen",
+    "title": "Tilastografiikan perusteet",
+    "section": "Kuvion tallentaminen",
+    "text": "Kuvion tallentaminen\nYllä olevat komennot oletuksena tuottavat kuvion RStudion Plots-paneeliin tarkasteltavaksi. Sieltä sen tallennus onnistuu hiirelläkin, mutta ggsave()-komennolla kuvion tallennus onnistuu suoraan R-koodista. Kuvio tallentuu työhakemistoon. Formaatti määrittyy suoraan tiedostopäätteestä. Komennossa voi myös määrittää kuvatiedoston koon ja tarkkuuden.\n\nggsave(\"kuvio.png\")\nggsave(\"kuvio.pdf\")",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Tilastografiikan perusteet</span>"
+    ]
+  },
+  {
+    "objectID": "11-pylvaskuvio.html",
+    "href": "11-pylvaskuvio.html",
+    "title": "Pylväskuviot",
+    "section": "",
+    "text": "Yksinkertainen pylväskuvio\nIhan perustapaus käsiteltiin jo johdannossa, mutta tässä kertauksena:\nESS2023 |&gt; ggplot(aes(x = C1)) + \n    geom_bar()",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Pylväskuviot</span>"
+    ]
+  },
+  {
+    "objectID": "11-pylvaskuvio.html#ryhmitelty-pylväskuvio",
+    "href": "11-pylvaskuvio.html#ryhmitelty-pylväskuvio",
+    "title": "Pylväskuviot",
+    "section": "Ryhmitelty pylväskuvio",
+    "text": "Ryhmitelty pylväskuvio\nTämä komento tuottaa ryhmitellyn pylväskuvion, jossa on kolme pylvästä, jotka kuvaavat koettua onnellisuutta sukupuolittain. position = \"dodge\"-argumentti määrittää, että pylväät asetetaan vierekkäin eikä päällekkäin.\n\nESS2023 |&gt; ggplot(aes(x = C1, fill = as_factor(Sukupuoli))) + \n    geom_bar(position = \"dodge\")",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Pylväskuviot</span>"
+    ]
+  },
+  {
+    "objectID": "11-pylvaskuvio.html#sama-vaakasuuntaan",
+    "href": "11-pylvaskuvio.html#sama-vaakasuuntaan",
+    "title": "Pylväskuviot",
+    "section": "Sama vaakasuuntaan",
+    "text": "Sama vaakasuuntaan\nKoko kuvion voi kellauttaa kyljelleen coord_flip()-komennolla, jolloin pylväät asetetaan vaakasuuntaan. Tämä on hyödyllistä, jos x-akselilla on paljon luokkia tai pitkät luokkien nimet, jotka eivät mahdu pystyyn. Sama lopputulos olisi toki saatu laittamalla C1 suoraan y-akselille, mutta yleensä on helpointa tehdä komennot saman sapluunan mukaan ja kääntää jos tarve ilmenee.\n\nESS2023 |&gt; ggplot(aes(x = C1, fill = as_factor(Sukupuoli))) + \n    geom_bar(position = \"dodge\") + \n    coord_flip()",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Pylväskuviot</span>"
+    ]
+  },
+  {
+    "objectID": "11-pylvaskuvio.html#histogrammi",
+    "href": "11-pylvaskuvio.html#histogrammi",
+    "title": "Pylväskuviot",
+    "section": "Histogrammi",
+    "text": "Histogrammi\nHistogrammi on erikoistapaus pylväskuvioista, jossa x-akselilla on numeerinen muuttuja, joka on jaettu luokkiin (bin). Histogrammissa pylväät kuvaavat havaintojen määrää kussakin luokassa.\n\nESS2023 |&gt; ggplot(aes(x = Syntymävuosi)) + \n    geom_histogram()",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Pylväskuviot</span>"
+    ]
+  },
+  {
+    "objectID": "11-pylvaskuvio.html#pylväskuvio",
+    "href": "11-pylvaskuvio.html#pylväskuvio",
+    "title": "Pylväskuviot",
+    "section": "100% pylväskuvio",
+    "text": "100% pylväskuvio\nJos halutaan keskittyä suhteellisiin osuuksiin eikä havaintojen määrään, voidaan käyttää position = \"fill\"-argumenttia, jolloin pylväät skaalautuvat samaan korkeuteen ja kuvio näyttää kunkin luokan osuuden koko pylväästä.\n\nESS2023 |&gt; ggplot(aes(x = as_factor(Sukupuoli), fill = as_factor(B4))) + \n    geom_bar(position = \"fill\") + \n    labs(y = \"Prosenttiosuus\")",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Pylväskuviot</span>"
+    ]
+  },
+  {
+    "objectID": "12-viivakuvio.html",
+    "href": "12-viivakuvio.html",
+    "title": "Viivakuviot",
+    "section": "",
+    "text": "Yhden muuttujan keskiarvoviiva toisen muuttujan arvoilla\nViivakuviolla voidaan kuvata yhden muuttujan keskimääräistä kehitystä toisen arvon kasvaessa - tyypillisesti ajan kuluessa, jolloin aikamuuttuja on x-akselilla.\nggplot2:lla tämän voi tehdä kahdella eri tavalla: joko lasketaan keskiarvot komennon osana stat_summary()-komennolla, tai lasketaan keskiarvot erikseen ja piirretään viivakuva näiden keskiarvojen perusteella.\nEnsimmäinen on lyhyempi, mutta rikkoo vähän perussapluunaa - nyt stat_summary()-komennolla määritellään sekä laskukaava että se, millainen kuvio halutaan - nyt siis halutaan keskiarvo (fun = mean) ja viivakuva (geom = “line”).\nESS2023 |&gt; ggplot(aes(x = Syntymävuosi, y = C1)) +\n  stat_summary(fun = mean, geom = \"line\")\nToinen tapa on laskea keskiarvot ensin erikseen omaan taulukkoon. Tässä hyödynnetään luvussa 18 {@sec:taulukot} esiteltyä tapaa koota haluttuja tunnuslukuja taulukoksi, ja näin saatu taulukko toimii sitten kuvion aineistona.\nNyt sapluuna on siis normaali - paitsi aineistona on juuri tehty taulukko.\nkeskiarvot &lt;- ESS2023 |&gt; group_by(Syntymävuosi) |&gt; summarise(C1_keskiarvo = mean(C1, na.rm = TRUE))\n\nkeskiarvot |&gt; ggplot(aes(x = Syntymävuosi, y = C1_keskiarvo)) + \n  geom_line()\nTässä yksinkertaisessa tapauksessa toimintatavoilla ei ole juuri eroa, mutta jälkimmäinen on helpommin laajennettavissa. Usein sama informaatio myös halutaan esittää sekä taulukkona että kuviona.",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Viivakuviot</span>"
+    ]
+  },
+  {
+    "objectID": "13-boxplot.html",
+    "href": "13-boxplot.html",
+    "title": "Laatikko-jana -kuviot eli boxplotit",
+    "section": "",
+    "text": "Boxplotin rakenne\nMuuttujien jakaumaa voidaan kuvata tunnuslukuja kuvaavilla laatikko-jana -kuvioilla. Kuviossa voidaan esittää kaksi hajontalukua siten, että toista kuvataan laatikolla eli suorakaiteella ja toista Janalla, joka kulkee laatikon läpi. Lisäksi yleensä esitetään yksi keskiluku laatikon halkaisevan viivan muodossa.\nYleensä kuviossa esitetään keskilukuna mediaani ja tämän ympäriltä laatikolla 25. ja 75. persentiili. Laatikon koko kuvaa näin siis kvartiiliväliä (Interquartile range). Janalla voidaan esittää minimi ja maksimi, mutta usein nillä ilmaistaan vielä korostetun poikkeavia havaintoja siten, että janan pituus laatikon reunasta 1,5 kertaa kvartiiliväli eli laatikon pituus. Tämän ulkopuolelle jäävät havainnot merkitään kuvioon erillisinä pisteinä kuten hajointakuviossa.",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Laatikko-jana -kuviot eli boxplotit</span>"
+    ]
+  },
+  {
+    "objectID": "13-boxplot.html#boxplot-rllä",
+    "href": "13-boxplot.html#boxplot-rllä",
+    "title": "Laatikko-jana -kuviot eli boxplotit",
+    "section": "Boxplot R:llä",
+    "text": "Boxplot R:llä\nYhden muuttujan jakaumaa toisen luokissa voi kuvata seuraavalla boxplotilla:\n\n# Esimerkki boxplotin piirtämisestä ggplot2:lla\nESS2023 |&gt; ggplot(aes(x = as_factor(F14), y = Syntymävuosi)) +\n  geom_boxplot() + coord_flip()",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Laatikko-jana -kuviot eli boxplotit</span>"
+    ]
+  },
+  {
+    "objectID": "14-sirontakuvio.html",
+    "href": "14-sirontakuvio.html",
+    "title": "Hajontakuviot",
+    "section": "",
+    "text": "Hajontakuvio kahdella jatkuvalla muuttujalla\nHajontakuviolla voidaan tarkastella kahden jatkuvan muuttujan välistä yhteyttä. Hajontakuviossa jokainen piste kuvaa yhtä havaintoa, ja pisteiden sijainti kuviossa määräytyy näiden kahden muuttujan arvojen perusteella.\nESS2023 |&gt; ggplot(aes(x = Syntymävuosi, y = A1_min)) + \n    geom_point()",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Hajontakuviot</span>"
+    ]
+  },
+  {
+    "objectID": "14-sirontakuvio.html#hajontakuvion-täristäminen",
+    "href": "14-sirontakuvio.html#hajontakuvion-täristäminen",
+    "title": "Hajontakuviot",
+    "section": "Hajontakuvion täristäminen",
+    "text": "Hajontakuvion täristäminen\nJos hajontakuviossa on paljon päällekkäisiä havaintoja, kuvio voi näyttää siltä, että havaintoja on vähemmän kuin todellisuudessa on. Tällöin voidaan käyttää position = \"jitter\"-argumenttia, joka lisää pisteisiin pientä satunnaista tärinää, jotta päällekkäiset havainnot erottuvat paremmin.\n\nESS2023 |&gt; ggplot(aes(x = Syntymävuosi, y = C1)) + \n    geom_point(position = \"jitter\")",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Hajontakuviot</span>"
+    ]
+  },
+  {
+    "objectID": "14-sirontakuvio.html#hajontakuvio-kahdella-jatkuvalla-ja-yhdellä-luokitellulla-muuttujalla",
+    "href": "14-sirontakuvio.html#hajontakuvio-kahdella-jatkuvalla-ja-yhdellä-luokitellulla-muuttujalla",
+    "title": "Hajontakuviot",
+    "section": "Hajontakuvio kahdella jatkuvalla ja yhdellä luokitellulla muuttujalla",
+    "text": "Hajontakuvio kahdella jatkuvalla ja yhdellä luokitellulla muuttujalla\nHajontakuvioon voidaan lisätä kolmas muuttuja, joka on luokiteltu. Tällöin pisteiden väri tai muoto voi kuvata luokitellun muuttujan eri luokkia. Esimerkiksi sukupuoli voidaan kuvata pisteiden värillä:\n\nESS2023 |&gt; ggplot(aes(x = Syntymävuosi, y = C1, color = as_factor(Sukupuoli))) + \n    geom_point(position = \"jitter\")",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Hajontakuviot</span>"
+    ]
+  },
+  {
+    "objectID": "14-sirontakuvio.html#trendiviivan-lisääminen-hajontakuviin",
+    "href": "14-sirontakuvio.html#trendiviivan-lisääminen-hajontakuviin",
+    "title": "Hajontakuviot",
+    "section": "Trendiviivan lisääminen hajontakuviin",
+    "text": "Trendiviivan lisääminen hajontakuviin\nHajontakuviin voidaan lisätä trendiviiva, joka kuvaa kahden jatkuvan muuttujan välistä keskimääräistä yhteyttä. Trendiviivan lisääminen onnistuu geom_smooth()-komennolla, jossa oletuksena ilmaistaan paikallinen regressio (loess), mutta lineaarinen malli onnistuu määrittämällä komennossa method = \"lm\"-argumentti, joka tarkoittaa lineaarista mallia.\n\nESS2023 |&gt; ggplot(aes(x = Syntymävuosi, y = C1)) + \n    geom_point(position = \"jitter\") + \n    geom_smooth(method = \"lm\")",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Hajontakuviot</span>"
+    ]
+  },
+  {
+    "objectID": "15-kuvion-muokkaaminen.html",
+    "href": "15-kuvion-muokkaaminen.html",
+    "title": "Kuvioiden muokkaaminen",
+    "section": "",
+    "text": "Otsikot ja akselien nimet",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Kuvioiden muokkaaminen</span>"
+    ]
+  },
+  {
+    "objectID": "15-kuvion-muokkaaminen.html#teemat",
+    "href": "15-kuvion-muokkaaminen.html#teemat",
+    "title": "Kuvioiden muokkaaminen",
+    "section": "Teemat",
+    "text": "Teemat",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Kuvioiden muokkaaminen</span>"
+    ]
+  },
+  {
+    "objectID": "15-kuvion-muokkaaminen.html#värit",
+    "href": "15-kuvion-muokkaaminen.html#värit",
+    "title": "Kuvioiden muokkaaminen",
+    "section": "Värit",
+    "text": "Värit",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Kuvioiden muokkaaminen</span>"
+    ]
+  },
+  {
+    "objectID": "16-useita-muuttujia.html",
+    "href": "16-useita-muuttujia.html",
+    "title": "Useita muuttujia samassa kuviossa",
+    "section": "",
+    "text": "Käytetty aineisto\nTämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
+    ]
+  },
+  {
+    "objectID": "16-useita-muuttujia.html#pitkä-muoto-pivot_longer",
+    "href": "16-useita-muuttujia.html#pitkä-muoto-pivot_longer",
+    "title": "Useita muuttujia samassa kuviossa",
+    "section": "Pitkä muoto: pivot_longer",
+    "text": "Pitkä muoto: pivot_longer\n\nUseita boxploteja\n\n\nUseita pylväitä (100 %)\n\n\nUseita viivoja",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
+    ]
+  },
+  {
+    "objectID": "16-useita-muuttujia.html#facetit",
+    "href": "16-useita-muuttujia.html#facetit",
+    "title": "Useita muuttujia samassa kuviossa",
+    "section": "Facetit",
+    "text": "Facetit",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
+    ]
+  },
+  {
+    "objectID": "16-useita-muuttujia.html#patchwork-kuvioiden-yhdistäminen",
+    "href": "16-useita-muuttujia.html#patchwork-kuvioiden-yhdistäminen",
+    "title": "Useita muuttujia samassa kuviossa",
+    "section": "Patchwork: kuvioiden yhdistäminen",
+    "text": "Patchwork: kuvioiden yhdistäminen",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
+    ]
+  },
+  {
+    "objectID": "16-useita-muuttujia.html#sirontamatriisi-ggpairs-funktiolla",
+    "href": "16-useita-muuttujia.html#sirontamatriisi-ggpairs-funktiolla",
+    "title": "Useita muuttujia samassa kuviossa",
+    "section": "Sirontamatriisi ggpairs-funktiolla",
+    "text": "Sirontamatriisi ggpairs-funktiolla",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
+    ]
+  },
+  {
+    "objectID": "16-useita-muuttujia.html#korrelaatioheatmap",
+    "href": "16-useita-muuttujia.html#korrelaatioheatmap",
+    "title": "Useita muuttujia samassa kuviossa",
+    "section": "Korrelaatioheatmap",
+    "text": "Korrelaatioheatmap",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
+    ]
+  },
+  {
+    "objectID": "osa3-harjoitukset.html",
+    "href": "osa3-harjoitukset.html",
+    "title": "Osa 3: Harjoitustehtävät",
+    "section": "",
+    "text": "Tämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Osa 3: Harjoitustehtävät</span>"
+    ]
+  },
+  {
+    "objectID": "20-regressio.html",
+    "href": "20-regressio.html",
+    "title": "Regressioanalyysi",
+    "section": "",
+    "text": "Käytetty aineisto\nTämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "20-regressio.html#yksinkertainen-lineaarinen-regressio",
+    "href": "20-regressio.html#yksinkertainen-lineaarinen-regressio",
+    "title": "Regressioanalyysi",
+    "section": "Yksinkertainen lineaarinen regressio",
+    "text": "Yksinkertainen lineaarinen regressio",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "20-regressio.html#monimuuttujaregressio",
+    "href": "20-regressio.html#monimuuttujaregressio",
+    "title": "Regressioanalyysi",
+    "section": "Monimuuttujaregressio",
+    "text": "Monimuuttujaregressio",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "20-regressio.html#mallin-diagnostiikka",
+    "href": "20-regressio.html#mallin-diagnostiikka",
+    "title": "Regressioanalyysi",
+    "section": "Mallin diagnostiikka",
+    "text": "Mallin diagnostiikka",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "20-regressio.html#tulosten-raportointi",
+    "href": "20-regressio.html#tulosten-raportointi",
+    "title": "Regressioanalyysi",
+    "section": "Tulosten raportointi",
+    "text": "Tulosten raportointi",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "21-anova.html",
+    "href": "21-anova.html",
+    "title": "Varianssianalyysi",
+    "section": "",
+    "text": "Käytetty aineisto\nTämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Varianssianalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "21-anova.html#yksisuuntainen-varianssianalyysi",
+    "href": "21-anova.html#yksisuuntainen-varianssianalyysi",
+    "title": "Varianssianalyysi",
+    "section": "Yksisuuntainen varianssianalyysi",
+    "text": "Yksisuuntainen varianssianalyysi",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Varianssianalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "21-anova.html#post-hoc-testit",
+    "href": "21-anova.html#post-hoc-testit",
+    "title": "Varianssianalyysi",
+    "section": "Post-hoc-testit",
+    "text": "Post-hoc-testit",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Varianssianalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "21-anova.html#tulosten-tulkinta",
+    "href": "21-anova.html#tulosten-tulkinta",
+    "title": "Varianssianalyysi",
+    "section": "Tulosten tulkinta",
+    "text": "Tulosten tulkinta",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Varianssianalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "22-faktorianalyysi.html",
+    "href": "22-faktorianalyysi.html",
+    "title": "Faktorianalyysi",
+    "section": "",
+    "text": "Käytetty aineisto\nTämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Faktorianalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "22-faktorianalyysi.html#faktorianalyysin-tarkoitus",
+    "href": "22-faktorianalyysi.html#faktorianalyysin-tarkoitus",
+    "title": "Faktorianalyysi",
+    "section": "Faktorianalyysin tarkoitus",
+    "text": "Faktorianalyysin tarkoitus",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Faktorianalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "22-faktorianalyysi.html#faktoriluku-ja-rotatointi",
+    "href": "22-faktorianalyysi.html#faktoriluku-ja-rotatointi",
+    "title": "Faktorianalyysi",
+    "section": "Faktoriluku ja rotatointi",
+    "text": "Faktoriluku ja rotatointi",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Faktorianalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "22-faktorianalyysi.html#tulosten-tulkinta",
+    "href": "22-faktorianalyysi.html#tulosten-tulkinta",
+    "title": "Faktorianalyysi",
+    "section": "Tulosten tulkinta",
+    "text": "Tulosten tulkinta",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Faktorianalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "24-logistinen-regressio.html",
+    "href": "24-logistinen-regressio.html",
+    "title": "Logistinen regressioanalyysi",
+    "section": "",
+    "text": "Käytetty aineisto\nTämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Logistinen regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "24-logistinen-regressio.html#milloin-logistinen-regressio-sopii",
+    "href": "24-logistinen-regressio.html#milloin-logistinen-regressio-sopii",
+    "title": "Logistinen regressioanalyysi",
+    "section": "Milloin logistinen regressio sopii?",
+    "text": "Milloin logistinen regressio sopii?",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Logistinen regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "24-logistinen-regressio.html#logistinen-regressio-rllä",
+    "href": "24-logistinen-regressio.html#logistinen-regressio-rllä",
+    "title": "Logistinen regressioanalyysi",
+    "section": "Logistinen regressio R:llä",
+    "text": "Logistinen regressio R:llä",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Logistinen regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "24-logistinen-regressio.html#ristitulosuhteet-odds-ratios",
+    "href": "24-logistinen-regressio.html#ristitulosuhteet-odds-ratios",
+    "title": "Logistinen regressioanalyysi",
+    "section": "Ristitulosuhteet (odds ratios)",
+    "text": "Ristitulosuhteet (odds ratios)",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Logistinen regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "24-logistinen-regressio.html#mallin-sopivuus",
+    "href": "24-logistinen-regressio.html#mallin-sopivuus",
+    "title": "Logistinen regressioanalyysi",
+    "section": "Mallin sopivuus",
+    "text": "Mallin sopivuus",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Logistinen regressioanalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "osa4-harjoitukset.html",
+    "href": "osa4-harjoitukset.html",
+    "title": "Osa 4: Harjoitustehtävät",
+    "section": "",
+    "text": "Tämä luku on valmisteilla.",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Osa 4: Harjoitustehtävät</span>"
+    ]
+  }
+]
