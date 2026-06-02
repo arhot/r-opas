@@ -1,0 +1,11 @@
+---
+title: "Opiskeluohjeita ja lisäresursseja"
+---
+
+*Tämä luku on valmisteilla.*
+
+# Yleistä oppaan käytöstä
+
+## Tekoälyn hyödyntämisestä {#sec-tekoaly}
+
+##  SPSS-ympäristöstä R:ään siirtyvälle {#sec-spss-r} 

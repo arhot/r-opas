@@ -1,0 +1,10 @@
+---
+title: "Osa 4: Harjoitustehtävät"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+*Tämä luku on valmisteilla.*

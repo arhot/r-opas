@@ -1,0 +1,15 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.quarto/
+_book/
+*.rmarkdown
+*_files/
+taulukko*.xlsx
+yhdistetty_taulukko.xlsx
+kuvio.pdf
+kuvio.png
+site_libs/
+*.html
+

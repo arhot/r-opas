@@ -1,0 +1,128 @@
+---
+title: "Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+Tässä luvussa käydään läpi komennot, joiden avulla voit tehdä julkaisuvalmista, APA:n ohjeistuksen mukaista, taulukkoa muuttujien esittelyyn lukijalle raportissa tai tehtävässä. Aineistoon tutustumiseen sopivat lyhyet ja nopeat komennot esiteltiin luvussa @sec-tutustuminen. 
+
+Luokiteltujen muuttujien osalta esitellään vastaajamääriä ja prosenttijakaumia kuvaava frekvenssitaulukko, ja numeeristen muuttujien osalta esitellään keski- ja hajontalukuja kuvaava tunnuslukutaulukko.
+
+## Frekvenssijakauma, yksi muuttuja {#sec-frekvenssijakauma}
+
+Monipuolisia työkaluja julkaisuvalmiiden frekvenssi- ja ristiintaulukkojen tekemiseen tarjoaa `janitor`-paketin `tabyl()`-komento. Komento itsessään tekee frekvenssitaulukon, ja joukko `adorn_*`-komentoja mahdollistaa monipuoliset muokkaustyökalut. Tällä kertaa muokataan prosenttien muotoa komennolla `adorn_pct_formatting()` ja nimetään sarakkeet uudestaan suomenkielisiksi  `rename()`-komennolla.
+
+```{r}
+taulukko1 <- ESS2023 |>
+  tabyl(C1) |>
+  adorn_pct_formatting(digits = 1) |>
+  rename(
+    n = n,
+    `%` = percent, 
+    `% vastanneista` = valid_percent
+  )
+
+taulukko1
+```
+
+Kun taulukko on valmis, se voidaan tallentaa Excel-muodossa `write_xlsx()`-komennolla, jolloin sen voi liittää raporttiin tai tehtävään. 
+
+```{r}
+write_xlsx(taulukko1, "taulukko1.xlsx")
+```
+
+## Frekvenssijakauma ryhmittäin eli ristiintaulukko {#sec-ristiintaulukko}
+
+Ristiintaulukko on frekvenssijakauma, joka on jaettu ryhmittäin. Ristiintaulukko voidaan tehdä `tabyl()`-komennolla, jossa määritellään kaksi muuttujaa, joiden perusteella taulukko jaetaan. Tässä esimerkissä tarkastellaan kiinnostusta politiikkaan sukupuolen mukaan.
+
+`tabyl()` tekee ristiintaulukon, kun sille annetaan kaksi muuttujaa. Ensimmäinen muuttuja tulee riveille, toinen sarakkeille. Sen jälkeen taulukosta voi muokata haluamansa näköisen `adorn_*`-komentojen avulla. 
+
+Aloitetaan merkitsemällä kiinnostus politiikkaan ja sukupuoli tekijämuuttujiksi `mutate()`-komennolla, jotta saamme niihin selitetekstit näkyviin.
+
+Sen jälkeen tehdään ristiintaulukko `tabyl()`-komennolla, ja lisätään siihen Yhteensä-sarake ja -rivi `adorn_totals()`-komennolla.
+
+Laitetaan prosenttiosuudet näkyviin sarakkeittain `adorn_percentages("col")`-komennolla. Vaihtoehtoisesti prosenttiosuudet voisi laskea myös riveittäin `adorn_percentages("row")`-komennolla, jolloin prosenttiosuudet laskettaisiin kunkin rivin sisällä, tai koko taulukon osuutena `adorn_percentages("all")`-komennolla, jolloin prosenttiosuudet laskettaisiin koko taulukon osuutena. Nyt halutaan tietää miten kiinnostus jakautuu miesten joukossa, naisten joukossa, ja kokonaisuudessaan, joten prosenttiosuudet lasketaan sarakkeittain. Pyöristetään vielä prosenttiosuudet yhden desimaalin tarkkuuteen `adorn_pct_formatting(digits = 1)`-komennolla.
+
+Lisätään vielä vastaajamäärät näkyviin `adorn_ns(position = "rear")`-komennolla, jolloin vastaajamäärät tulevat sulkuihin prosenttiosuuksien jälkeen. `position="front"`-komennolla vastaajamäärät tulisivat ennen prosenttiosuuksia.
+
+```{r}
+ESS2023 <- ESS2023 |> mutate(`Kiinnostus politiikkaan` = as_factor(B1), Sukupuoli = as_factor(Sukupuoli))
+
+taulukko2 <- ESS2023 |>
+  tabyl(`Kiinnostus politiikkaan`, Sukupuoli) |>
+  adorn_totals(c("col", "row"), name="Yhteensä") |>
+  adorn_percentages("col") |>
+  adorn_pct_formatting(digits = 1) |>
+  adorn_ns(position = "rear")
+
+taulukko2
+
+write_xlsx(taulukko2, "taulukko2.xlsx")
+```
+## Tunnuslukutaulukko, yksi muuttuja {#sec-tunnuslukutaulukko}
+
+Julkaisukelpoisen ja tarpeen mukaan muokattavan tunnuslukutaulukon voi tehdä `summarise()`-komennolla, jossa määritellään halutut tunnusluvut. (Erotuksena `summary()`-komennosta, joka antaa vain tietyt luvut, ja jota käytetään aineiston nopeaan tarkasteluun luvun @sec-tutustuminen ohjeen mukaan.
+
+Esittelytaulukko voi yksinkertaisimmillaan olla vain keskiarvo ja keskihajonta, mutta tässä laitetaan lisäksi minimi ja maksimi. Mitä tahansa haluttuja tunnuslukuja voi lisätä samalla logiikalla.
+```{r}
+taulukko3 <- ESS2023 |> summarise(
+  Muuttuja = "Onnellisuus",
+  keskiarvo = mean(C1, na.rm = TRUE),
+  keskihajonta = sd(C1, na.rm = TRUE),
+  minimi = min(C1, na.rm = TRUE),
+  maksimi = max(C1, na.rm = TRUE)
+)
+
+taulukko3
+```
+
+## Tunnuslukutaulukko, useampia muuttujia samassa taulukossa {#sec-tunnuslukutaulukko-useampi}
+
+Jos halutaan useampia muuttujia samaan taulukkoon, voidaan tehdä erikseen taulukko jokaisesta muuttujasta ja yhdistää ne sitten `bind_rows()`-komennolla. Tällöin on hyvä määritellä muuttujan nimi omaksi muuttujakseen, jotta taulukko on selkeä.
+
+Numeeriset sarakkeet voi pyöristää halutun tarkkuisiksi `mutate()`-komennolla, jossa määritellään `across(where(is.numeric), ~ round(.x, 2))`, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.
+
+```{r}
+taulukko4 <- ESS2023 |> summarise(
+  Muuttuja = "Kiinnostus politiikkaan",
+  keskiarvo = mean(B1, na.rm = TRUE),
+  keskihajonta = sd(B1, na.rm = TRUE),
+  minimi = min(B1, na.rm = TRUE),
+  maksimi = max(B1, na.rm = TRUE),
+)
+
+taulukko4
+
+yhdistetty_taulukko <- bind_rows(taulukko3, taulukko4) |>
+  mutate(
+    across(where(is.numeric), ~ round(.x, 2))
+  )
+
+yhdistetty_taulukko
+
+write_xlsx(yhdistetty_taulukko, "yhdistetty_taulukko.xlsx")
+```
+
+## Tunnuslukutaulukko, ryhmittäin {#sec-tunnuslukutaulukko-ryhmittain}
+
+Jos halutaan tunnuslukutaulukko, joka on jaettu ryhmittäin, voidaan käyttää `group_by()`-komentoa, jolla määritellään ryhmittelymuuttuja, ja sitten `summarise()`-komentoa, jolla määritellään halutut tunnusluvut.
+
+
+```{r}
+taulukko5 <- ESS2023 |> group_by(Sukupuoli) |> summarise(
+  keskiarvo = mean(C1, na.rm = TRUE),
+  keskihajonta = sd(C1, na.rm = TRUE),
+  minimi = min(C1, na.rm = TRUE),
+  maksimi = max(C1, na.rm = TRUE)
+)
+
+taulukko5
+
+write_xlsx(taulukko5, "taulukko5.xlsx")
+```
+
+## Korrelaatio {#sec-korrelaatio}
+

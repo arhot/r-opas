@@ -1,0 +1,26 @@
+---
+title: "Laatikko-jana -kuviot eli boxplotit"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+## Boxplotin rakenne
+
+Muuttujien jakaumaa voidaan kuvata tunnuslukuja kuvaavilla laatikko-jana -kuvioilla. Kuviossa voidaan esittää kaksi hajontalukua siten, että toista kuvataan laatikolla eli suorakaiteella ja toista Janalla, joka kulkee laatikon läpi. Lisäksi yleensä esitetään yksi keskiluku laatikon halkaisevan viivan muodossa.
+
+Yleensä kuviossa esitetään keskilukuna mediaani ja tämän ympäriltä laatikolla 25. ja 75. persentiili. Laatikon koko kuvaa näin siis kvartiiliväliä (Interquartile range). Janalla voidaan esittää minimi ja maksimi, mutta usein nillä ilmaistaan vielä korostetun poikkeavia havaintoja siten, että janan pituus laatikon reunasta 1,5 kertaa kvartiiliväli eli laatikon pituus. Tämän ulkopuolelle jäävät havainnot merkitään kuvioon erillisinä pisteinä kuten hajointakuviossa.
+
+## Boxplot R:llä
+
+Yhden muuttujan jakaumaa toisen luokissa voi kuvata seuraavalla boxplotilla:
+```{r}
+# Esimerkki boxplotin piirtämisestä ggplot2:lla
+ESS2023 |> ggplot(aes(x = as_factor(F14), y = Syntymävuosi)) +
+  geom_boxplot() + coord_flip()
+```
+
+
+

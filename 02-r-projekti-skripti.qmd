@@ -1,0 +1,42 @@
+---
+title: "Kooditiedostot (.R, .Rmd), R-projekti ja skriptit"
+---
+
+Tässä luvussa esitellään keskeisimmät tiedostotyypit, joita R-käytössä tarvitaan: erilaiset tiedostot, joihin analyysikoodeja voidaan kirjoittaa ja kerätä, tyypilliset aineistotiedostot, joissa dataa tuodaan R:ään ja tallennetaan, sekä tyypilliset tuotostiedostot, joihin analyysien tuloksia tallennetaan. Lisäksi esitellään R-projekti, joka on R-käytössä hyödyllinen tapa organisoida ja hallita analyysitiedostoja, aineistoja ja tuotoksia.
+
+Luku on sijoitettu oppaan alkuun muiden ylätason asioiden kanssa. Jos olet ensimmäistä kertaa tutustumassa R:n käyttöön, suosittelen kuitenkin aloittamaan perusanalyyseistä!
+
+## Kooditiedostot
+
+
+
+## R-projekti
+
+projektihakemisto
+työhakemisto
+
+
+## Skriptitiedosto
+
+funktio
+
+objekti 
+
+argumentti
+
+$
+
+|> 
+
+aineisto <- aineisto |> muokkaukset 
+
+## Kommentit ja koodin rakenne
+
+.r 
+.RMD
+## Koodin ajaminen
+
+
+## Aineistotiedostot
+
+## Tuotostiedostot: kuviot, taulukot, raportit

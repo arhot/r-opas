@@ -1,0 +1,54 @@
+---
+title: "Pylväskuviot"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+## Yksinkertainen pylväskuvio
+
+Ihan perustapaus käsiteltiin jo johdannossa, mutta tässä kertauksena:
+
+```{r}
+ESS2023 |> ggplot(aes(x = C1)) + 
+    geom_bar()
+```
+## Ryhmitelty pylväskuvio
+
+Tämä komento tuottaa ryhmitellyn pylväskuvion, jossa on kolme pylvästä, jotka kuvaavat koettua onnellisuutta sukupuolittain. `position = "dodge"`-argumentti määrittää, että pylväät asetetaan vierekkäin eikä päällekkäin.
+
+```{r}
+ESS2023 |> ggplot(aes(x = C1, fill = as_factor(Sukupuoli))) + 
+    geom_bar(position = "dodge") 
+```
+
+## Sama vaakasuuntaan
+
+Koko kuvion voi kellauttaa kyljelleen `coord_flip()`-komennolla, jolloin pylväät asetetaan vaakasuuntaan. Tämä on hyödyllistä, jos x-akselilla on paljon luokkia tai pitkät luokkien nimet, jotka eivät mahdu pystyyn. Sama lopputulos olisi toki saatu laittamalla C1 suoraan y-akselille, mutta yleensä on helpointa tehdä komennot saman sapluunan mukaan ja kääntää jos tarve ilmenee.
+```{r}
+ESS2023 |> ggplot(aes(x = C1, fill = as_factor(Sukupuoli))) + 
+    geom_bar(position = "dodge") + 
+    coord_flip()
+```
+
+## Histogrammi
+
+Histogrammi on erikoistapaus pylväskuvioista, jossa x-akselilla on numeerinen muuttuja, joka on jaettu luokkiin (bin). Histogrammissa pylväät kuvaavat havaintojen määrää kussakin luokassa.
+
+```{r}
+ESS2023 |> ggplot(aes(x = Syntymävuosi)) + 
+    geom_histogram()
+```
+
+
+## 100% pylväskuvio
+
+Jos halutaan keskittyä suhteellisiin osuuksiin eikä havaintojen määrään, voidaan käyttää `position = "fill"`-argumenttia, jolloin pylväät skaalautuvat samaan korkeuteen ja kuvio näyttää kunkin luokan osuuden koko pylväästä.
+
+```{r}
+ESS2023 |> ggplot(aes(x = as_factor(Sukupuoli), fill = as_factor(B4))) + 
+    geom_bar(position = "fill") + 
+    labs(y = "Prosenttiosuus")
+```

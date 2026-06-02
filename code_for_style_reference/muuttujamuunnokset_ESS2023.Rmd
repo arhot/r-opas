@@ -1,0 +1,132 @@
+---
+title: "Muuttujamuunnokset — ESS 2023 Suomi"
+output: html_document
+---
+
+# Työkalujen lataus
+
+```{r}
+library(tidyverse)
+library(haven)
+library(forcats)
+library(labelled)
+
+ess <- read_sav("data/ESS2023_Suomi.sav")
+```
+
+---
+
+# Muuttujamuunnokset
+
+## Tyyppi 1 — Laskutoimitus: ikä syntymävuodesta
+
+Aineistossa on syntymävuosi (`Syntymävuosi`), mutta analyyseissä tarvitaan ikä. Ikä lasketaan yksinkertaisella vähennyslaskulla. ESS 2023 on kerätty vuonna 2023, joten laskutoimitus on `2023 - Syntymävuosi`.
+
+```{r}
+ess <- ess |>
+  mutate(Ikä = 2023 - Syntymävuosi)
+
+summary(ess$Ikä)
+```
+
+---
+
+## Tyyppi 2 — Luokittelu: ikäryhmät numeerisesta iästä
+
+Jatkuva ikämuuttuja voidaan jakaa luokkiin komennolla `cut()`. Argumentti `breaks` määrittelee luokkarajat ja `labels` niiden nimet. Luokkia syntyy aina yksi vähemmän kuin rajakohtia.
+
+Ensimmäisen rajakohdan on oltava **pienempi** kuin pienin arvo aineistossa, jotta pienin arvo ei putoa luokittelun ulkopuolelle. `Inf` viimeisenä ylärajana tarkoittaa, että kaikki suurimmat arvot kuuluvat viimeiseen luokkaan ilman ylärajaa.
+
+```{r}
+ess <- ess |>
+  mutate(Ikäryhmä = cut(Ikä,
+                        breaks = c(14, 29, 44, 59, 74, Inf),
+                        labels = c("15–29", "30–44", "45–59", "60–74", "75+")))
+
+table(ess$Ikäryhmä)
+```
+
+---
+
+## Tyyppi 3 — Uudelleenluokittelu: maakunnista suuralueet
+
+Kun luokitellussa muuttujassa on liikaa luokkia, niitä voi yhdistää `fct_collapse()`-komennolla. Logiikka on `"uusi luokka" = c("vanha luokka 1", "vanha luokka 2")`. Jos vanhoja luokkia on vain yksi, `c()`:ta ei tarvita.
+
+```{r}
+ess <- ess |>
+  mutate(
+    Suuralue = as_factor(Maakunta) |>
+      fct_collapse(
+        "Helsinki-Uusimaa"      = "Helsinki-Uusimaa",
+        "Länsi-Suomi"           = c("Keski-Suomi", "Etelä-Pohjanmaa", "Pohjanmaa",
+                                    "Satakunta", "Pirkanmaa"),
+        "Etelä-Suomi"           = c("Varsinais-Suomi", "Kanta-Häme", "Päijät-Häme",
+                                    "Kymenlaakso", "Etelä-Karjala"),
+        "Pohjois- ja Itä-Suomi" = c("Etelä-Savo", "Pohjois-Savo", "Pohjois-Karjala",
+                                    "Kainuu", "Keski-Pohjanmaa", "Pohjois-Pohjanmaa",
+                                    "Lappi"),
+        "Ahvenanmaa"            = "Åland"
+      )
+  )
+
+table(ess$Suuralue)
+```
+
+---
+
+## Tyyppi 4 — Indeksimuuttuja: luottamus instituutioihin
+
+Kun useampi kysymys mittaa samaa asiaa, niistä voi laskea yhden yhteisen muuttujan. `rowMeans(pick(...))` laskee jokaiselle vastaajalle valittujen muuttujien rivin keskiarvon.
+
+`pick()` valitsee muuttujia, mutta vain sen yhden laskutoimituksen ajaksi (toisin kuin `select()`, joka pysyvästi rajaisi aineistoa). Argumentti `na.rm = TRUE` tarkoittaa, että vastaaja jolla on yksi puuttuva arvo saa silti keskiarvon jäljelle jäävistä osioista.
+
+```{r}
+ess <- ess |>
+  mutate(
+    luottamus_ka = rowMeans(pick(trstprl, trstlgl, trstplc, trstplt, trstprt),
+                            na.rm = TRUE)
+  )
+
+summary(ess$luottamus_ka)
+```
+
+> Summamuuttujien rakentaminen, osioiden valinta ja sisäisen johdonmukaisuuden tarkistus (Cronbachin alfa) käsitellään tarkemmin omassa luvussaan (luku 08).
+
+---
+
+## Tyyppi 5 — Standardointi: z-pisteet
+
+Standardointi muuttaa muuttujan asteikon niin, että **keskiarvo = 0** ja **keskihajonta = 1**. Komento `scale()` tekee tämän automaattisesti. Tulos muunnetaan numeeriseksi vektoriksi `as.numeric()`-komennolla, jotta se käyttäytyy myöhemmissä analyysivaiheissa odotetusti.
+
+```{r}
+ess <- ess |>
+  mutate(stflife_z = as.numeric(scale(stflife)))
+
+summary(ess$stflife_z)
+```
+
+Positiivinen z-arvo tarkoittaa, että vastaaja on yli otoksen keskiarvon; negatiivinen, että hän on sen alapuolella. Arvo ±1 vastaa yhden keskihajonnan etäisyyttä keskiarvosta.
+
+---
+
+## Lisäesimerkit
+
+### Suunnan kääntö: Likert-väittämä 1–5
+
+Muuttujan suunnan voi kääntää yksinkertaisella laskutoimituksella. Asteikolla 1–5 kaava on `6 - vanha_arvo`: arvo 1 muuttuu arvoksi 5, arvo 2 arvoksi 4 ja niin edelleen — asteikon keskikohta 3 pysyy ennallaan.
+
+```{r}
+# Esimerkki yksittäiselle muuttujalle
+ess <- ess |>
+  mutate(imuehome_kaannetty = 6 - imuehome)
+```
+
+### Suunnan kääntö useampaan muuttujaan kerralla
+
+`across()` toistaa saman muunnoksen kaikille valituille muuttujille. Lambda-funktio `\(x) 6 - x` kertoo, mitä kullekin tehdään. `.names = "{col}_k"` tallentaa tulokset uusiin muuttujiin alkuperäisten nimien perään — alkuperäiset säilyvät aineistossa.
+
+```{r}
+# Esimerkki: käännetään kaikki imc-alkuiset maahanmuuttoasenne-osiot (asteikko 1–5)
+ess <- ess |>
+  mutate(across(starts_with("imc"), \(x) 6 - x, .names = "{col}_k"))
+```

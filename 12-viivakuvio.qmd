@@ -1,0 +1,34 @@
+---
+title: "Viivakuviot"
+---
+```{r}
+#| include: false
+source("_common.R")
+```
+
+
+## Yhden muuttujan keskiarvoviiva toisen muuttujan arvoilla
+
+Viivakuviolla voidaan kuvata yhden muuttujan keskimääräistä kehitystä toisen arvon kasvaessa - tyypillisesti ajan kuluessa, jolloin aikamuuttuja on x-akselilla. 
+
+`ggplot2`:lla tämän voi tehdä kahdella eri tavalla: joko lasketaan keskiarvot komennon osana `stat_summary()`-komennolla, tai lasketaan keskiarvot erikseen ja piirretään viivakuva näiden keskiarvojen perusteella. 
+
+Ensimmäinen on lyhyempi, mutta rikkoo vähän perussapluunaa - nyt `stat_summary()`-komennolla määritellään sekä laskukaava että se, millainen kuvio halutaan - nyt siis halutaan keskiarvo (fun = mean) ja viivakuva (geom = "line"). 
+
+```{r}
+ESS2023 |> ggplot(aes(x = Syntymävuosi, y = C1)) +
+  stat_summary(fun = mean, geom = "line")
+```
+
+Toinen tapa on laskea keskiarvot ensin erikseen omaan taulukkoon. Tässä hyödynnetään luvussa 18 {@sec:taulukot} esiteltyä tapaa koota haluttuja tunnuslukuja taulukoksi, ja näin saatu taulukko toimii sitten kuvion aineistona. 
+
+Nyt sapluuna on siis normaali - paitsi aineistona on juuri tehty taulukko.
+
+```{r}
+keskiarvot <- ESS2023 |> group_by(Syntymävuosi) |> summarise(C1_keskiarvo = mean(C1, na.rm = TRUE))
+
+keskiarvot |> ggplot(keskiarvot, aes(x = Syntymävuosi, y = C1_keskiarvo)) + 
+  geom_line()
+```
+
+Tässä yksinkertaisessa tapauksessa toimintatavoilla ei ole juuri eroa, mutta jälkimmäinen on helpommin laajennettavissa. Usein sama informaatio myös halutaan esittää sekä taulukkona että kuviona. 

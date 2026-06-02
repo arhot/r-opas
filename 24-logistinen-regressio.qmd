@@ -1,0 +1,20 @@
+---
+title: "Logistinen regressioanalyysi"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+*Tämä luku on valmisteilla.*
+
+## Käytetty aineisto
+
+## Milloin logistinen regressio sopii?
+
+## Logistinen regressio R:llä
+
+## Ristitulosuhteet (odds ratios)
+
+## Mallin sopivuus

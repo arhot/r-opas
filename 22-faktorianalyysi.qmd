@@ -1,0 +1,18 @@
+---
+title: "Faktorianalyysi"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+*Tämä luku on valmisteilla.*
+
+## Käytetty aineisto
+
+## Faktorianalyysin tarkoitus
+
+## Faktoriluku ja rotatointi
+
+## Tulosten tulkinta

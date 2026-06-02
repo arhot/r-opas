@@ -1,0 +1,15 @@
+---
+title: "Kuvioiden muokkaaminen"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+## Otsikot ja akselien nimet
+
+## Teemat
+
+## Värit
+

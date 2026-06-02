@@ -1,0 +1,52 @@
+---
+title: "Aineiston lukeminen R:ään ja tallentaminen"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+# Aineiston lukeminen R:ään
+
+R lukee aineiston mistä tahansa tiedostotyypistä, ja yksi sen vahvuuksista onkin laaja tuki erilaisille aineistomuodoille ja erityisesti erilaisten aineistolähteiden yhdistelylle. Tässä oppaassa keskitytään kuitenkin perustilanteeseen, jossa aineisto on jo siistissä taulukkomuodossa eli yksi rivi on yksi havainto ja yksi sarake on yksi muuttuja. Tällainen aineisto voi olla tallennettu esimerkiksi CSV-tiedostona, Excel-tiedostona tai SPSS-tiedostona, ja nämä esimerkit käydään tässä läpi. Tiedostot voivat olla tallennettuina omalle tietokoneelle, mutta R:ään voi lukea aineistoja myös suoraan verkosta.
+
+RStudiossa on aineiston lukemiseen valikkopohjainen polku, jossa on myös esikatselu, jonka perusteella voi muokata latauskomentoa ennen suoritusta. Valikkopolku generoi automaattisesti R-koodin, jonka voi kopioida ja liittää omaan skriptiin. Hyvä toimintatapa on ensimmäisellä latauksella käyttää tätä valikkopohjaista polkua, jotta näkee miten R-koodi muodostuu, ja sen jälkeen tallettaa koodi oman analyysitiedoston alkuun, josta sitä voi sitten muokata ja käyttää uudestaan.
+
+## CSV-tiedostot
+
+Comma Separated Values (CSV) on yleinen, tekstipohjainen ja ohjelmistoriippumaton tiedostomuoto taulukkomuotoisen aineiston lataamiseen. Tiedosto on yksinkertainen - siinä on ainoastaan yksi tekstimuotoinen arvo jokaista muuttujan arvoa kohden (tai tyhjä puuttuvat tieto). Pilkun sijasta erottimena käytetään usein puolipistettä (jos pilkku on varattu desimaalierottimeksi), ja komento pitää valita tämän mukaan - `read_csv()`-komento pilkkuerotetuille tiedostoille ja `read_csv2()`-komento puolipiste-erotetuille tiedostoille. CSV-tiedostossa tiedot ovat aina siistissä muodossa ja aineistot latautuvat yleensä ongelmitta. Tiedostoon ei ole kuitenkaan kirjattu muuttujien tyyppejä, ja aina R:n arvio muuttujatyypistä ei osu oikeaan ja ne pitää muokata tarvittaessa. 
+
+## Excel-tiedostot
+
+Excel-tiedostot voi lukea R:ään `readxl`-paketin `read_excel()`-komennolla. Yhdessä Excel-tiedostossa voi olla useampia taulukkomuotoisia aineistoja, jotka sijaitsevat eri välilehdillä ja luettava välilehti pitää määritellä. 
+
+Excel-tiedostot eivät välttämättä ole siistejä: muuttujien nimet eivät ole välttämättä ensimmäisellä rivillä, ja tiedostossa voi olla kaikkea muutakin kuin varsinaista tietoa - ihmiset jättävät tiedostoihin muistiinpanoja, tyhjää tilaa ja muuta ylimääräistä. Usein Excel-tiedostoja joutuu siis muokkaamaan ennen latausta (ja tässä tulee helposti virheitä).
+
+## SPSS-tiedostot
+
+SPSS-tiedostot voi lukea R:ään `haven`-paketin `read_sav()`-komennolla. SPSS-tiedostoissa on muutama edullinen ominaisuus: niihin on tallennettu muuttujien tyypit ja niissä on käytössä `labelled`-muuttujat, joissa on tallennettu myös muuttujien ja niiden arvojen selitteet. Muuttujatyypitkin usein perustuvat SPSS:n arvauksiin, joten jos käyttämässäsi aineistossa ei ole ihmisen tarkistamia muuttujatietoja, kannattaa ne tarkastaa.
+
+R:n omissa muuttujatyypeissä jokainen tieto kirjataan vain yhdessä formaatissa - sukupuolen kirjaus voi siis olla tekstimuotoinen "mies" ja "nainen", tai numeerinen 1 ja 2, mutta ei molempia. `labelled` tuo R:ään ominaisuuden, jossa voidaan kirjata sekä tekstimuotoinen että numeerinen arvo, kuten SPSS:ssä toimitaan. Samalla mahdollistuu selitetekstien kirjaaminen sekä kysymykselle että kunkin arvon merkitykselle ja useamman erilaisen puuttuvan tiedon huomiointi (esim. "en halua vastata" vs. "en tiedä"). Oletuksena `labelled`-muuttujat latautuvat R:ään numeerisina, ja analyysit tehdään numerojen perusteella, ja muuttuja pitää ensin muokata luokitelluksi `as_factor()`-komennolla, jonka jälkeen käytetään selitetekstejä.
+
+## Aineiston lataus verkosta
+
+R:ään voi lukea aineistoja suoraan verkosta, jos tiedostolla on julkinen URL-osoite. Tämä on kätevää, sillä tällöin ei tarvitse ladata aineistoa ensin omalle koneelle ja määritellä oikeaa tiedostopolkua. Verkko-osoitteesta luettaessa pitää kuitenkin huomioida, että URL-osoitteen pitää olla suora linkki tiedostoon, eikä esimerkiksi linkki verkkosivulle, josta tiedosto löytyy.
+
+Tämän oppaan esimerkeissä käytetään European Social Survey (ESS) 2023 Suomen aineistoa, jonka suomennettu versio on jaossa ei-kaupalliseen käyttöön CC BY-NC-SA 4.0 -lisenssin mukaisesti osoitteessa # korjaa osoite(`data/ESS2023_Suomi.sav`).
+
+```{r}
+# add a reference to everywhere 
+# Ladataan muokkaamaton aineisto verkosta 
+library(haven)
+ESS2023 <- read_sav("data/ESS2023_Suomi.sav")
+```
+
+
+Kun aineistoa on työstetty, se kannattaa tallentaa omalle koneelle, jotta sitä ei tarvitse ladata uudestaan verkosta joka ikiselle analyysille. 
+
+Tämä komento tallentaa muokatun aineiston omalle koneelle SPSS-tiedostona, jolloin kaikki muuttujatyyppitiedot ja selitetekstit säilyvät. Tiedosto tallennetaan komennolla työhakemistoon. Voit muuttaa työhakemiston esim. valikosta Session > Set Working Directory > Choose Directory, tai määritellä tiedostopolun suoraan komennossa, jolloin tiedosto tallentuu määritettyyn paikkaan.
+```{r}
+# Tallennetaan muokattu aineisto omalle koneelle .sav-tiedostona
+write_sav(ESS2023, "ESS2023_Suomi.sav")
+```

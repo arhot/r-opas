@@ -1,0 +1,28 @@
+---
+title: "Useita muuttujia samassa kuviossa"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+*Tämä luku on valmisteilla.*
+
+## Käytetty aineisto
+
+## Pitkä muoto: pivot_longer
+
+### Useita boxploteja
+
+### Useita pylväitä (100 %)
+
+### Useita viivoja
+
+## Facetit
+
+## Patchwork: kuvioiden yhdistäminen
+
+## Sirontamatriisi ggpairs-funktiolla
+
+## Korrelaatioheatmap

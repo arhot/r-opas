@@ -1,0 +1,46 @@
+---
+title: "Hajontakuviot"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+## Hajontakuvio kahdella jatkuvalla muuttujalla
+
+Hajontakuviolla voidaan tarkastella kahden jatkuvan muuttujan välistä yhteyttä. Hajontakuviossa jokainen piste kuvaa yhtä havaintoa, ja pisteiden sijainti kuviossa määräytyy näiden kahden muuttujan arvojen perusteella.
+
+```{r}
+ESS2023 |> ggplot(aes(x = Syntymävuosi, y = A1_min)) + 
+    geom_point()
+```
+
+## Hajontakuvion täristäminen
+
+Jos hajontakuviossa on paljon päällekkäisiä havaintoja, kuvio voi näyttää siltä, että havaintoja on vähemmän kuin todellisuudessa on. Tällöin voidaan käyttää `position = "jitter"`-argumenttia, joka lisää pisteisiin pientä satunnaista tärinää, jotta päällekkäiset havainnot erottuvat paremmin.
+
+```{r}
+ESS2023 |> ggplot(aes(x = Syntymävuosi, y = C1)) + 
+    geom_point(position = "jitter")
+```
+
+## Hajontakuvio kahdella jatkuvalla ja yhdellä luokitellulla muuttujalla
+
+Hajontakuvioon voidaan lisätä kolmas muuttuja, joka on luokiteltu. Tällöin pisteiden väri tai muoto voi kuvata luokitellun muuttujan eri luokkia. Esimerkiksi sukupuoli voidaan kuvata pisteiden värillä:
+
+```{r}
+ESS2023 |> ggplot(aes(x = Syntymävuosi, y = C1, color = as_factor(Sukupuoli))) + 
+    geom_point(position = "jitter")
+```
+
+## Trendiviivan lisääminen hajontakuviin
+
+Hajontakuviin voidaan lisätä trendiviiva, joka kuvaa kahden jatkuvan muuttujan välistä keskimääräistä yhteyttä. Trendiviivan lisääminen onnistuu `geom_smooth()`-komennolla, jossa oletuksena ilmaistaan paikallinen regressio (loess), mutta lineaarinen malli onnistuu määrittämällä komennossa `method = "lm"`-argumentti, joka tarkoittaa lineaarista mallia.
+
+
+```{r}
+ESS2023 |> ggplot(aes(x = Syntymävuosi, y = C1)) + 
+    geom_point(position = "jitter") + 
+    geom_smooth(method = "lm")
+```

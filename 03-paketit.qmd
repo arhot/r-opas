@@ -1,0 +1,14 @@
+---
+title: "Paketit"
+---
+
+# Paketit {#sec-paketit}
+*Tämä luku on valmisteilla.*
+
+## Mikä on R-paketti?
+
+## Paketin asentaminen
+
+## Paketin lataaminen käyttöön
+
+## Tässä oppaassa käytettävät paketit

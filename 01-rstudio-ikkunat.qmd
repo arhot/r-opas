@@ -1,0 +1,51 @@
+---
+title: "R-kieli, RStudio ja näiden käytöt"
+---
+
+R on ohjelmointikieli, joka on erityisen suosittu tilastollisessa analyysissä ja datatieteessä. Jokainen vaihe R-analyysissa tehdään siis R-kielisellä komennolla. Onneksi suurin osa komennoista hyödyntää englanninkielisiä sanoja - komento summary() tekee yhteenvedon pyydetystä asiasta, ja tämä on helppo ymmärtää ja muistaakin, ja helppo löytää jos asia unohtuu. Kun komennot pitää joka tapauksessa kirjoittaa muistiin, ne jäävät itselle muistiin ja ne voi saavutettavasti siirtää toiselle käyttäjälle.
+
+Komento voi siis näyttää esimerkiksi tältä:
+
+```{{r}}
+EuropeanSocialSurvey2023 |>
+  group_by(Ikäryhmä) |>
+  summarise(ka_Tyytyväisyys_elämään = mean(Tyytyväisyys_elämään, na.rm = TRUE))
+```
+
+Vaikka komennossa onkin paljon teknisiä yksityiskohtia, perusrakenne on kuitenkin aika selkeä: European Social Survey ryhmitellään ikäryhmittäin, ja lasketaan ikäryhmittäin keskiarvo tyytyväisyydestä elämään. 
+
+Valitettavasti tietokone on kuitenkin pilkuntarkka - komennot on kirjoitettava täsmälleen oikein. Tietokone ei aina ole avulias kertoessaan missä ongelma on. Useimmat asiat olisi myös mahdollista tehdä monella eri tavalla - R on aito ohjelmointikieli, jolla pystyy tekemään mitä vaan. Tyhjästä paperista aloittaminen on (millä tahansa kielellä) vaikeaa, ja kun tämä yhdistetään vaadittuun tarkkuuteen ja kielen rajoittamattomuuteen, on R-käytön oppimisessa kieltämättä haasteensa. 
+
+Tämä versio ei sitten enää toimisikaan (komennossa on kolme tyypillistä virhettä: puuttuva pilkku, sulku väärässä paikassa ja kirjoitusvirhe):
+
+```{{r}}
+EuropeanSocialSurvey2023 |>
+  groupby(Ikäryhmä)) |>
+  summarise(ka_Tyytyväisyys_elämään = mean(Tyytyväisyys_elämään na.rm = TRUE)
+```
+
+Tässä oppaassa yritetään madaltaa kynnystä kolmella konstilla: ensinnäkin oppaassa pyritään käyttämään tiettyjä sapluunoja. Oppaan komennoissa on tiettyjä toistuvia rakenteita. Vaikka nämä eivät olekaan ainoa tapa tehdä asioita R:ssä, niiden tarkoitus on auttaa aloittavaa käyttäjää ja toimia yksinkertaisena hakuteoksena. Toiseksi, oppaassa pyritään mahdollisimman paljon hyödyntämään englanninkielisiä komentoja, ei hankalasti luettavia matriisimerkintöjä. Nämä kaksi kohtaa konkreettisesti tarkoittavat, että oppaassa käytetään tidyverse-paketin komentoja - paketeista ja tidyversestä voit lukea luvussa @sec:paketit. 
+
+Kolmantena - ja ehkä tärkeimpänä - oppaassa opastetaan viisaaseen tekoälykalujen hyödyntämiseen. Modernit tekoälykalut ovat parhaimmillaan ohjelmointityyppisissä asioissa, sillä juuri siihen niitä on koulutettu. Nykyisin pilkkuvirheiden korjaukset hoituvat paljolti näillä työkaluilla, ja usein tekoälyltä voi pyytää suomen kielellä tarvittavan R-kielisen komennon. Ihminen on kuitenkin aina vastuussa oman koodinsa tuloksista, joten kokonaan ei voida välttyä komentojen ymmärtämiseltä ja oppimiselta. Luvussa @sec:tekoaly kerrotaan erilaisten tekoälykalujen hyödyntämisestä R-kielen oppimisessa ja käytössä huomioitavista yksityisyys- ja eettisistä näkökohdista. 
+
+Kuten mitä tahansa luonnollista puhuttua kieltäkin, R:ää voisi periaatteessa kirjoittaa missä tahansa tekstieditorissa. Käytännössä kuitenkin ohjelmointikieliä kirjoitetaan ja käytetään ns. integroiduissa kehitysympäristöissä (Integrated Development Environment IDE), jotka on suunniteltu helpottamaan ohjelmointia. Siinä missä tekstinkäsittelyohjelmiin on kerätty toimintoja, jotka helpottavat luonnollisen kielen kirjoittamista, IDE:ihin on kerätty toimintoja, jotka helpottavat koodin kirjoittamista, suorittamista ja tulosten tarkastelua.
+
+R:lle suosituin IDE on RStudio, joka on ilmainen ja avoimen lähdekoodin ohjelma. RStudio tarjoaa käyttäjälleen monia hyödyllisiä ominaisuuksia, kuten koodin korostuksen, virheiden tarkistuksen, aineistojen lataukset, kuvioiden tarkastelut ja tallennukset ja paljon muuta. Se on saatavilla Windowsille, Macille ja Linuxille. Tässä oppaassa opastetaan R-kielen käyttöön RStudion avulla. Samat toiminnallisuudet löytyvät toki muistakin IDE:sta.
+
+## RStudion neljä paneelia
+
+RStudion näkymä on oletuksena jaettu neljään paneeliin, joita voi tarvittaessa muuttaa ja järjestellä uudelleen omien työskentelytapojensa mukaan. 
+
+Oletusnäkymässä vasemmassa yläpaneelissa on lähdekoodi eli työstettävä analyysitiedosto tai -tiedostot. Tänne kirjoitetaan ja muokataan koodia. Samassa paneelissa voi myös tarkastella aineistoja taulukkonäkymässä. Tiedostoja voi olla auki useampia välilehdillä. Täällä voi muokata mitä tahansa tekstitiedostoja, mutta yleensä työstetään joko .R -tiedostoja, joissa on pelkkää R-koodia tai .Rmd -tiedostoja, joissa on R-koodia, ihmisen luettavaksi tarkoitettua tekstiä sekä taittokomentoja (otsikoinnit, lihavoinnit..) sekaisin. Suorittaessasi .R -tiedostosta komentoja tulosteet tulevat näkyviin vasemman alapaneelin konsoliin ja oikean alapaneelin Plots -välilehteen. .Rmd -tiedostosta saat sen sijaan halutessasi tulosteet näkyviin samaan välilehteen.
+
+Oikeassa yläpaneelissa on oletusvälilehtenä Environment, jossa näkyy käyttömuistissa olevat tiedot, eli konkreettisesti ladatut aineistot, tehdyt mallit ja vastaavat. Samassa paneelissa välilehtinä on myös History, jossa näkyy kaikki aiemmin kirjoitetut komennot sekä versionhallinta.
+
+Vasemmassa alapaneelissa on nk. konsoli, jonne oletuksena R-kielen komennot lähetetään ja tulokset näkyvät. Tänne voi kirjoittaakin komentoja, jolloin ne suoritetaan heti, mutta eivät jää mihinkään talteen. Yleensä käytännössä kaikki kannattaa kirjoittaa suoraan tiedostoon ja suorittaa sieltä. 
+
+Oikeassa alapaneelissa on useampia hyödyllisiä välilehtiä: Files näyttää tiedostokansion, ja täältä voi esim. ladata aineistoja. Plots näyttää piirtämäsi kuviot ja grafiikat, ja ne voi tallentaakin täältä kautta. Packages -välilehdellä on asentamasi työkalut eli paketit ja Help -välilehti puolestaan on haku R-kielen dokumentaatioon. Nykyisin toki apua yleensä haetaan verkosta tai tekoälykalujen avulla, mutta dokumentaatiosta voi hyvin tarkastaa miten jotain komentoa käytetään.
+
+## Asennusohjeet
+
+R-kieli ja RStudio asennetaan erikseen, mutta molemmat ovat ilmaisia ja avoimen lähdekoodin ohjelmia. Löydät käyttöjärjestelmällesi tarvittavat versiot näistä linkeistä:
+- **R** (versio 4.1.0 tai uudempi): <https://cran.r-project.org>
+- **RStudio**: <https://posit.co/download/rstudio-desktop/> 

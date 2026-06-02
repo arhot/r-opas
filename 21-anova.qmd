@@ -1,0 +1,18 @@
+---
+title: "Varianssianalyysi"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+*Tämä luku on valmisteilla.*
+
+## Käytetty aineisto
+
+## Yksisuuntainen varianssianalyysi
+
+## Post-hoc-testit
+
+## Tulosten tulkinta

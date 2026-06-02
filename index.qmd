@@ -1,0 +1,58 @@
+---
+title: "Lukijalle"
+---
+
+Tämä opas neuvoo, kuinka toteutat tilastollisia analyysejä **R-ympäristössä**. R on ilmainen,
+avoimen lähdekoodin ohjelmointikieli, jota käytetään laajalti yhteiskuntatieteellissä tilastollisessa analyysissä.
+
+Tämä opas on saanut inspiraationsa Tietoarkiston ylläpitämästä
+[SPSS-oppimisympäristöstä](https://www.fsd.tuni.fi/fi/palvelut/menetelmaopetus/kvanti/spss/): se kattaa samat aihepiirit samassa järjestyksessä, mutta SPSS-valikkotoimintojen
+sijasta käytetään R:ää ja erityisesti **tidyverse**-pakettiperhettä. Rakenne ei ole täsmälleen sama, mutta lähtökohtaisesti opas kattaa samat toiminnot.
+
+## Esimerkkien ja harjoitusten aineisto
+
+Esimerkkiaineistona ja harjoituksissa käytetään **European Social Survey 2023 -tutkimuksen Suomen aineistoa**
+(ESS 2023, Suomi). Aineistossa on 1 563 vastaajaa ja 354 muuttujaa. Muuttujat käsittelevät
+mm. poliittista osallistumista, hyvinvointia, sosiaalisia suhteita ja taustamuuttujia.
+
+Aineisto on tallennettu SPSS-muotoon (`.sav`) ja luetaan R:ään `haven`-paketilla.
+Muuttujat on tallennettu **numeerisina**, ja muuttuja-arvot saa käännettyä teksteiksi
+`as_factor()`-funktiolla.
+
+## Tarvittavat ohjelmat
+
+- **R** (versio 4.1.0 tai uudempi): <https://cran.r-project.org>
+- **RStudio**: <https://posit.co/download/rstudio-desktop/>
+
+## Tarvittavat paketit
+
+Asenna seuraavat paketit kerran R-konsoliin kirjoittamalla:
+
+```r
+install.packages(c(
+  "tidyverse",  # dplyr, ggplot2, tidyr, readr, forcats, stringr...
+  "haven",      # SPSS- ja Stata-tiedostojen lukeminen
+  "janitor",    # Frekvenssitaulukot ja aineiston siistiminen
+  "broom",      # Mallitulosten siistiminen taulukoksi
+  "psych",      # Faktorianalyysi ja kuvailevia tunnuslukuja
+  "corrr",      # Korrelaatiot tidyverse-tyyliin
+  "scales",     # Akseleiden muotoilu kuvioissa
+  "knitr",      # Taulukoiden tulostus
+  "writexl"     # Taulukoiden tallennus Excel-muotoon
+))
+```
+
+Kun paketit on asennettu, ne otetaan käyttöön `library()`-komennolla kunkin
+R-istunnon alussa (tai skriptin alussa).
+
+## Oppaan rakenne
+
+Opas jakautuu neljään osaan:
+
+1. **R- ja RStudio-perusteet** — ohjelmiston ikkunat, projektit, skriptit ja paketit
+2. **Havaintoaineiston käsittely** — aineiston avaaminen, muunnokset ja tallennus
+3. **Kuviot ggplot2:lla** — eri kuviotyypit ja niiden muokkaaminen
+4. **Analyysimenetelmät** — frekvenssit, ristiintaulukointi, korrelaatio, regressio jne.
+
+Luvut on tarkoitettu luettaviksi järjestyksessä, mutta myöhempiä lukuja voi
+käyttää myös yksittäisinä ohjeina.

@@ -1,0 +1,20 @@
+---
+title: "Regressioanalyysi"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+*Tämä luku on valmisteilla.*
+
+## Käytetty aineisto
+
+## Yksinkertainen lineaarinen regressio
+
+## Monimuuttujaregressio
+
+## Mallin diagnostiikka
+
+## Tulosten raportointi

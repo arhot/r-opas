@@ -1,0 +1,58 @@
+project:
+  type: book
+  output-dir: _book
+
+lang: fi
+
+book:
+  title: "R-opas"
+  subtitle: "Kvantitatiivisen analyysin opas R-ohjelmiston käyttäjille"
+  search: true
+  chapters:
+    - index.qmd
+    - part: "Osa 1: R- ja RStudio-perusteet"
+      chapters:
+        - 01-rstudio-ikkunat.qmd
+        - 02-r-projekti-skripti.qmd
+        - 03-paketit.qmd
+        - 04-oppaan_kayttajalle.qmd
+    - part: "Osa 2: Aineiston käsittely"
+      chapters:
+        - 05-aineiston-lukeminen.qmd
+        - 06-aineistoon-tutustuminen.qmd
+        - 07-muuttujamuunnokset.qmd
+        - 08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.qmd
+        - 09-painottaminen.qmd
+        - osa2-harjoitukset.qmd
+    - part: "Osa 3: Kuviot"
+      chapters:
+        - 10-ggplot2-perusteet.qmd
+        - 11-pylvaskuvio.qmd
+        - 12-viivakuvio.qmd
+        - 13-boxplot.qmd
+        - 14-sirontakuvio.qmd
+        - 15-kuvion-muokkaaminen.qmd
+        - 16-useita-muuttujia.qmd
+        - osa3-harjoitukset.qmd
+    - part: "Osa 4: Analyysimenetelmät"
+      chapters:
+        - 20-regressio.qmd
+        - 21-anova.qmd
+        - 22-faktorianalyysi.qmd
+        - 24-logistinen-regressio.qmd
+        - osa4-harjoitukset.qmd
+
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    code-fold: false
+    code-tools: true
+    highlight-style: github
+
+execute:
+  echo: true
+  warning: false
+  message: false

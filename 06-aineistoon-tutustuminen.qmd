@@ -1,0 +1,52 @@
+---
+title: "Aineistoon tutustuminen"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+## Aineiston rakenne
+
+Muista ladata aineisto luvun 5 ohjeiden mukaisesti. 
+
+Uuden aineiston kanssa työskentely alkaa tutustumalla siihen. Tärkeämpää kuin tässä tapahtuva ladatun aineiston tarkastelu on aineiston dokumentaatioon tutustuminen, eli lue aineiston kanssa jaettu koodikirja tai vastaava dokumentaatio.
+
+Ainakin kolmella tavalla voi varmistaa R:ssä, että aineisto on latautunut oikein:
+
+head() -komennolla näkee aineiston ensimmäiset rivit (oletuksena 6 riviä) ja sarakkeet (määrä riippuu näytön koosta), ja näin varmistuu, että aineisto on ladattu ja että se näyttää siltä kuin pitääkin. Tulosteessa sarakkeiden nimien alla näkyy muuttujan tyyppi kulmasulkeissa <>. dbl eli double tarkoittaa numeerista muuttujaa, chr eli character tarkoittaa tekstimuotoista muuttujaa, fct eli factor tarkoittaa luokiteltua tekstiä, jossa on määritettynä selitetekstit kullekin arvolle ja lbl tarkoittaa labelled-muuttujaa, jossa on tallennettu sekä numeerinen että tekstimuotoinen arvo ja selitetekstit. 
+
+ESS-aineiston osalta esimerkiksi voimme tarkistaa, että sukupuoli on latautunut labelled-muuttujana, jossa on tallennettu sekä numeerinen että tekstimuotoinen arvo ja selitetekstit, ja että syntymävuosi on latautunut numeerisena muuttujana.
+```{r}
+head(ESS2023)
+```
+
+names() -komennolla näkee aineiston sarakkeiden nimet, ja näin varmistuu, että kaikki sarakkeet ovat ladattu ja että ne on nimetty oikein. Tässä esimerkkiaineistossa eräät rekisteritiedot on jo nimetty selkeillä suomenkielisillä nimillä, mutta suurin osa muuttujista on nimetty koodikirjan mukaisesti, joka ei välttämättä ole kovin kuvaava. Koodikirja kannattaa siis pitää auki, jotta ymmärtää mitä kukin muuttuja tarkoittaa.
+```{r}
+names(ESS2023)
+```
+
+view() -komennolla näkee aineiston taulukkonäkymässä RStudiossa. Saman näkymän voi avata myös hiirellä klikkaamalla aineiston nimeä Environment-paneelissa. 
+
+```{r}
+view(ESS2023)
+```
+
+## Muuttujien tarkastelu {#sec-tutustuminen}
+
+Seuraavaksi on hyvä tarkastella mielenkiinnon kohteena olevia muuttujia. Pikaiseen tarkasteluun tutkijan näytöllä toimii esimerkiksi `summary()` -komento, joka antaa muuttujista keski- ja hajontalukuja. 
+
+Otetaan siis aineisto, sitten valitaan komennolla `select()`-komennolla tarkasteltavat muuttujat, ja lopuksi `summary()`-komennolla saadaan jakaumaa kuvaavat keski- ja hajontaluvut sekä puuttuvien tietojen määrä. Poimitaan nyt aineiston muuttujista syntymävuosi, sukupuoli ja koettu onnellisuus C1. 
+
+
+```{r}
+ESS2023 |> select(Syntymävuosi, Sukupuoli, C1) |> summary()
+```
+
+Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa, sillä se on luokiteltu teksti, jossa on määritettynä selitetekstit kullekin arvolle. Luokitelluista muuttujista halutun tiedon voi poimia esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.
+```{r}
+ESS2023 |> count(Sukupuoli)
+```
+
+`summary` on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa {@sec:muuttujien_esittely_taulukot}.

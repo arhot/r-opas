@@ -1,0 +1,158 @@
+---
+title: "Muuttujamuunnokset"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+## Muuttujamuunnokset tidyverse-tyyliin
+
+Tässä oppaassa käytetään kaikkien muuttujamuunnostentekemiseen samaa perussapluunaa, joka on muotoa:
+
+aineisto <- aineisto |> 
+  mutate(uusi_muuttuja = komento(vanha_muuttuja)) 
+
+mutate() -komennolla luodaan uusi muuttuja, joka tallennetaan vanhan muuttujan perään. Komennon sisällä määritellään uuden muuttujan nimi ja laskukaava, joka kertoo miten uusi muuttuja lasketaan vanhasta. 
+
+Koska muuttujamuunnos halutaan käyttöön seuraavissa analyyseissä, tallennetaan uusi aineisto vanhan päälle. Näin kaikki myöhemmät komennot käyttävät uutta muuttujaa, joka on laskettu vanhasta.
+
+## Yksikertaiset laskutoimitukset 
+Vastaajan ikä voidaan laskea suoralla vähennyslaskulla. ESS 2023 on kerätty vuonna 2023, joten laskutoimitus on `2023 - Syntymävuosi`. Tulos tallennetaan uudeksi muuttujaksi `mutate()`-komennolla.
+
+Laskutoimintoja kuten +, -, *, / ja ^ voidaan käyttää sellaisenaan eli niihin ei tarvita erillistä funktiota.
+
+```{r}
+ESS2023 <- ESS2023 |> 
+  mutate(Ikä = 2023 - Syntymävuosi)
+```
+
+Tämä komento ei tulosta mitään näytölle, vaan ainoastaan aineistoon. Siksi kannattaa heti tarkastaa mitä tuli tehtyä.
+
+```{r}
+ESS2023 |> select(Ikä) |> summary()
+```
+
+## Luokitelluksi merkitseminen
+
+Usein on tarpeen muuttaa muuttuja luokitelluksi, ilman että mitään varsinaisia muutoksia tehdään. Erityisen tärkeää tämä on `labelled`-muuttujien kanssa, joissa on sekä numero- että tekstiarvo tallennettuna. Toimenpiteen jälkeen R tietää, että kyseistä muuttujaa kohdellaan luokiteltuna. 
+
+```{r}
+ESS2023 <- ESS2023 |> 
+  mutate(Sukupuoli = as_factor(Sukupuoli))
+```
+
+
+```{r}
+ESS2023 |> select(Sukupuoli) |> summary()
+```
+## Numeroiden luokittelu
+
+Jatkuva muuttuja voidaan jakaa luokkiin komennolla `cut()`. Argumentti `breaks` määrittelee luokkarajat ja `labels` niiden nimet. Luokkia syntyy aina yksi vähemmän kuin rajakohtia — 4 rajakohtaa tuottaa siis 3 luokkaa.
+
+Ryhmien määrittelyssä pitää huomioida, että luokkarajan kohdalla oleva arvo menee pienempään ryhmään. Ensimmäisen rajakohdan on siis oltava *pienempi* kuin aineiston pienin arvo (ei sama kuin pienin arvo!), jotta se ei jää luokittelun ulkopuolelle. Kaikki arvot ensimmäisen rajakohdan alapuolella tai viimeisen yläpuolella muuttuvat automaattisesti puuttuviksi (`NA`). 
+
+```{r}
+ESS2023 <- ESS2023 |> 
+  mutate(Ikäryhmä = cut(Ikä,
+                        breaks = c(0, 35, 59, 99),
+                        labels = c("Alle 35", "35-59", "60 ja yli")))
+
+ESS2023 |> count(Ikäryhmä)
+```
+
+## Muuttujan uudelleenkoodaus
+
+## Uudelleenkoodaus: muuttujan arvojen uudelleensuuntaaminen laskemalla
+
+Usein halutaavan kääntää muuttujan asteikko. Esimerkiksi Likert-väittämien vastaukset on usein koodattu niin, että pieni arvo tarkoittaa positiivista mielipidettä ja suuri negatiivista — tai päinvastoin. Ennen kuin muuttujia yhdistetään summamuuttujaksi, niiden suunnan on oltava sama.
+
+Asteikolla 1–5 suunta käännetään yksinkertaisella laskutoimituksella: `uusi_arvo = 6 - vanha_arvo`. Arvo 1 muuttuu arvoksi 5, arvo 2 arvoksi 4 ja niin edelleen — asteikon keskikohta 3 pysyy paikallaan.
+
+```{r}
+# Yksi muuttuja kerrallaan
+ESS2023 <- ESS2023 |> 
+  mutate(B33_kaannetty = 6 - B33)
+```
+
+Tässä kuitenkin menetetään muuttujaryhmien selitteet ja laskutoimituksen tuloksena on vain numeroita.
+
+```{r}
+ESS2023 |> select(B33, B33_kaannetty) |> head()
+```
+
+Jos käännetään useampia muuttujia kerralla, `across()` toistaa saman laskutoimituksen kaikille valituille. Lambda-funktio `\(x) 6 - x` kertoo, mitä kullekin muuttujalle tehdään, ja `.names = "{col}_kaannetty"` tallentaa tulokset uusiin muuttujiin alkuperäisten nimien perään — jolloin alkuperäiset säilyvät aineistossa muuttumattomina. Alkuperäiset muuttujat A4, A5 ja A6 mittasivat luottamusta (isommat arvot tarkoittivat enemmän luottamusta), ja nyt uudet muuttujat A4_kaannetty, A5_kaannetty ja A6_kaannetty mittaavat epäluottamusta (isommat arvot tarkoittavat enemmän epäluottamusta).
+
+```{r}
+ESS2023 <- ESS2023 |> 
+  mutate(across(c(A4, A5, A6), \(x) 10 - x, .names = "{col}_kaannetty"))
+```
+
+## Summamuuttujan laskeminen
+
+Summamuuttuja on useammasta muuttujasta summana tai keskiarvona laskettu uusi muuttuja. Senkin voi sinänsä laskea ihan yksinkertaisena laskutoimituksena:
+```{r}
+ESS2023 <- ESS2023 |> 
+  mutate(epäluottamus_summamuuttuja_suora_keskiarvo = (A4_kaannetty+A5_kaannetty+A6_kaannetty)/3)
+```
+
+Usein kuitenkin halutaan huomioida puuttuvat tiedot, jolloin laskukaava on hieman monimutkaisempi. Tällöin `rowMeans()`-komentoa käytetään laskukaavana. `rowMeans()`laskee nimensä mukaisesti jokaiselle riville eli vastaajalle oman keskiarvon. Kun puuttuvat tiedot jätetään huomiotta keskiarvon laskennassa argumentilla `na.rm = TRUE`, saadaan keskiarvo laskettua niillekin vastaajille, joilta puuttuu osa tiedoista.
+
+```{r}
+ESS2023 <- ESS2023 |>
+  mutate(
+    epäluottamus_summamuuttuja_keskiarvo_puuttuvat =  
+      pick(A4_kaannetty, A5_kaannetty, A6_kaannetty) |>
+      rowMeans(na.rm = TRUE))
+```
+
+Verrataan vielä eroa - nyt ensimmäisellä tavalla muutama vastaaja putosi pois summamuuttujasta, koska heiltä puuttui tieto jostain kolmesta alkuperäisestä muuttujasta, mutta toisella tavalla he saivat keskiarvon niistä tiedoista, jotka heiltä oli saatu.
+```{r}
+ESS2023 |> select(epäluottamus_summamuuttuja_suora_keskiarvo, epäluottamus_summamuuttuja_keskiarvo_puuttuvat) |> summary()
+```
+
+## Myönteisten vastausten lukumäärä muuttujajoukossa
+
+Jos halutaan laskea, kuinka monesta väittämästä vastaaja on vastannut tietyllä tavalla - tässä siis "Kyllä" poliittisen aktiivisuuden kysymyksiin, voidaan käyttää `rowSums()`-komentoa, joka laskee rivittäisen summan. 
+
+Nyt pitää määritellä muuttujat vähän monimutkaisemmin kuin summamuuttujassa, sillä pitää kertoa mistä arvo "Kyllä" löytyy. Nyt sen numeroarvo oli 1. Argumentti `across(B15:B22, ~ . == 1)` kertoo, että laskettavaksi valitaan muuttujat B15–B22 ja että niistä lasketaan vain ne, joissa arvo on 1 (myönteinen vastaus). 
+
+Argumentti `na.rm = TRUE` kertoo, että puuttuvat tiedot jätetään huomiotta laskennassa.
+
+Jos muuttuja olisi määritelty luokitelluksi aiemmin, numeron 1 sijasta voisi käyttää selitetekstiä "Kyllä", jolloin laskukaava olisi `across(B15:B22, ~ . == "Kyllä")`.
+
+```{r}
+ESS2023 <- ESS2023 |>
+  mutate(
+    myönteisten_vastausten_lukumäärä = rowSums(
+      across(B15:B22, 
+      ~ . == 1),
+      na.rm = TRUE
+    )
+  )
+      
+```
+## Uudelleenkoodaus: luokkien nimien perusteella
+
+Jos haluat operoida luokiteltujen muuttujien arvoilla, voit käyttää `fct_recode()`-komentoa. Tässä muutetaan ensin muuttuja F14 luokitelluksi komennolla as_factor() ja sitten muokataan luokkien nimiä uudelleenkoodauksella, jossa annetaan ensin uuden luokan nimi ja sitten vanhan, aineistossa jo olevan. Esimerkiksi luokka "Suuri kaupunki" muutetaan muotoon "Suurkaupunki". Samalla yhdistetään kaksi luokkaa antamalla niille sama uusi nimi "Pieni kaupunki". Jos jotain luokkaa ei mainita, sen nimi jää ennalleen. 
+
+```{r}
+ESS2023<- ESS2023|>
+  mutate(
+    Asuinalue = F14 |>
+      as_factor() |>
+      fct_recode(
+        "Suurkaupunki" = "Suuri kaupunki",
+        "Taajama" = "Suuren kaupungin lähiö tai lähiseutu",
+        "Pieni kaupunki" = "Pieni tai keskikokoinen kaupunki tai kunta",
+        "Pieni kaupunki" = "Pienempi taajama tai kunta"
+      )
+  )
+```
+
+Tarkastetaan mitä tuli tehtyä:
+```{r}
+ESS2023 |> count(Asuinalue)
+```
+
+

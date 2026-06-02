@@ -1,0 +1,30 @@
+---
+title: "Painottaminen"
+---
+
+```{r}
+#| include: false
+source("_common.R")
+```
+
+## Miksi painotetaan?
+
+Tutkimuksessa on joskus tarpeen antaa yksittäiselle vastaajalle suurempi tai pienempi paino kuin muille. Ensimmäinen - ja tärkeämpi - syy on se, että aineiston otosrakenne on sellainen, että kaikilla populaation osilla ei ole yhtä suurta todennäköisyyttä tulla valituksi otokseen. Kaikkialla ei esimerkiksi ole selvää väestörekisteriä, josta otantaa tehdä, tai joskus halutaan varmistaa, että joku väestönosa tai vähemmistö tulee edustetuksi aineistossa, vaikka analyysin halutaankin vastaavan koko väestöä. Tällöin painotetaan, jotta saadaan otos vastaamaan paremmin populaatiota. Tätä painoa kutsutaan *asetelmapainoksi*. Tällainen paino täytyy aina huomioida tai analyysi vääristyy.
+
+Toinen syy painottamiseen on se, että vaikka otannassa kuka tahansa voi tulla poimituksi, vastauskato ei jakaudu tasaisesti väestöryhmien kesken. Esimerkiksi kyselytutkimuksessa nuoret miehet saattavat vastata harvemmin kuin muut. Tällöin voidaan tehdä oletus, että sellainen nuori mies joka on vastannut on samanlainen kuin sellainen nuori mies joka ei vastannut. Jos oletus pätee, voidaan laskea otannan ja toteutuneen aineiston perusteella painokerroin, joka antaa vastanneelle nuorelle miehelle suuremman painoin kuin muille. Tätä painoa kutsutaan *analyysipainoksi*. Tällaisten painojen käytöstä on erilaisia koulukuntia. 
+
+Henkilökohtaisesti tämän oppaan kirjoittaja ei yleensä käytä tällaisia painoja - Andrew Gelmanin sanoin "Survey Weighting is a mess" (Gelman 2007): useimmissa tutkimusmenetelmissä painon huomiointi on yllättävän hankalaa, ja oletus siitä, että muutaman demografisen tekijän osalta samanlainen vastaaja on samanlainen kuin vastaamatta jättänyt, pitää harvoin paikkaansa. Lisäksi painotettaessa pitäisi huomioida se, että keskivirheet pitäisi laskea eri tavalla, mitä esimerkiksi SPSS:n painotus ei tee.
+
+## Painomuuttuja ESS-aineistossa
+
+European Social Survey (ESS) Suomi 2023 -aineistossa on kaksi painomuuttujaa: asetelmapaino, jonka arvo on kaikille vastaajille 1 (koska Suomessa on helppo tehdä väestörekisteristä edustava otanta) sekä analyysipaino, joka on laskettu ikäryhmän, sukupuolen, koulutustason ja asuinalueen perusteella.
+
+Asetelmapainoa ei tarvitse huomioida, koska se on kaikille sama, mutta analyysipainoa voi halutessaan käyttää. 
+
+R:ssä painot voidaan huomioida useammalla eri tavalla: monessa tavallisessa komennossa on argumentti, jolla voidaan huomioida yksinkertainen tapausten painotus. Tämä vastaa SPSS:n painotusta. Yleensä tämä argumentti on nimeltään `weight=analyysipaino` tai `wt=analyysipaino`, mutta jokaisen komennon osalta pitää tarkistaa oikea argumentti dokumentaatiosta. 
+
+Toinen tapa huomioida painot on käyttää `svydesign`-pakettia, joka on suunniteltu erityisesti painotettujen aineistojen analysointiin. Tällä voidaan huomioida monimutkaiset ryväsotannat ja vastaavat asetelmat tavalla, joka huomioi keskivirheiden laskun asiallisesti. 
+
+## Viitteet
+
+Gelman, A. (2007). Struggles with Survey Weighting and Regression Modeling. Statistical Science, 153-164.
