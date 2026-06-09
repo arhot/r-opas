@@ -7,9 +7,7 @@ title: "Varianssianalyysi"
 source("_common.R")
 ```
 
-*Tämä luku on valmisteilla.*
-
-## Käytetty aineisto
+Varianssianalyysi on lineaarinen regressioanalyysi eri perspektiivistä: siinä nostetaan keskiöön kaikkien ryhmien vertailut sekä muuttujakohtaiset selitysosuudet. 
 
 ## Yksisuuntainen varianssianalyysi
 

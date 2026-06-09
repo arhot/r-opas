@@ -126,3 +126,24 @@ write_xlsx(taulukko5, "taulukko5.xlsx")
 
 ## Korrelaatio {#sec-korrelaatio}
 
+Kahden jatkuvan muuttujan yhteyttä tarkastellaan korrelaatiokertoimella. Useimmiten korrelaatioita halutaan tarkastella useamman muuttujan välillä. `corrr`-paketin `correlate()`-komento laskee korrelaatiokertoimet, ja `rplot()`-komento visualisoi ne. Korrelaatiokertoimet lasketaan vain numeerisille muuttujille, joten on tärkeää varmistaa, että kaikki korrelaatioihin mukaan otettavat muuttujat ovat numeerisia.
+
+Tässä valitaan institutionaalista luottamusta kuvaavat muuttujat eli kysymyssarja B6-B12. `correlate()`-komennolla lasketaan korrelaatiokertoimet ja siistitään taulukko `shave()`-komennolla, joka poistaa kahteen kertaan näkyvät kertoimet (korrelaatio on sama muuttujan B6 ja B7 välillä kuin B7 ja B6 välillä, joten toinen niistä voidaan poistaa). Pyöristetään vielä korrelaatiokertoimet kahteen desimaaliin `mutate()`-komennolla, jossa määritellään `across(where(is.numeric), ~ round(.x, 2))`, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.
+
+`rplot()`-komento visualisoidaan korrelaatiomatriisi.
+
+
+```{r}
+korrelaatiotaulukko <- ESS2023 |> select(B6, B7, B8, B9, B10, B11, B12) |> 
+  correlate() |>
+  shave() |>
+  mutate(
+    across(where(is.numeric), ~ round(.x, 2))
+  )
+
+korrelaatiotaulukko
+
+write_xlsx(korrelaatiotaulukko, "korrelaatiotaulukko.xlsx")
+
+rplot(korrelaatiotaulukko)
+```
