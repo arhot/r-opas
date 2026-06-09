@@ -451,7 +451,7 @@
     "href": "08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-korrelaatio",
     "title": "Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio",
     "section": "Korrelaatio",
-    "text": "Korrelaatio",
+    "text": "Korrelaatio\nKahden jatkuvan muuttujan yhteyttä tarkastellaan korrelaatiokertoimella. Useimmiten korrelaatioita halutaan tarkastella useamman muuttujan välillä. corrr-paketin correlate()-komento laskee korrelaatiokertoimet, ja rplot()-komento visualisoi ne. Korrelaatiokertoimet lasketaan vain numeerisille muuttujille, joten on tärkeää varmistaa, että kaikki korrelaatioihin mukaan otettavat muuttujat ovat numeerisia.\nTässä valitaan institutionaalista luottamusta kuvaavat muuttujat eli kysymyssarja B6-B12. correlate()-komennolla lasketaan korrelaatiokertoimet ja siistitään taulukko shave()-komennolla, joka poistaa kahteen kertaan näkyvät kertoimet (korrelaatio on sama muuttujan B6 ja B7 välillä kuin B7 ja B6 välillä, joten toinen niistä voidaan poistaa). Pyöristetään vielä korrelaatiokertoimet kahteen desimaaliin mutate()-komennolla, jossa määritellään across(where(is.numeric), ~ round(.x, 2)), jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.\nrplot()-komento visualisoidaan korrelaatiomatriisi.\n\nkorrelaatiotaulukko &lt;- ESS2023 |&gt; select(B6, B7, B8, B9, B10, B11, B12) |&gt; \n  correlate() |&gt;\n  shave() |&gt;\n  mutate(\n    across(where(is.numeric), ~ round(.x, 2))\n  )\n\nkorrelaatiotaulukko\n\n# A tibble: 7 × 8\n  term     B6    B7    B8    B9   B10   B11   B12\n  &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 B6    NA    NA    NA    NA    NA    NA       NA\n2 B7     0.59 NA    NA    NA    NA    NA       NA\n3 B8     0.43  0.66 NA    NA    NA    NA       NA\n4 B9     0.7   0.53  0.41 NA    NA    NA       NA\n5 B10    0.66  0.5   0.36  0.85 NA    NA       NA\n6 B11    0.58  0.49  0.35  0.66  0.68 NA       NA\n7 B12    0.39  0.44  0.33  0.45  0.48  0.67    NA\n\nwrite_xlsx(korrelaatiotaulukko, \"korrelaatiotaulukko.xlsx\")\n\nrplot(korrelaatiotaulukko)",
     "crumbs": [
       "Osa 2: Aineiston käsittely",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Kuvailevat analyysit: jakaumat, tunnusluvut, ristiintaulukko ja korrelaatio</span>"
@@ -836,18 +836,7 @@
     "href": "21-anova.html",
     "title": "Varianssianalyysi",
     "section": "",
-    "text": "Käytetty aineisto\nTämä luku on valmisteilla.",
-    "crumbs": [
-      "Osa 4: Analyysimenetelmät",
-      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Varianssianalyysi</span>"
-    ]
-  },
-  {
-    "objectID": "21-anova.html#yksisuuntainen-varianssianalyysi",
-    "href": "21-anova.html#yksisuuntainen-varianssianalyysi",
-    "title": "Varianssianalyysi",
-    "section": "Yksisuuntainen varianssianalyysi",
-    "text": "Yksisuuntainen varianssianalyysi",
+    "text": "Yksisuuntainen varianssianalyysi\nVarianssianalyysi on lineaarinen regressioanalyysi eri perspektiivistä: siinä nostetaan keskiöön kaikkien ryhmien vertailut sekä muuttujakohtaiset selitysosuudet.",
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>Varianssianalyysi</span>"
