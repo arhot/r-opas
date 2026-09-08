@@ -54,5 +54,6 @@ Opas jakautuu neljään osaan:
 3. **Kuviot ggplot2:lla** — eri kuviotyypit ja niiden muokkaaminen
 4. **Analyysimenetelmät** — frekvenssit, ristiintaulukointi, korrelaatio, regressio jne.
 
-Luvut on tarkoitettu luettaviksi järjestyksessä, mutta myöhempiä lukuja voi
-käyttää myös yksittäisinä ohjeina.
+## Ohjeita oppaan käyttäjälle
+
+Jos olet uusi R:n käyttäjä, kannattaa tutustua nopeasti osioon 1. Varsinainen pihvi on kuitenkin osassa 2 ja siitä eteenpäin, joten kannattaa edetä aika nopeasti näihin osioihin. Osaan 1 voi palata viimeisenä.

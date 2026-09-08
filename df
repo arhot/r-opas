@@ -1,0 +1,225 @@
+[1mdiff --git a/02-r-projekti-skripti.qmd b/02-r-projekti-skripti.qmd[m
+[1mindex e93f771..45c9b03 100644[m
+[1m--- a/02-r-projekti-skripti.qmd[m
+[1m+++ b/02-r-projekti-skripti.qmd[m
+[36m@@ -8,35 +8,46 @@[m [mLuku on sijoitettu oppaan alkuun muiden ylätason asioiden kanssa. Jos olet ensi[m
+ [m
+ ## Kooditiedostot[m
+ [m
+[32m+[m[32mKaikki R:llä tehtävät toimenpiteet kirjataan kooditiedostoihin - teknisesti voit kyllä komentaa R:ää suoraan komentoriviltä, mutta tästä ei jää mitään muistijälkeä. Kooditiedostot ovat tekstitiedostoja, joihin kirjoitetaan R-koodia. Käytännössä on kaksi vaihtoehtoa:[m
+ [m
+[32m+[m[32m- R-skriptitiedosto (.R) sisältää lähtökohtaisesti vain R-komentoja. Jos haluat kirjata muistiinpanoja tai dokumentoida jotain, voit kirjoittaa kommentteja merkitsemällä ne #-merkillä rivin alussa.[m
+[32m+[m[32m- Markdown -tiedosto, yleensä R Markdown (.Rmd), sisältää sekä R-komentoja että tekstiä. Teksti voi olla esimerkiksi muistiinpanoja, raportointia, ohjeita tai muuta dokumentaatiota. R Markdown -tiedostot voidaan kääntää (renderöidä) erilaisiksi tuotoksiksi, kuten HTML- tai PDF-raporteiksi. Tämä opas on kirjoitettu Quarto Markdown -tiedostona (.qmd), joka on R Markdownin laajennus.[m
+ [m
+[31m-## R-projekti[m
+[32m+[m[32m## Kooditiedostojen rakenteesta[m
+ [m
+[31m-projektihakemisto[m
+[31m-työhakemisto[m
+[32m+[m[32mMuutama sana R-komentojen rakenteesta:[m
+ [m
+[32m+[m[32mPerusyksikkö R:n komentamiseen on funktio, joka suorittaa tietyn tehtävän. Funktio kirjoitetaan muodossa `funktio(argumentit)`, jossa `argumentit` ovat funktiolle annettavia tietoja. Esimerkiksi `mean(x)` laskee muuttujan x keskiarvon. Tunnistat aina funktion sitä seuraavista suluista. Tavalliset funktiot ovat yleensä englanninkielisiä sanoja, jotka kuvaavat mitä funktio tekee. Esimerkiksi `mean()` laskee keskiarvon, `sum()` laskee summan ja `plot()` piirtää kuviota.[m[41m [m
+ [m
+[31m-## Skriptitiedosto[m
+[32m+[m[32mFunktioilla operoidaan objekteilla. Objekti voi olla vähän mitä tahansa R:n käyttömuistiin ladattua tai tallenttua, mutta tilastollisissa analyysissa toki tyypillisesti aineistoja tai aineistojen sisällä olevia muuttujia. Kuitenkin myös kuviot ja mallit tallennetaan objekteina, jotta niitä voidaan käsitellä ja tallentaa.[m
+ [m
+[31m-funktio[m
+[32m+[m[32mMelkein aina funktio tarvitsee vähintään yhden argumentin - usein objektin. Esimerkiksi `mean(x)` laskee muuttujan x keskiarvon. Usein funktiolle voidaan antaa useampia argumentteja, joista osaa määrittää mitä tarkemmin tehdään - esimerkiksi `mean(x, na.rm = TRUE)` laskee muuttujan x keskiarvon, mutta jättää puuttuvat arvot huomioimatta.[m
+ [m
+[31m-objekti [m
+[32m+[m[32mMuutama tärkeä lyhenne, joita R-kielessä käytetään:[m
+ [m
+[31m-argumentti[m
+[32m+[m[32mDollarimerkkiä $ käytetään erottamaan objektin sisältä sen osia - tavallisimpana tapauksena aineiston sisältä muuttujia. Esimerkiksi `aineisto$muuttuja` viittaa aineiston sisältämään muuttujaan. Keskiarvolaskenta `mean(aineisto$muuttuja)` laskee siis aineiston sisältämän muuttujan keskiarvon.[m
+ [m
+[31m-$[m
+[32m+[m[32mPutkimerkki |> eli "sitten". Esimerkiksi `aineisto |> mean(muuttuja)` tarkoittaa, että otetaan aineisto syötetään ja sitten lasketaan sen sisältämän muuttujan keskiarvo.  `aineisto |> mean(muuttuja)` ja  `mean(aineisto$muuttuja)` ovat siis sama asia, ja tässä tapauksessa voi käyttää kumpaa vaan. Usein kuitenkin halutaan tehdä useita asioita kerralla, ja tällöin putkimerkkiä käytetään paljon, koska se tekee koodista luettavampaa ja helpottaa monimutkaisempien analyysien tekemistä.[m
+ [m
+[31m-|> [m
+[32m+[m[32mNuoli vasempaan <- tallentaa objekteja käyttömuistiin tulevia operaatioita varten, nuolen vasemmalla puolella olevalla nimellä. Tämä ei siis tallenna tai muokkaa tiedostoa, vaan ainoastaan käytettäväksi R:n käyttömuistiin. Esimerkiksi `aineisto <- read_sav("aineisto.sav")` lukee SPSS-muotoisen aineiston R:ään ja tallentaa sen käyttömuistiin nimellä `aineisto`. Tämän jälkeen `aineisto` on käytettävissä analyysien tekemiseen.[m
+[32m+[m[32mKun tätä aineistoa halutaan muokata ja tallentaa muokattu versio käyttömuistiin, voidaan käyttää esimerkiksi seuraavaa rakennetta:[m
+[32m+[m[32mYleisin rakenne tulee aineistojen muokkaamisesta:[m
+[32m+[m[32m`aineisto <- aineisto |> muokkaukset()`[m
+[32m+[m[32mIlman nuolta vasemmalle muokkaukset tulostettaisiin vain ruudulle.[m
+ [m
+[31m-aineisto <- aineisto |> muokkaukset [m
+[32m+[m[32m## Koodin ajaminen[m
+ [m
+[31m-## Kommentit ja koodin rakenne[m
+[32m+[m[32mKun komentoja on kirjoitettu kooditiedostoon, ne voidaan suorittaa R:ssä. Tämä voidaan tehdä usealla tavalla:[m
+[32m+[m[32m- Koko tiedosto voidaan suorittaa kerralla, jolloin kaikki komennot ajetaan järjestyksessä. Tämä on hyödyllistä, kun halutaan toistaa analyysi alusta loppuun.[m
+[32m+[m[32m- Yksittäisiä komentoja voidaan suorittaa valitsemalla ne ja painamalla Ctrl + Enter (Windows) tai Cmd + Enter (Mac). Tämä on hyödyllistä, kun halutaan testata tai tarkastella yksittäisiä komentoja.[m
+[32m+[m[32m- Rstudiossa on myös Play-painike, jolla voidaan ajaa koko tiedosto tai valittu osa siitä.[m
+[32m+[m
+[32m+[m[32m## R-projekti[m
+[32m+[m
+[32m+[m[32mKun tekeminen R:ssä laajenee, tarvitaan tapoja organisoida ja hallita analyysitiedostoja, aineistoja ja tuotoksia. R-projekti on hyödyllinen tapa tehdä tämä. R-projekti on yksinkertaisesti kansio, jossa on kaikki analyysiin liittyvät tiedostot ja ns. projektitiedosto, joka kertoo R:lle mistä asiat löytyvät. Kun projekti on avattu, RStudio asettaa työskentelykansion automaattisesti projektin juurikansioon, jolloin tiedostojen polut pysyvät selkeinä ja helpottavat analyysien toistettavuutta.[m
+[32m+[m
+[32m+[m[32mProjekti perustetaan RStudiossa valitsemalla File > New Project > New Directory > New Project. Tämän jälkeen valitaan projektin nimi ja sijainti. RStudio luo projektikansion ja tallentaa sinne projektitiedoston (.Rproj). Kun projekti on avattu, kaikki analyysitiedostot, aineistot ja tuotokset voidaan tallentaa tähän kansioon tai sen alikansioihin.[m
+ [m
+[31m-.r [m
+[31m-.RMD[m
+[31m-## Koodin ajaminen[m
+ [m
+ [m
+[31m-## Aineistotiedostot[m
+ [m
+[31m-## Tuotostiedostot: kuviot, taulukot, raportit[m
+\ No newline at end of file[m
+[1mdiff --git a/06-aineistoon-tutustuminen.qmd b/06-aineistoon-tutustuminen.qmd[m
+[1mindex e525c72..ec3ad27 100644[m
+[1m--- a/06-aineistoon-tutustuminen.qmd[m
+[1m+++ b/06-aineistoon-tutustuminen.qmd[m
+[36m@@ -44,7 +44,7 @@[m [mOtetaan siis aineisto, sitten valitaan komennolla `select()`-komennolla tarkaste[m
+ ESS2023 |> select(Syntymävuosi, Sukupuoli, C1) |> summary()[m
+ ```[m
+ [m
+[31m-Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa, sillä se on luokiteltu teksti, jossa on määritettynä selitetekstit kullekin arvolle. Luokitelluista muuttujista halutun tiedon voi poimia esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.[m
+[32m+[m[32mSyntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. Luvun 7 ohjeella voit muokata sen luokitelluksi ja sen jälkeen `summary()` on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.[m
+ ```{r}[m
+ ESS2023 |> count(Sukupuoli)[m
+ ```[m
+[1mdiff --git a/11-pylvaskuvio.qmd b/11-pylvaskuvio.qmd[m
+[1mindex 2c953c0..1036ada 100644[m
+[1m--- a/11-pylvaskuvio.qmd[m
+[1m+++ b/11-pylvaskuvio.qmd[m
+[36m@@ -51,4 +51,4 @@[m [mJos halutaan keskittyä suhteellisiin osuuksiin eikä havaintojen määrään, v[m
+ ESS2023 |> ggplot(aes(x = as_factor(Sukupuoli), fill = as_factor(B4))) + [m
+     geom_bar(position = "fill") + [m
+     labs(y = "Prosenttiosuus")[m
+[31m-```[m
+\ No newline at end of file[m
+[32m+[m[32m```[m[41m [m
+\ No newline at end of file[m
+[1mdiff --git a/20-regressio.qmd b/20-regressio.qmd[m
+[1mindex bf710b9..60225e2 100644[m
+[1m--- a/20-regressio.qmd[m
+[1m+++ b/20-regressio.qmd[m
+[36m@@ -7,14 +7,103 @@[m [mtitle: "Regressioanalyysi"[m
+ source("_common.R")[m
+ ```[m
+ [m
+[31m-*Tämä luku on valmisteilla.*[m
+[31m-[m
+[31m-## Käytetty aineisto[m
+[32m+[m[32mRegressioanalyysi on keskeisin tilastollisen tutkimuksen menetelmä. Lineaarinen regressioanalyysi ennustaa selitettävän tekijän vaihtelua yhden tai useamman selittäjän eri arvoilla. Useimmat tavalliset tilastolliset menetelmät ovat regressioanalyysin erikoistapauksia, ja useimmat edistyneet menetelmät ovat yleisen tai yleistetyn regressiomenetelmät perheen jäseniä, joissa logiikka on sama, mutta jotakin regression osaa vaihdetaan.[m
+ [m
+ ## Yksinkertainen lineaarinen regressio[m
+ [m
+[31m-## Monimuuttujaregressio[m
+[32m+[m[32mYksinkertaisin tapaus on yhden selittäjän regressio, joka ennustaa yhden selitettävän tekijän ehdollisia keskiarvoja. Koska ennustetaan keskiarvoja, selitettävän tekijän tulee olla jatkuva. Selittävät tekijät voivat olla mitä tahansa ja R osaa huomioida muuttujien oikean käytön, kunhan olet määritellyt muuttujat aineistossa oikein.[m
+[32m+[m
+[32m+[m[32mJatkuvalla selittäjällä regression tulos eli regressiokerroin kertoo mitä tapahtuu selitettävän keskiarvolle, kun selittäjä kasvaa yhdellä yksiköllä.[m[41m [m
+[32m+[m
+[32m+[m[32mLuokitellulla selittäjällä regressiokerroin kertoo mitä tapahtuu selitettävän keskiarvolle, kun verrataan muita ryhmiä vuorollaan ns. vertailuryhmään. R käyttää vertailuryhmänä automaattisesti luokiteltujen selittäjien joukossa ensimmäistä ryhmää, mutta vertailuryhmän voi määritellä itse `relevel()`-komennolla. R tulostaa taulukkoon aina sen ryhmän, jota nyt verrataan, ja vertailuryhmä on se muuttujan ryhmä, joka ei näy taulukossa (kyseistä ryhmää ei tietenkään tarvitse itseensä verrata).[m
+[32m+[m
+[32m+[m[32mRegressio suoritetaan komennolla `lm()`, joka tarkoittaa "linear model". Komennolle annetaan kaava, jossa selitettävä tekijä tulee ensin, seuraavaksi tilde ~ ja sitten selittäjä. Kaavan jälkeen määritellään aineisto, josta malli lasketaan. Tuloksia voi tarkastella pikaisesti komennolla `summary()`, joka antaa mallin tilastolliset tunnusluvut, kuten regressiokertoimet, niiden tilastollisen merkitsevyyden ja mallin selitysasteen R²:n.[m
+[32m+[m
+[32m+[m[32m```{r}[m
+[32m+[m[32mmalli1 <- lm(C1 ~ Syntymävuosi, data = ESS2023)[m
+[32m+[m
+[32m+[m[32msummary(malli1)[m
+[32m+[m
+[32m+[m[32mmalli2 <- lm(C1 ~ as_factor(Sukupuoli), data = ESS2023)[m
+[32m+[m
+[32m+[m[32msummary(malli2)[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m## Useamman selittävän tekijän regressio[m
+[32m+[m
+[32m+[m[32mUseamman selittävän tekijän regressio tehdään samalla `lm()`-komennolla, mutta kaavaan määritellään useampi selittäjä. Regressiokertoimet kertovat, mitä tapahtuu selitettävän keskiarvolle, kun kukin selittäjä kasvaa yhdellä yksiköllä, mutta kaikki muut selittäjät pidetään vakioina.[m
+ [m
+[31m-## Mallin diagnostiikka[m
+[32m+[m[32m```{r}[m
+[32m+[m[32mmalli3 <- lm(C1 ~ Syntymävuosi + as_factor(Sukupuoli), data = ESS2023)[m
+[32m+[m
+[32m+[m[32msummary(malli3)[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m## Regressiomallin visualisointi[m
+[32m+[m
+[32m+[m[32mRegressiomallin voi visualisoida helposti hajontakuviolla, kun siinä on yksi jatkuva selittäjä (ja mahdollisesti yksi luokiteltu selittäjä).[m[41m [m
+[32m+[m
+[32m+[m[32m```{r}[m
+[32m+[m[32mggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +[m
+[32m+[m[32m  geom_point() +[m
+[32m+[m[32m  geom_smooth(method = "lm", se = FALSE) +[m
+[32m+[m[32m  labs(x = "Syntymävuosi", y = "Onnellisuus") +[m
+[32m+[m[32m  theme_minimal()[m
+[32m+[m[32m```[m
+ [m
+ ## Tulosten raportointi[m
+[32m+[m
+[32m+[m[32mTulostaulukoita voi rakentaa komennolla tidy(). Tiedot mallista saa taulukkomuodossa, jossa on regressiokertoimet, niiden tilastollinen merkitsevyys ja luottamusvälit. `conf.int=TRUE`-argumentti lisää taulukkoon luottamusvälit. Taulukko on R:n data frame -muodossa, joten sitä voi muokata haluamakseen `mutate()`-komennolla, ja esimerkiksi pyöristää numeeriset sarakkeet halutun tarkkuisiksi `mutate(across(where(is.numeric), ~ round(.x, 2)))`-komennolla. Voit myös nimetä sarakkeet suomenkielisiksi `rename()`-komennolla, ja järjestää sarakkeet haluamaasi järjestykseen `select()`-komennolla.[m[41m [m
+[32m+[m
+[32m+[m[32m```{r}[m
+[32m+[m[32mtaulukko1 <- malli1 |> tidy(conf.int=TRUE)[m
+[32m+[m
+[32m+[m[32mtaulukko1[m
+[32m+[m
+[32m+[m[32mtaulukko_mallit <- bind_rows([m
+[32m+[m[32m  "Malli 1" = tidy(malli1, conf.int = TRUE),[m
+[32m+[m[32m  "Malli 2" = tidy(malli2, conf.int = TRUE),[m
+[32m+[m[32m  "Malli 3" = tidy(malli3, conf.int = TRUE),[m
+[32m+[m[32m  .id = "malli"[m
+[32m+[m[32m)[m[41m [m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m
+[32m+[m[32m## Mallin oletukset ja diagnostiikka[m
+[32m+[m
+[32m+[m[32mRegressioanalyysiin liittyy tiettyjä oletuksia, jotka rajoittavat mallin käyttökelpoisuutta ja yleisetettävyyttä. Ne on hyvä tarkastaa, mutta vain harvoin niiden perusteella kannattaa mallia hylätä. Oletuksia on viisi, ja niistä kaksi ensimmäistä ja tärkeintä koskevat aineistoa ja yhteyttä yleensä, kolme viimeistä regression ns. virheitä. Regression tulosten perusteella voidaan siis laskea jokaiselle aineiston havainnolle mallin ennustama selitettävän tekijän arvo, ja mallin ennustama arvo ja havainnon todellinen arvo eivät yleensä ole täsmälleen samoja, vaan niissä on eroa. Tätä eroa kutsutaan virheeksi, ja mallin oletukset koskevat näitä virheitä. Oletukset ovat:[m
+[32m+[m
+[32m+[m[32m1) Validiteetti[m[41m [m
+[32m+[m
+[32m+[m[32mMallin ja muuttujien teoreettista pohdintaa.[m
+[32m+[m
+[32m+[m[32m2) Lineaarisuus[m
+[32m+[m
+[32m+[m[32mLineaarisuutta voidaan tarkastella kuviolla - voit esimerkiksi piirtää lineaarisen mallin ennusteet ja lineaarisuusoletusta käyttämättömän mallin samaan kuvioon. Jos lineaarisuus pätee, mallien ennusteet ovat hyvin samankaltaisia, mutta jos lineaarisuus ei päde, mallien ennusteet eroavat toisistaan.[m
+[32m+[m
+[32m+[m[32m```{r}[m
+[32m+[m[32mggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +[m
+[32m+[m[32m  geom_point() +[m
+[32m+[m[32m  geom_smooth(method = "lm", se = FALSE, color = "blue") +[m
+[32m+[m[32m  geom_smooth(method = "gam" se = FALSE, color = "red") +[m
+[32m+[m[32m  labs(x = "Syntymävuosi", y = "Onnellisuus") +[m
+[32m+[m[32m  theme_minimal() +[m
+[32m+[m[32m  scale_color_manual(values = c("blue", "red"), labels = c("Lineaarinen malli", "Loess-malli")) +[m
+[32m+[m[32m  theme(legend.title = element_blank())[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m3) Virheiden riippumattomuus toisistaan[m
+[32m+[m
+[32m+[m[32mEsim. onko sama vastaaja vastannut kahdesti kyselyyn.[m
+[32m+[m
+[32m+[m[32m4) Virheiden varianssin yhtenäisyys selittäjien eri arvoilla[m
+[32m+[m
+[32m+[m[32mVirheiden yhtä[m
+[32m+[m[32m```{r}[m
+[32m+[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32m5) Virheiden normaalijakauma[m
+[41m+[m
+[41m+[m
+[41m+[m
+[1mdiff --git a/ESS2023_Suomi.sav b/ESS2023_Suomi.sav[m
+[1mindex b9c6c46..8583808 100644[m
+Binary files a/ESS2023_Suomi.sav and b/ESS2023_Suomi.sav differ
+[1mdiff --git a/index.qmd b/index.qmd[m
+[1mindex 05cdcba..49b2232 100644[m
+[1m--- a/index.qmd[m
+[1m+++ b/index.qmd[m
+[36m@@ -54,5 +54,6 @@[m [mOpas jakautuu neljään osaan:[m
+ 3. **Kuviot ggplot2:lla** — eri kuviotyypit ja niiden muokkaaminen[m
+ 4. **Analyysimenetelmät** — frekvenssit, ristiintaulukointi, korrelaatio, regressio jne.[m
+ [m
+[31m-Luvut on tarkoitettu luettaviksi järjestyksessä, mutta myöhempiä lukuja voi[m
+[31m-käyttää myös yksittäisinä ohjeina.[m
+[32m+[m[32m## Ohjeita oppaan käyttäjälle[m
+[32m+[m
+[32m+[m[32mJos olet uusi R:n käyttäjä, kannattaa tutustua nopeasti osioon 1. Varsinainen pihvi on kuitenkin osassa 2 ja siitä eteenpäin, joten kannattaa edetä aika nopeasti näihin osioihin. Osaan 1 voi palata viimeisenä.[m
+[1mdiff --git a/korrelaatiotaulukko.xlsx b/korrelaatiotaulukko.xlsx[m
+[1mindex f9acdbf..b04d591 100644[m
+Binary files a/korrelaatiotaulukko.xlsx and b/korrelaatiotaulukko.xlsx differ

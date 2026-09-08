@@ -44,7 +44,7 @@ Otetaan siis aineisto, sitten valitaan komennolla `select()`-komennolla tarkaste
 ESS2023 |> select(Syntymävuosi, Sukupuoli, C1) |> summary()
 ```
 
-Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa, sillä se on luokiteltu teksti, jossa on määritettynä selitetekstit kullekin arvolle. Luokitelluista muuttujista halutun tiedon voi poimia esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.
+Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. Luvun 7 ohjeella voit muokata sen luokitelluksi ja sen jälkeen `summary()` on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.
 ```{r}
 ESS2023 |> count(Sukupuoli)
 ```

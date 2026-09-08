@@ -8,35 +8,46 @@ Luku on sijoitettu oppaan alkuun muiden ylätason asioiden kanssa. Jos olet ensi
 
 ## Kooditiedostot
 
+Kaikki R:llä tehtävät toimenpiteet kirjataan kooditiedostoihin - teknisesti voit kyllä komentaa R:ää suoraan komentoriviltä, mutta tästä ei jää mitään muistijälkeä. Kooditiedostot ovat tekstitiedostoja, joihin kirjoitetaan R-koodia. Käytännössä on kaksi vaihtoehtoa:
 
+- R-skriptitiedosto (.R) sisältää lähtökohtaisesti vain R-komentoja. Jos haluat kirjata muistiinpanoja tai dokumentoida jotain, voit kirjoittaa kommentteja merkitsemällä ne #-merkillä rivin alussa.
+- Markdown -tiedosto, yleensä R Markdown (.Rmd), sisältää sekä R-komentoja että tekstiä. Teksti voi olla esimerkiksi muistiinpanoja, raportointia, ohjeita tai muuta dokumentaatiota. R Markdown -tiedostot voidaan kääntää (renderöidä) erilaisiksi tuotoksiksi, kuten HTML- tai PDF-raporteiksi. Tämä opas on kirjoitettu Quarto Markdown -tiedostona (.qmd), joka on R Markdownin laajennus.
+
+## Kooditiedostojen rakenteesta
+
+Muutama sana R-komentojen rakenteesta:
+
+Perusyksikkö R:n komentamiseen on funktio, joka suorittaa tietyn tehtävän. Funktio kirjoitetaan muodossa `funktio(argumentit)`, jossa `argumentit` ovat funktiolle annettavia tietoja. Esimerkiksi `mean(x)` laskee muuttujan x keskiarvon. Tunnistat aina funktion sitä seuraavista suluista. Tavalliset funktiot ovat yleensä englanninkielisiä sanoja, jotka kuvaavat mitä funktio tekee. Esimerkiksi `mean()` laskee keskiarvon, `sum()` laskee summan ja `plot()` piirtää kuviota. 
+
+Funktioilla operoidaan objekteilla. Objekti voi olla vähän mitä tahansa R:n käyttömuistiin ladattua tai tallenttua, mutta tilastollisissa analyysissa toki tyypillisesti aineistoja tai aineistojen sisällä olevia muuttujia. Kuitenkin myös kuviot ja mallit tallennetaan objekteina, jotta niitä voidaan käsitellä ja tallentaa.
+
+Melkein aina funktio tarvitsee vähintään yhden argumentin - usein objektin. Esimerkiksi `mean(x)` laskee muuttujan x keskiarvon. Usein funktiolle voidaan antaa useampia argumentteja, joista osaa määrittää mitä tarkemmin tehdään - esimerkiksi `mean(x, na.rm = TRUE)` laskee muuttujan x keskiarvon, mutta jättää puuttuvat arvot huomioimatta.
+
+Muutama tärkeä lyhenne, joita R-kielessä käytetään:
+
+Dollarimerkkiä $ käytetään erottamaan objektin sisältä sen osia - tavallisimpana tapauksena aineiston sisältä muuttujia. Esimerkiksi `aineisto$muuttuja` viittaa aineiston sisältämään muuttujaan. Keskiarvolaskenta `mean(aineisto$muuttuja)` laskee siis aineiston sisältämän muuttujan keskiarvon.
+
+Putkimerkki |> eli "sitten". Esimerkiksi `aineisto |> mean(muuttuja)` tarkoittaa, että otetaan aineisto syötetään ja sitten lasketaan sen sisältämän muuttujan keskiarvo.  `aineisto |> mean(muuttuja)` ja  `mean(aineisto$muuttuja)` ovat siis sama asia, ja tässä tapauksessa voi käyttää kumpaa vaan. Usein kuitenkin halutaan tehdä useita asioita kerralla, ja tällöin putkimerkkiä käytetään paljon, koska se tekee koodista luettavampaa ja helpottaa monimutkaisempien analyysien tekemistä.
+
+Nuoli vasempaan <- tallentaa objekteja käyttömuistiin tulevia operaatioita varten, nuolen vasemmalla puolella olevalla nimellä. Tämä ei siis tallenna tai muokkaa tiedostoa, vaan ainoastaan käytettäväksi R:n käyttömuistiin. Esimerkiksi `aineisto <- read_sav("aineisto.sav")` lukee SPSS-muotoisen aineiston R:ään ja tallentaa sen käyttömuistiin nimellä `aineisto`. Tämän jälkeen `aineisto` on käytettävissä analyysien tekemiseen.
+Kun tätä aineistoa halutaan muokata ja tallentaa muokattu versio käyttömuistiin, voidaan käyttää esimerkiksi seuraavaa rakennetta:
+Yleisin rakenne tulee aineistojen muokkaamisesta:
+`aineisto <- aineisto |> muokkaukset()`
+Ilman nuolta vasemmalle muokkaukset tulostettaisiin vain ruudulle.
+
+## Koodin ajaminen
+
+Kun komentoja on kirjoitettu kooditiedostoon, ne voidaan suorittaa R:ssä. Tämä voidaan tehdä usealla tavalla:
+- Koko tiedosto voidaan suorittaa kerralla, jolloin kaikki komennot ajetaan järjestyksessä. Tämä on hyödyllistä, kun halutaan toistaa analyysi alusta loppuun.
+- Yksittäisiä komentoja voidaan suorittaa valitsemalla ne ja painamalla Ctrl + Enter (Windows) tai Cmd + Enter (Mac). Tämä on hyödyllistä, kun halutaan testata tai tarkastella yksittäisiä komentoja.
+- Rstudiossa on myös Play-painike, jolla voidaan ajaa koko tiedosto tai valittu osa siitä.
 
 ## R-projekti
 
-projektihakemisto
-työhakemisto
+Kun tekeminen R:ssä laajenee, tarvitaan tapoja organisoida ja hallita analyysitiedostoja, aineistoja ja tuotoksia. R-projekti on hyödyllinen tapa tehdä tämä. R-projekti on yksinkertaisesti kansio, jossa on kaikki analyysiin liittyvät tiedostot ja ns. projektitiedosto, joka kertoo R:lle mistä asiat löytyvät. Kun projekti on avattu, RStudio asettaa työskentelykansion automaattisesti projektin juurikansioon, jolloin tiedostojen polut pysyvät selkeinä ja helpottavat analyysien toistettavuutta.
+
+Projekti perustetaan RStudiossa valitsemalla File > New Project > New Directory > New Project. Tämän jälkeen valitaan projektin nimi ja sijainti. RStudio luo projektikansion ja tallentaa sinne projektitiedoston (.Rproj). Kun projekti on avattu, kaikki analyysitiedostot, aineistot ja tuotokset voidaan tallentaa tähän kansioon tai sen alikansioihin.
 
 
-## Skriptitiedosto
-
-funktio
-
-objekti 
-
-argumentti
-
-$
-
-|> 
-
-aineisto <- aineisto |> muokkaukset 
-
-## Kommentit ja koodin rakenne
-
-.r 
-.RMD
-## Koodin ajaminen
 
 
-## Aineistotiedostot
-
-## Tuotostiedostot: kuviot, taulukot, raportit

@@ -51,4 +51,4 @@ Jos halutaan keskittyä suhteellisiin osuuksiin eikä havaintojen määrään, v
 ESS2023 |> ggplot(aes(x = as_factor(Sukupuoli), fill = as_factor(B4))) + 
     geom_bar(position = "fill") + 
     labs(y = "Prosenttiosuus")
-```
+``` 
