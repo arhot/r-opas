@@ -85,7 +85,7 @@ Lineaarisuutta voidaan tarkastella kuviolla - voit esimerkiksi piirtää lineaar
 ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = "blue") +
-  geom_smooth(method = "gam" se = FALSE, color = "red") +
+  geom_smooth(method = "gam", se = FALSE, color = "red") +
   labs(x = "Syntymävuosi", y = "Onnellisuus") +
   theme_minimal() +
   scale_color_manual(values = c("blue", "red"), labels = c("Lineaarinen malli", "Loess-malli")) +
