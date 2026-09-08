@@ -10,8 +10,6 @@ yhdistetty_taulukko.xlsx
 kuvio.pdf
 kuvio.png
 site_libs/
-*.html
-
 
 /.quarto/
 **/*.quarto_ipynb
