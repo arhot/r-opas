@@ -9,7 +9,6 @@ taulukko*.xlsx
 yhdistetty_taulukko.xlsx
 kuvio.pdf
 kuvio.png
-site_libs/
 
 /.quarto/
 **/*.quarto_ipynb
