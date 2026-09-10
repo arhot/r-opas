@@ -3,12 +3,38 @@ title: "Paketit"
 ---
 
 # Paketit {#sec-paketit}
-*Tämä luku on valmisteilla.*
 
 ## Mikä on R-paketti?
 
+Kun asennat R-kielen, saat käyttöösi perusfunktiot ja -komennot. R:n toiminnallisuutta voidaan kuitenkin laajentaa asentamalla erilaisia paketteja. Paketti on kokoelma funktioita, dataa ja dokumentaatiota, jotka on koottu yhteen. Paketti voi olla esimerkiksi pieni yhteen menetelmään liittyvät komennot sisältävä paketti, tai laajempi paketti, joka sisältää useita menetelmiä ja dataa. Paketteja voidaan asentaa R:n virallisesta pakettivarastosta CRAN:sta (Comprehensive R Archive Network) tai muista lähteistä, kuten GitHubista.
+
 ## Paketin asentaminen
+
+RStudiossa voit asentaa paketteja valitsemalla ylävalikosta "Tools" -> "Install Packages...". Avautuvassa ikkunassa voit kirjoittaa haluamasi paketin nimen ja painaa "Install". Voit myös asentaa paketteja suoraan R-konsolista käyttämällä komentoa `install.packages("paketin_nimi")`.
 
 ## Paketin lataaminen käyttöön
 
+Paketti täytyy ladata käyttöön ennen kuin voit käyttää sen funktioita. Tämä tehdään komennolla `library(paketin_nimi)`. Esimerkiksi, jos haluat käyttää `ggplot2`-pakettia, kirjoitat:
+```{r}
+library(ggplot2)
+```
+
+tämän jälkeen voit käyttää `ggplot2`-paketin funktioita, kuten `ggplot()`.
+
 ## Tässä oppaassa käytettävät paketit
+
+Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta `tidyverse`-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten `dplyr`, `ggplot2`, `tidyr`, `readr`, `forcats` ja `stringr`. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän luvusta 04 {@sec-r-tyylit}.
+
+```r
+install.packages(c(
+  "tidyverse",  # dplyr, ggplot2, tidyr, readr, forcats, stringr...
+  "haven",      # SPSS- ja Stata-tiedostojen lukeminen
+  "janitor",    # Frekvenssitaulukot ja aineiston siistiminen
+  "broom",      # Mallitulosten siistiminen taulukoksi
+  "psych",      # Faktorianalyysi ja kuvailevia tunnuslukuja
+  "corrr",      # Korrelaatiot tidyverse-tyyliin
+  "scales",     # Akseleiden muotoilu kuvioissa
+  "knitr",      # Taulukoiden tulostus
+  "writexl"     # Taulukoiden tallennus Excel-muotoon
+))
+```

@@ -6,6 +6,52 @@ title: "Opiskeluohjeita ja lisäresursseja"
 
 # Yleistä oppaan käytöstä
 
+## R-kielen tyyleistä {#sec-r-tyylit}
+
+R:n tyypillisin käyttötarkoitus on tilastollinen analyysi, mutta se on periaatteessa täysiverinen ohjelmointikieli. Tämän seurauksena saman asian voi tehdä monella eri tavalla R:llä: voit suorittaa analyysin sitä varten tehdyllä funktiolla, tai tehdä sen askel askeleelta matemaattisia operaatioita toteuttaen. Paketit ovat periaatteessa jonkun valitsemia tapoja tehdä jokin asia. 
+
+Tästä on paljon hyötyjä, mutta aloittelevan käyttäjän kannalta se voi olla myös hankalaa. Yksittäisten komentojen osalta asialla ei niin suurta merkitystä, mutta erilaisista toimintatavoista syntyy kokonaisia koodaustyylejä, joiden elementtejä ei aina ole helppo yhdistellä. 
+
+Tässä oppaassa käytetään kauttaaltaan **tidyverse**-pakettiperheen tyylejä. Tidyverse on kokoelma paketteja, joiden ajatuksena on se, että komentojen käyttöliittymä on mahdollisimman yhtenäinen. Komennot on myös rakennettu siten, että tehtäviä voi helposti pilkkoa ja ketjuttaa. Komennot on nimetty selkeillä englanninkielen sanoilla, yleensä verbeillä, jotka kertovat arkikielellä mistä on kysymys. Esimerkiksi jos halutaan ryhmitellä aineisto sukupuolittain ja sitten laskea kunkin ryhmän keskiarvo, voidaan käyttää seuraavaa komentoa:
+
+```{r}
+aineisto |>
+  group_by(sukupuoli) |>
+  summarise(keskiarvo = mean(tulot, na.rm = TRUE))
+```
+
+Toinen tyylivaihtoehto on pitäytyä R:n perusfunktioissa. Joskus esitetään ajatus, että tämä olisi hyvä tapa aloittaa - opetellaan ensin "peruskomennot" ja sitten "laajennukset". Perusfunktioiden haaste on aloittelijalle kuitenkin se, että siinäkin on monta erilaista tapaa tehdä sama asia, ja eri funktioiden käyttöliittymät poikkeavat toisistaan. Yhden komennon oppiminen ei siis auta seuraavan funktion tai analyysin oppimisessa. Yllä olevaan analyysin voi toteuttaa perusfunktioilla esimerkiksi seuraavasti:
+
+```{r}
+# aggregate()-funktion formula-rakenne
+aggregate(tulot ~ sukupuoli, data = data, FUN = mean, na.rm = TRUE)
+
+# tapply()-funktio
+tapply(data$tulot, data$sukupuoli, mean, na.rm = TRUE)
+
+# ave()-funktio
+ave(data$tulot, data$sukupuoli, FUN = function(x) mean(x, na.rm = TRUE))
+```
+
+Kaikissa on erilainen käyttöliittymä ja kaikkien tulokset ovat eri formaatissa. Komentojen ketjuttaminen ei usein toimi. Monet funktiot on nimetty tavalla, joka ei ole kovin läpinäkyvä (esim. `tapply()` ei varmaan sano uudelle käyttäjälle mitään, kun taas `group_by()` ja `summarise()` kertovat selkeästi, mitä ne tekevät). Näiden vuoksi tässä oppaassa noudatetaan kautta linja **tidyverse-tyyliä**. Perusfunktioiden käyttö voi hyvin seurata myöhemmin, jos kokin tarve nousee esiin.
+
+On olemassa vielä muitakin vaihtoehtoja, kuten data.table-paketti, mutta se on vielä enemmän erillinen tyylisuunta. Sen etuna on laskennallinen tehokkuus valtavilla aineistoilla. Tidyverse riittää kuitenkin yleisille yhteiskuntatieteellisille aineistoille.
+
 ## Tekoälyn hyödyntämisestä {#sec-tekoaly}
 
+Tekoälytyökalut ovat mullistaneet maailmaa monella tavalla, mutta erityisesti ne ovat mullistaneet ohjelmointia, mukaan lukien R-ohjelmointia. R:n oppimisessa yksi hankalimmista asioista aloittelijalle on pilkuntarkkuus: yksikin merkki väärässä paikassa, ja komento ei toimi, usein vielä siten että virheilmoitus ei oikein kerro mistä on kyse. Tällaisten virheiden etsimisessä ja korjaamisessa tekoälykalut ovat paikallaan. Samoin ne ovat erinomaisia kertomaan mikä olikaan oikea komento johonkin toimenpiteeseen tai miten argumentit piti asettaa jollekin komennolle. Laajempiakin tehtäviä työkalut toteuttavat ohjeistettuna hienosti. 
+
+Vaikka muuten välttäisi tekoälytyökalujen käyttöä, tilastoanalyysien teossa ne ovat siis hieno apuväline. Useimmille riittää hyvin sopivan chatbotin valinta. Bottia kannattaa opastaa omasta asemasta - kannattaa siis kysyessä kertoa, että olet aloittava R:n käyttäjä ja haluaisit tehdä tietyn asian tidyverse-tyylisesti. Tekoälytyökalut saa kuitenkin integroitua RStudioonkin, jolloin ne voivat toimia suoraan R-konsolissa. Tällöin voit kysyä suoraan, miten jokin asia tehdään ja saat vastauksen suoraan R-koodina. Tällöin voit myös pyytää, että koodi selitetään vaihe vaiheelta. Joka tapauksessa tekoälykalut erehtyvät, ja tulokset täytyy tarkastaa.
+
 ##  SPSS-ympäristöstä R:ään siirtyvälle {#sec-spss-r} 
+
+Moni yhteiskuntatieteilijä harkitsee SPSS:stä R:ään siirtymistä. Ilmeinen ero käyttäjälle on se, että R ei tarjoa valikkopolkuja, joista voidaan analyysikoodit generoida (analyysien toistettavuusvaatimus on tullut jo niin yleiseksi, että SPSS-käyttäjänkin yleensä täytyy viedä valikoista generoidut komennot Syntaxiin - periaatteessa on mahdollista käyttää SPSS:ää niin, että toimenpiteistä ei jää mitään logijälkeä, mutta näin ei kannata tehdä). Tekoälytyökalut pehmittävät tätä siirtymää, erityisesti kryptisten virheilmoitusten ratkaisemisessa, ja toivottavasti tämä opaskin kantaa kortensa kekoon. 
+
+Muitakin eroja on. SPSS:n aineistoformaatissa sekä muuttujilla että muuttujien arvoilla voi olla kahdet arvot: nimet ja selitteet, tai numeroarvot ja näitä vastaavat selitteet. Tämän logiikan voi tuoda R-ympäristöön haven-paketin labelled-muuttujilla. Aika usein kannattaa kuitenkin muokata aineistot R:n sisäisen logiikan mukaisesti siten, että muuttujilla on vain yksi arvo: numeerisilla muuttujilla numero, luokitelluilla muuttujilla sanallinen selite. SPSS:n 1=mies, 2=nainen ei kuitenkaan sisällä mitään informaatiota ja johtaa helposti virheisiin. SPSS:n formaatissa on myös erillinen numeroitu puuttuva tieto ("99 = Ei osaa sanoa"). Tätäkin voi käyttää, mutta useimmiten on helpompaa vain päättää mitkä arvot ovat puuttuvia ja koodata ne sellaisiksi eli NA eli Not Available -arvolla.
+
+SPSS tekee myös kuviot ja taulukot automaattisesti omien tyylitiedostojensa mukaisesti ja näyttää ne erillisessä Output-ikkunassaan. Kuvioiden osalta tässä oppaassa käytetyn kuviotyökalun logiikka on aika samanlainen - ggplot2 sisältää oletustyylin, jota voidaan sitten muokata, ja Rstudiossa on erillinen plot-ikkuna. Taulukoiden osalta R:ssä toiminta on vähän erilaista: taulukot kannattaa työstää objekteina ja sen jälkeen ne voidaan viedä pelkkinä numeroina tiedostoon (esim. Excel-tiedostoon) ja työstää taitto sitten muualla, tai toisaalta voidaan tehdä taulukoihin taitto R:n työkaluilla ja tallentaa ne suoraan valmiiseen tiedostoon liitettävässä formaatissa (esim. HTML- tai PDF-tiedostoina). 
+
+SPSS:ssä käytettävissä olevat työkalut ovat heti käytettävissä valikoissa - varsinaisia laajennuksia ei ole, ellei ajatella AMOS:n kaltaisia kokonaan erillisiä ohjelmistoja. R:ssä on tuhansia paketteja, eli aina löytyy työkalu. Paketit pitää kuitenkin muistaa asentaa ja työkalut ottaa esiin kun aloitetaan analyysi.
+
+
+
