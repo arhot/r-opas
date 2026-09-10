@@ -3,12 +3,10 @@
 .RData
 .Ruserdata
 .quarto/
-*.rmarkdown
-*_files/
+*.rmarkdowns
 taulukko*.xlsx
 yhdistetty_taulukko.xlsx
 kuvio.pdf
-kuvio.png
 
 /.quarto/
 **/*.quarto_ipynb
