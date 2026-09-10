@@ -9,7 +9,6 @@ source("_common.R")
 
 *Tämä luku on valmisteilla.*
 
-## Käytetty aineisto
 
 ## Milloin logistinen regressio sopii?
 
