@@ -37,6 +37,24 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: './_book'
+      - name: Cancel stale Pages deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.request("POST /repos/{owner}/{repo}/pages/deployments/{pages_deployment_id}/cancel", {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pages_deployment_id: context.sha,
+              });
+              core.info(`Cancelled existing Pages deployment for ${context.sha}`);
+            } catch (error) {
+              if (error.status === 404) {
+                core.info(`No existing Pages deployment found for ${context.sha}`);
+                return;
+              }
+              throw error;
+            }
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
