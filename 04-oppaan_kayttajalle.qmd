@@ -14,7 +14,7 @@ Tästä on paljon hyötyjä, mutta aloittelevan käyttäjän kannalta se voi oll
 
 Tässä oppaassa käytetään kauttaaltaan **tidyverse**-pakettiperheen tyylejä. Tidyverse on kokoelma paketteja, joiden ajatuksena on se, että komentojen käyttöliittymä on mahdollisimman yhtenäinen. Komennot on myös rakennettu siten, että tehtäviä voi helposti pilkkoa ja ketjuttaa. Komennot on nimetty selkeillä englanninkielen sanoilla, yleensä verbeillä, jotka kertovat arkikielellä mistä on kysymys. Esimerkiksi jos halutaan ryhmitellä aineisto sukupuolittain ja sitten laskea kunkin ryhmän keskiarvo, voidaan käyttää seuraavaa komentoa:
 
-```{r}
+```{r, eval=FALSE}
 aineisto |>
   group_by(sukupuoli) |>
   summarise(keskiarvo = mean(tulot, na.rm = TRUE))
@@ -22,7 +22,7 @@ aineisto |>
 
 Toinen tyylivaihtoehto on pitäytyä R:n perusfunktioissa. Joskus esitetään ajatus, että tämä olisi hyvä tapa aloittaa - opetellaan ensin "peruskomennot" ja sitten "laajennukset". Perusfunktioiden haaste on aloittelijalle kuitenkin se, että siinäkin on monta erilaista tapaa tehdä sama asia, ja eri funktioiden käyttöliittymät poikkeavat toisistaan. Yhden komennon oppiminen ei siis auta seuraavan funktion tai analyysin oppimisessa. Yllä olevaan analyysin voi toteuttaa perusfunktioilla esimerkiksi seuraavasti:
 
-```{r}
+```{r, eval=F}
 # aggregate()-funktion formula-rakenne
 aggregate(tulot ~ sukupuoli, data = data, FUN = mean, na.rm = TRUE)
 
