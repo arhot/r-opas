@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Paketit – R-opas</title>
+<title>Aineistoon tutustuminen – R-opas</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./04-oppaan_kayttajalle.html" rel="next">
-<link href="./02-r-projekti-skripti.html" rel="prev">
+<link href="./07-muuttujamuunnokset.html" rel="next">
+<link href="./05-aineiston-lukeminen.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-rstudio-ikkunat.html">Osa 1: R- ja RStudio-perusteet</a></li><li class="breadcrumb-item"><a href="./03-paketit.html"><span class="chapter-title">Paketit</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-aineiston-lukeminen.html">Osa 2: Aineiston käsittely</a></li><li class="breadcrumb-item"><a href="./06-aineistoon-tutustuminen.html"><span class="chapter-title">Aineistoon tutustuminen</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Hae" onclick="window.quartoOpenSearch();">
@@ -171,7 +171,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-paketit.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Paketit</span></a>
+  <a href="./03-paketit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Paketit</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -197,7 +197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-aineistoon-tutustuminen.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Aineistoon tutustuminen</span></a>
+  <a href="./06-aineistoon-tutustuminen.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Aineistoon tutustuminen</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -319,22 +319,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Sisällysluettelo</h2>
    
   <ul>
-  <li><a href="#sec-paketit" id="toc-sec-paketit" class="nav-link active" data-scroll-target="#sec-paketit">Paketit</a>
-  <ul class="collapse">
-  <li><a href="#mikä-on-r-paketti" id="toc-mikä-on-r-paketti" class="nav-link" data-scroll-target="#mikä-on-r-paketti">Mikä on R-paketti?</a></li>
-  <li><a href="#paketin-asentaminen" id="toc-paketin-asentaminen" class="nav-link" data-scroll-target="#paketin-asentaminen">Paketin asentaminen</a></li>
-  <li><a href="#paketin-lataaminen-käyttöön" id="toc-paketin-lataaminen-käyttöön" class="nav-link" data-scroll-target="#paketin-lataaminen-käyttöön">Paketin lataaminen käyttöön</a></li>
-  <li><a href="#tässä-oppaassa-käytettävät-paketit" id="toc-tässä-oppaassa-käytettävät-paketit" class="nav-link" data-scroll-target="#tässä-oppaassa-käytettävät-paketit">Tässä oppaassa käytettävät paketit</a></li>
-  </ul></li>
+  <li><a href="#aineiston-rakenne" id="toc-aineiston-rakenne" class="nav-link active" data-scroll-target="#aineiston-rakenne">Aineiston rakenne</a></li>
+  <li><a href="#sec-tutustuminen" id="toc-sec-tutustuminen" class="nav-link" data-scroll-target="#sec-tutustuminen">Muuttujien tarkastelu</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-rstudio-ikkunat.html">Osa 1: R- ja RStudio-perusteet</a></li><li class="breadcrumb-item"><a href="./03-paketit.html"><span class="chapter-title">Paketit</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-aineiston-lukeminen.html">Osa 2: Aineiston käsittely</a></li><li class="breadcrumb-item"><a href="./06-aineistoon-tutustuminen.html"><span class="chapter-title">Aineistoon tutustuminen</span></a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">Paketit</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Koodi</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">Aineistoon tutustuminen</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Koodi</button></div></div>
 </div>
 
 
@@ -351,43 +346,255 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="sec-paketit" class="level1">
-<h1>Paketit</h1>
-<section id="mikä-on-r-paketti" class="level2">
-<h2 class="anchored" data-anchor-id="mikä-on-r-paketti">Mikä on R-paketti?</h2>
-<p>Kun asennat R-kielen, saat käyttöösi perusfunktiot ja -komennot. R:n toiminnallisuutta voidaan kuitenkin laajentaa asentamalla erilaisia paketteja. Paketti on kokoelma funktioita, dataa ja dokumentaatiota, jotka on koottu yhteen. Paketti voi olla esimerkiksi pieni yhteen menetelmään liittyvät komennot sisältävä paketti, tai laajempi paketti, joka sisältää useita menetelmiä ja dataa. Paketteja voidaan asentaa R:n virallisesta pakettivarastosta CRAN:sta (Comprehensive R Archive Network) tai muista lähteistä, kuten GitHubista.</p>
-</section>
-<section id="paketin-asentaminen" class="level2">
-<h2 class="anchored" data-anchor-id="paketin-asentaminen">Paketin asentaminen</h2>
-<p>RStudiossa voit asentaa paketteja valitsemalla ylävalikosta “Tools” -&gt; “Install Packages…”. Avautuvassa ikkunassa voit kirjoittaa haluamasi paketin nimen ja painaa “Install”. Voit myös asentaa paketteja suoraan R-konsolista käyttämällä komentoa <code>install.packages("paketin_nimi")</code>.</p>
-</section>
-<section id="paketin-lataaminen-käyttöön" class="level2">
-<h2 class="anchored" data-anchor-id="paketin-lataaminen-käyttöön">Paketin lataaminen käyttöön</h2>
-<p>Paketti täytyy ladata käyttöön ennen kuin voit käyttää sen funktioita. Tämä tehdään komennolla <code>library(paketin_nimi)</code>. Esimerkiksi, jos haluat käyttää <code>ggplot2</code>-pakettia, kirjoitat:</p>
+<section id="aineiston-rakenne" class="level2">
+<h2 class="anchored" data-anchor-id="aineiston-rakenne">Aineiston rakenne</h2>
+<p>Muista ladata aineisto luvun 5 ohjeiden mukaisesti.</p>
+<p>Uuden aineiston kanssa työskentely alkaa tutustumalla siihen. Tärkeämpää kuin tässä tapahtuva ladatun aineiston tarkastelu on aineiston dokumentaatioon tutustuminen, eli lue aineiston kanssa jaettu koodikirja tai vastaava dokumentaatio.</p>
+<p>Ainakin kolmella tavalla voi varmistaa R:ssä, että aineisto on latautunut oikein:</p>
+<p>head() -komennolla näkee aineiston ensimmäiset rivit (oletuksena 6 riviä) ja sarakkeet (määrä riippuu näytön koosta), ja näin varmistuu, että aineisto on ladattu ja että se näyttää siltä kuin pitääkin. Tulosteessa sarakkeiden nimien alla näkyy muuttujan tyyppi kulmasulkeissa &lt;&gt;. dbl eli double tarkoittaa numeerista muuttujaa, chr eli character tarkoittaa tekstimuotoista muuttujaa, fct eli factor tarkoittaa luokiteltua tekstiä, jossa on määritettynä selitetekstit kullekin arvolle ja lbl tarkoittaa labelled-muuttujaa, jossa on tallennettu sekä numeerinen että tekstimuotoinen arvo ja selitetekstit.</p>
+<p>ESS-aineiston osalta esimerkiksi voimme tarkistaa, että sukupuoli on latautunut labelled-muuttujana, jossa on tallennettu sekä numeerinen että tekstimuotoinen arvo ja selitetekstit, ja että syntymävuosi on latautunut numeerisena muuttujana.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ESS2023)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 354
+  aineisto esskierros  idno asetelmapaino analyysipaino_suomi Sukupuoli 
+  &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;               &lt;dbl&gt; &lt;dbl+lbl&gt; 
+1 ESS11e03         11 50003             1               0.941 1 [Mies]  
+2 ESS11e03         11 50031             1               1.53  2 [Nainen]
+3 ESS11e03         11 50064             1               1.22  2 [Nainen]
+4 ESS11e03         11 50096             1               1.99  1 [Mies]  
+5 ESS11e03         11 50113             1               0.576 2 [Nainen]
+6 ESS11e03         11 50133             1               0.884 1 [Mies]  
+# ℹ 348 more variables: Syntymävuosi &lt;dbl&gt;, Ammatti_pääluokka &lt;dbl+lbl&gt;,
+#   Ammatti_alaluokka &lt;dbl+lbl&gt;, Maakunta &lt;chr+lbl&gt;, A1_min &lt;dbl&gt;,
+#   A2 &lt;dbl+lbl&gt;, A3_min &lt;dbl&gt;, A4 &lt;dbl+lbl&gt;, A5 &lt;dbl+lbl&gt;, A6 &lt;dbl+lbl&gt;,
+#   B1 &lt;dbl+lbl&gt;, B2 &lt;dbl+lbl&gt;, B3 &lt;dbl+lbl&gt;, B4 &lt;dbl+lbl&gt;, B5 &lt;dbl+lbl&gt;,
+#   B6 &lt;dbl+lbl&gt;, B7 &lt;dbl+lbl&gt;, B8 &lt;dbl+lbl&gt;, B9 &lt;dbl+lbl&gt;, B10 &lt;dbl+lbl&gt;,
+#   B11 &lt;dbl+lbl&gt;, B12 &lt;dbl+lbl&gt;, B13 &lt;dbl+lbl&gt;, B14 &lt;dbl+lbl&gt;, B15 &lt;dbl+lbl&gt;,
+#   B16 &lt;dbl+lbl&gt;, B17 &lt;dbl+lbl&gt;, B18 &lt;dbl+lbl&gt;, B19 &lt;dbl+lbl&gt;, …</code></pre>
 </div>
-<p>tämän jälkeen voit käyttää <code>ggplot2</code>-paketin funktioita, kuten <code>ggplot()</code>.</p>
+</div>
+<p>names() -komennolla näkee aineiston sarakkeiden nimet, ja näin varmistuu, että kaikki sarakkeet ovat ladattu ja että ne on nimetty oikein. Tässä esimerkkiaineistossa eräät rekisteritiedot on jo nimetty selkeillä suomenkielisillä nimillä, mutta suurin osa muuttujista on nimetty koodikirjan mukaisesti, joka ei välttämättä ole kovin kuvaava. Koodikirja kannattaa siis pitää auki, jotta ymmärtää mitä kukin muuttuja tarkoittaa.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ESS2023)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "aineisto"                   "esskierros"                
+  [3] "idno"                       "asetelmapaino"             
+  [5] "analyysipaino_suomi"        "Sukupuoli"                 
+  [7] "Syntymävuosi"               "Ammatti_pääluokka"         
+  [9] "Ammatti_alaluokka"          "Maakunta"                  
+ [11] "A1_min"                     "A2"                        
+ [13] "A3_min"                     "A4"                        
+ [15] "A5"                         "A6"                        
+ [17] "B1"                         "B2"                        
+ [19] "B3"                         "B4"                        
+ [21] "B5"                         "B6"                        
+ [23] "B7"                         "B8"                        
+ [25] "B9"                         "B10"                       
+ [27] "B11"                        "B12"                       
+ [29] "B13"                        "B14"                       
+ [31] "B15"                        "B16"                       
+ [33] "B17"                        "B18"                       
+ [35] "B19"                        "B20"                       
+ [37] "B21"                        "B22"                       
+ [39] "B23"                        "B24"                       
+ [41] "B25"                        "B26"                       
+ [43] "B27"                        "B28"                       
+ [45] "B29"                        "B30"                       
+ [47] "B31"                        "B32"                       
+ [49] "B33"                        "B34"                       
+ [51] "B35"                        "B36"                       
+ [53] "B37"                        "B38"                       
+ [55] "B39"                        "B40"                       
+ [57] "B41"                        "B42"                       
+ [59] "B43"                        "B44"                       
+ [61] "B45"                        "C1"                        
+ [63] "C2"                         "C3"                        
+ [65] "C4"                         "C5"                        
+ [67] "C6"                         "C7"                        
+ [69] "C8"                         "C9"                        
+ [71] "C10"                        "C11"                       
+ [73] "C12"                        "C13"                       
+ [75] "C14"                        "C15"                       
+ [77] "C16"                        "C17"                       
+ [79] "C18"                        "C19_1"                     
+ [81] "C19_2"                      "C19_3"                     
+ [83] "C19_4"                      "C19_5"                     
+ [85] "C19_6"                      "C19_7"                     
+ [87] "C19_8"                      "C19_9"                     
+ [89] "C19_10"                     "C19_13"                    
+ [91] "C20"                        "C21"                       
+ [93] "C23"                        "C25"                       
+ [95] "C28"                        "C30"                       
+ [97] "C31"                        "C32"                       
+ [99] "Koeryhmä"                   "C34"                       
+[101] "C35"                        "C36"                       
+[103] "C37"                        "C38"                       
+[105] "C39"                        "C40"                       
+[107] "C41"                        "C42"                       
+[109] "C43"                        "D1"                        
+[111] "D2"                         "D3"                        
+[113] "D4"                         "D5"                        
+[115] "D6"                         "D7"                        
+[117] "D8"                         "D10"                       
+[119] "D11_cm"                     "D12"                       
+[121] "D13_1"                      "D13_2"                     
+[123] "D13_3"                      "D13_4"                     
+[125] "D13_5"                      "D13_6"                     
+[127] "D14"                        "D15_1"                     
+[129] "D15_2"                      "D15_3"                     
+[131] "D15_4"                      "D15_5"                     
+[133] "D15_6"                      "D15_7"                     
+[135] "D15_8"                      "D16"                       
+[137] "D17"                        "D18"                       
+[139] "D19_1"                      "D19_2"                     
+[141] "D19_3"                      "D19_4"                     
+[143] "D19_5"                      "D19_6"                     
+[145] "D19_7"                      "D19_8"                     
+[147] "D19_9"                      "D19_10"                    
+[149] "D19_11"                     "D19_12"                    
+[151] "D19_13"                     "D20"                       
+[153] "D21"                        "D22"                       
+[155] "D23"                        "D24"                       
+[157] "D25"                        "D26"                       
+[159] "D27"                        "D28_1"                     
+[161] "D28_2"                      "D28_3"                     
+[163] "D28_4"                      "D28_5"                     
+[165] "D28_6"                      "D28_7"                     
+[167] "D28_8"                      "D28_9"                     
+[169] "D28_10"                     "D28_11"                    
+[171] "D28_12"                     "D29_1"                     
+[173] "D29_2"                      "D29_3"                     
+[175] "D29_4"                      "D29_5"                     
+[177] "D29_6"                      "D29_7"                     
+[179] "D29_8"                      "D29_9"                     
+[181] "D29_10"                     "D29_11"                    
+[183] "D29_12"                     "D29_13"                    
+[185] "D30"                        "D31"                       
+[187] "D32"                        "D33"                       
+[189] "F35a_1"                     "F35a_2"                    
+[191] "F35a_3"                     "F35a_4"                    
+[193] "F35a_5"                     "F35a_6"                    
+[195] "F35b_1"                     "F35b_2"                    
+[197] "F35b_3"                     "F35b_4"                    
+[199] "F35b_5"                     "F35b_6"                    
+[201] "F35b_7"                     "F35b_8"                    
+[203] "E1"                         "E2"                        
+[205] "E3"                         "E4"                        
+[207] "E5"                         "E6"                        
+[209] "E7"                         "E8"                        
+[211] "E9"                         "E10"                       
+[213] "E11"                        "E12"                       
+[215] "E13"                        "E14"                       
+[217] "E15"                        "E16"                       
+[219] "E17"                        "E18"                       
+[221] "E19"                        "E20"                       
+[223] "E21"                        "E22"                       
+[225] "E23"                        "E24"                       
+[227] "E25"                        "E26"                       
+[229] "E27"                        "E28"                       
+[231] "F1"                         "F2_sp"                     
+[233] "F3_sp"                      "F4_sp"                     
+[235] "F5_sp"                      "F6_sp"                     
+[237] "F7_sp"                      "F2_syntymävuosi"           
+[239] "F3_syntymävuosi"            "F4_syntymävuosi"           
+[241] "F5_syntymävuosi"            "F6_syntymävuosi"           
+[243] "F7_syntymävuosi"            "F2_suhde"                  
+[245] "F3_suhde"                   "F4_suhde"                  
+[247] "F5_suhde"                   "F6_suhde"                  
+[249] "F7_suhde"                   "F6"                        
+[251] "F7"                         "F8"                        
+[253] "F11"                        "F13"                       
+[255] "F14"                        "F14a_1"                    
+[257] "F14a_2"                     "F14a_3"                    
+[259] "F14a_4"                     "F14a_5"                    
+[261] "F14a_6"                     "F14a_7"                    
+[263] "F14a_8"                     "F14a_9"                    
+[265] "F14a_10"                    "F15"                       
+[267] "F16"                        "F17a_1"                    
+[269] "F17a_2"                     "F17a_3"                    
+[271] "F17a_4"                     "F17a_5"                    
+[273] "F17a_6"                     "F17a_7"                    
+[275] "F17a_8"                     "F17c"                      
+[277] "F18"                        "F19"                       
+[279] "F20"                        "F21"                       
+[281] "F22"                        "F23"                       
+[283] "F24"                        "F25"                       
+[285] "F26"                        "F27"                       
+[287] "F28"                        "F29"                       
+[289] "F30"                        "F32"                       
+[291] "F35"                        "F36"                       
+[293] "F37"                        "F38"                       
+[295] "F39"                        "F40"                       
+[297] "F41"                        "F42"                       
+[299] "F44"                        "F45a_1"                    
+[301] "F45a_2"                     "F45a_3"                    
+[303] "F45a_4"                     "F45a_5"                    
+[305] "F45a_6"                     "F45a_8"                    
+[307] "F45a_9"                     "F45c"                      
+[309] "F46"                        "F50"                       
+[311] "F51"                        "Puolison_ammatti_pääluokka"
+[313] "Puolison_ammatti_alaluokka" "F52"                       
+[315] "F53"                        "F54"                       
+[317] "F55"                        "F56"                       
+[319] "F57"                        "F58"                       
+[321] "H1a"                        "H1b"                       
+[323] "H1c"                        "H1d"                       
+[325] "H1e"                        "H1f"                       
+[327] "H1g"                        "H1h"                       
+[329] "H1i"                        "H1j"                       
+[331] "H1k"                        "H1l"                       
+[333] "H1m"                        "H1n"                       
+[335] "H1o"                        "H1p"                       
+[337] "H1q"                        "H1r"                       
+[339] "H1s"                        "H1t"                       
+[341] "H1u"                        "I1"                        
+[343] "I2"                         "I3"                        
+[345] "I4"                         "I5"                        
+[347] "I6"                         "I7"                        
+[349] "I8"                         "I9"                        
+[351] "K1"                         "K2"                        
+[353] "K3"                         "K4"                        </code></pre>
+</div>
+</div>
+<p>view() -komennolla näkee aineiston taulukkonäkymässä RStudiossa. Saman näkymän voi avata myös hiirellä klikkaamalla aineiston nimeä Environment-paneelissa.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(ESS2023)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
-<section id="tässä-oppaassa-käytettävät-paketit" class="level2">
-<h2 class="anchored" data-anchor-id="tässä-oppaassa-käytettävät-paketit">Tässä oppaassa käytettävät paketit</h2>
-<p>Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta <code>tidyverse</code>-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten <code>dplyr</code>, <code>ggplot2</code>, <code>tidyr</code>, <code>readr</code>, <code>forcats</code> ja <code>stringr</code>. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän luvusta 04 {<a href="04-oppaan_kayttajalle.html#sec-r-tyylit" class="quarto-xref"><span>R-kielen tyyleistä</span></a>}.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>,  <span class="co"># dplyr, ggplot2, tidyr, readr, forcats, stringr...</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"haven"</span>,      <span class="co"># SPSS- ja Stata-tiedostojen lukeminen</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"janitor"</span>,    <span class="co"># Frekvenssitaulukot ja aineiston siistiminen</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"broom"</span>,      <span class="co"># Mallitulosten siistiminen taulukoksi</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"psych"</span>,      <span class="co"># Faktorianalyysi ja kuvailevia tunnuslukuja</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"corrr"</span>,      <span class="co"># Korrelaatiot tidyverse-tyyliin</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scales"</span>,     <span class="co"># Akseleiden muotoilu kuvioissa</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"knitr"</span>,      <span class="co"># Taulukoiden tulostus</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"writexl"</span>     <span class="co"># Taulukoiden tallennus Excel-muotoon</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="sec-tutustuminen" class="level2">
+<h2 class="anchored" data-anchor-id="sec-tutustuminen">Muuttujien tarkastelu</h2>
+<p>Seuraavaksi on hyvä tarkastella mielenkiinnon kohteena olevia muuttujia. Pikaiseen tarkasteluun tutkijan näytöllä toimii esimerkiksi <code>summary()</code> -komento, joka antaa muuttujista keski- ja hajontalukuja.</p>
+<p>Otetaan siis aineisto, sitten valitaan komennolla <code>select()</code>-komennolla tarkasteltavat muuttujat, ja lopuksi <code>summary()</code>-komennolla saadaan jakaumaa kuvaavat keski- ja hajontaluvut sekä puuttuvien tietojen määrä. Poimitaan nyt aineiston muuttujista syntymävuosi, sukupuoli ja koettu onnellisuus C1.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(Syntymävuosi, Sukupuoli, C1) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Syntymävuosi    Sukupuoli           C1        
+ Min.   :1934   Min.   :1.000   Min.   : 0.000  
+ 1st Qu.:1954   1st Qu.:1.000   1st Qu.: 8.000  
+ Median :1969   Median :2.000   Median : 8.000  
+ Mean   :1970   Mean   :1.507   Mean   : 8.074  
+ 3rd Qu.:1986   3rd Qu.:2.000   3rd Qu.: 9.000  
+ Max.   :2008   Max.   :2.000   Max.   :10.000  
+                                NA's   :3       </code></pre>
+</div>
+</div>
+<p>Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. Luvun 7 ohjeella voit muokata sen luokitelluksi ja sen jälkeen <code>summary()</code> on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">count</span>(Sukupuoli)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  Sukupuoli      n
+  &lt;dbl+lbl&gt;  &lt;int&gt;
+1 1 [Mies]     770
+2 2 [Nainen]   793</code></pre>
+</div>
+</div>
+<p><code>summary</code> on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa {<span class="citation" data-cites="sec:muuttujien_esittely_taulukot">@sec:muuttujien_esittely_taulukot</span>}.</p>
 
 
 <!-- -->
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -844,56 +1051,68 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./02-r-projekti-skripti.html" class="pagination-link" aria-label="Kooditiedostot (.R, .Rmd), R-projekti ja skriptit">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Kooditiedostot (.R, .Rmd), R-projekti ja skriptit</span></span>
+      <a href="./05-aineiston-lukeminen.html" class="pagination-link" aria-label="Aineiston lukeminen R:ään ja tallentaminen">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Aineiston lukeminen R:ään ja tallentaminen</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04-oppaan_kayttajalle.html" class="pagination-link" aria-label="Opiskeluohjeita ja lisäresursseja">
-        <span class="nav-page-text"><span class="chapter-title">Opiskeluohjeita ja lisäresursseja</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./07-muuttujamuunnokset.html" class="pagination-link" aria-label="Muuttujamuunnokset">
+        <span class="nav-page-text"><span class="chapter-title">Muuttujamuunnokset</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Lähdekoodi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Paketit"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># Paketit {#sec-paketit}</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## Mikä on R-paketti?</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>Kun asennat R-kielen, saat käyttöösi perusfunktiot ja -komennot. R:n toiminnallisuutta voidaan kuitenkin laajentaa asentamalla erilaisia paketteja. Paketti on kokoelma funktioita, dataa ja dokumentaatiota, jotka on koottu yhteen. Paketti voi olla esimerkiksi pieni yhteen menetelmään liittyvät komennot sisältävä paketti, tai laajempi paketti, joka sisältää useita menetelmiä ja dataa. Paketteja voidaan asentaa R:n virallisesta pakettivarastosta CRAN:sta (Comprehensive R Archive Network) tai muista lähteistä, kuten GitHubista.</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paketin asentaminen</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>RStudiossa voit asentaa paketteja valitsemalla ylävalikosta "Tools" -&gt; "Install Packages...". Avautuvassa ikkunassa voit kirjoittaa haluamasi paketin nimen ja painaa "Install". Voit myös asentaa paketteja suoraan R-konsolista käyttämällä komentoa <span class="in">`install.packages("paketin_nimi")`</span>.</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paketin lataaminen käyttöön</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>Paketti täytyy ladata käyttöön ennen kuin voit käyttää sen funktioita. Tämä tehdään komennolla <span class="in">`library(paketin_nimi)`</span>. Esimerkiksi, jos haluat käyttää <span class="in">`ggplot2`</span>-pakettia, kirjoitat:</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>tämän jälkeen voit käyttää <span class="in">`ggplot2`</span>-paketin funktioita, kuten <span class="in">`ggplot()`</span>.</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tässä oppaassa käytettävät paketit</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta <span class="in">`tidyverse`</span>-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten <span class="in">`dplyr`</span>, <span class="in">`ggplot2`</span>, <span class="in">`tidyr`</span>, <span class="in">`readr`</span>, <span class="in">`forcats`</span> ja <span class="in">`stringr`</span>. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän luvusta 04 {@sec-r-tyylit}.</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>,  <span class="co"># dplyr, ggplot2, tidyr, readr, forcats, stringr...</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"haven"</span>,      <span class="co"># SPSS- ja Stata-tiedostojen lukeminen</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"janitor"</span>,    <span class="co"># Frekvenssitaulukot ja aineiston siistiminen</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"broom"</span>,      <span class="co"># Mallitulosten siistiminen taulukoksi</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"psych"</span>,      <span class="co"># Faktorianalyysi ja kuvailevia tunnuslukuja</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"corrr"</span>,      <span class="co"># Korrelaatiot tidyverse-tyyliin</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scales"</span>,     <span class="co"># Akseleiden muotoilu kuvioissa</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"knitr"</span>,      <span class="co"># Taulukoiden tulostus</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"writexl"</span>     <span class="co"># Taulukoiden tallennus Excel-muotoon</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Aineistoon tutustuminen"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Aineiston rakenne</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>Muista ladata aineisto luvun 5 ohjeiden mukaisesti. </span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>Uuden aineiston kanssa työskentely alkaa tutustumalla siihen. Tärkeämpää kuin tässä tapahtuva ladatun aineiston tarkastelu on aineiston dokumentaatioon tutustuminen, eli lue aineiston kanssa jaettu koodikirja tai vastaava dokumentaatio.</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>Ainakin kolmella tavalla voi varmistaa R:ssä, että aineisto on latautunut oikein:</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>head() -komennolla näkee aineiston ensimmäiset rivit (oletuksena 6 riviä) ja sarakkeet (määrä riippuu näytön koosta), ja näin varmistuu, että aineisto on ladattu ja että se näyttää siltä kuin pitääkin. Tulosteessa sarakkeiden nimien alla näkyy muuttujan tyyppi kulmasulkeissa &lt;&gt;. dbl eli double tarkoittaa numeerista muuttujaa, chr eli character tarkoittaa tekstimuotoista muuttujaa, fct eli factor tarkoittaa luokiteltua tekstiä, jossa on määritettynä selitetekstit kullekin arvolle ja lbl tarkoittaa labelled-muuttujaa, jossa on tallennettu sekä numeerinen että tekstimuotoinen arvo ja selitetekstit. </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>ESS-aineiston osalta esimerkiksi voimme tarkistaa, että sukupuoli on latautunut labelled-muuttujana, jossa on tallennettu sekä numeerinen että tekstimuotoinen arvo ja selitetekstit, ja että syntymävuosi on latautunut numeerisena muuttujana.</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ESS2023)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>names() -komennolla näkee aineiston sarakkeiden nimet, ja näin varmistuu, että kaikki sarakkeet ovat ladattu ja että ne on nimetty oikein. Tässä esimerkkiaineistossa eräät rekisteritiedot on jo nimetty selkeillä suomenkielisillä nimillä, mutta suurin osa muuttujista on nimetty koodikirjan mukaisesti, joka ei välttämättä ole kovin kuvaava. Koodikirja kannattaa siis pitää auki, jotta ymmärtää mitä kukin muuttuja tarkoittaa.</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ESS2023)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>view() -komennolla näkee aineiston taulukkonäkymässä RStudiossa. Saman näkymän voi avata myös hiirellä klikkaamalla aineiston nimeä Environment-paneelissa. </span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(ESS2023)</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Muuttujien tarkastelu {#sec-tutustuminen}</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>Seuraavaksi on hyvä tarkastella mielenkiinnon kohteena olevia muuttujia. Pikaiseen tarkasteluun tutkijan näytöllä toimii esimerkiksi <span class="in">`summary()`</span> -komento, joka antaa muuttujista keski- ja hajontalukuja. </span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>Otetaan siis aineisto, sitten valitaan komennolla <span class="in">`select()`</span>-komennolla tarkasteltavat muuttujat, ja lopuksi <span class="in">`summary()`</span>-komennolla saadaan jakaumaa kuvaavat keski- ja hajontaluvut sekä puuttuvien tietojen määrä. Poimitaan nyt aineiston muuttujista syntymävuosi, sukupuoli ja koettu onnellisuus C1. </span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(Syntymävuosi, Sukupuoli, C1) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. Luvun 7 ohjeella voit muokata sen luokitelluksi ja sen jälkeen <span class="in">`summary()`</span> on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.</span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">count</span>(Sukupuoli)</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a><span class="in">`summary`</span> on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa {@sec:muuttujien_esittely_taulukot}.</span>
 </code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

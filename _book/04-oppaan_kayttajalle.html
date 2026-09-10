@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Paketit – R-opas</title>
+<title>Opiskeluohjeita ja lisäresursseja – R-opas</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./04-oppaan_kayttajalle.html" rel="next">
-<link href="./02-r-projekti-skripti.html" rel="prev">
+<link href="./05-aineiston-lukeminen.html" rel="next">
+<link href="./03-paketit.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-rstudio-ikkunat.html">Osa 1: R- ja RStudio-perusteet</a></li><li class="breadcrumb-item"><a href="./03-paketit.html"><span class="chapter-title">Paketit</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-rstudio-ikkunat.html">Osa 1: R- ja RStudio-perusteet</a></li><li class="breadcrumb-item"><a href="./04-oppaan_kayttajalle.html"><span class="chapter-title">Opiskeluohjeita ja lisäresursseja</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Hae" onclick="window.quartoOpenSearch();">
@@ -171,12 +171,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-paketit.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Paketit</span></a>
+  <a href="./03-paketit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Paketit</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-oppaan_kayttajalle.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Opiskeluohjeita ja lisäresursseja</span></a>
+  <a href="./04-oppaan_kayttajalle.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Opiskeluohjeita ja lisäresursseja</span></a>
   </div>
 </li>
       </ul>
@@ -319,12 +319,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Sisällysluettelo</h2>
    
   <ul>
-  <li><a href="#sec-paketit" id="toc-sec-paketit" class="nav-link active" data-scroll-target="#sec-paketit">Paketit</a>
+  <li><a href="#yleistä-oppaan-käytöstä" id="toc-yleistä-oppaan-käytöstä" class="nav-link active" data-scroll-target="#yleistä-oppaan-käytöstä">Yleistä oppaan käytöstä</a>
   <ul class="collapse">
-  <li><a href="#mikä-on-r-paketti" id="toc-mikä-on-r-paketti" class="nav-link" data-scroll-target="#mikä-on-r-paketti">Mikä on R-paketti?</a></li>
-  <li><a href="#paketin-asentaminen" id="toc-paketin-asentaminen" class="nav-link" data-scroll-target="#paketin-asentaminen">Paketin asentaminen</a></li>
-  <li><a href="#paketin-lataaminen-käyttöön" id="toc-paketin-lataaminen-käyttöön" class="nav-link" data-scroll-target="#paketin-lataaminen-käyttöön">Paketin lataaminen käyttöön</a></li>
-  <li><a href="#tässä-oppaassa-käytettävät-paketit" id="toc-tässä-oppaassa-käytettävät-paketit" class="nav-link" data-scroll-target="#tässä-oppaassa-käytettävät-paketit">Tässä oppaassa käytettävät paketit</a></li>
+  <li><a href="#sec-r-tyylit" id="toc-sec-r-tyylit" class="nav-link" data-scroll-target="#sec-r-tyylit">R-kielen tyyleistä</a></li>
+  <li><a href="#sec-tekoaly" id="toc-sec-tekoaly" class="nav-link" data-scroll-target="#sec-tekoaly">Tekoälyn hyödyntämisestä</a></li>
+  <li><a href="#sec-spss-r" id="toc-sec-spss-r" class="nav-link" data-scroll-target="#sec-spss-r">SPSS-ympäristöstä R:ään siirtyvälle</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -332,9 +331,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-rstudio-ikkunat.html">Osa 1: R- ja RStudio-perusteet</a></li><li class="breadcrumb-item"><a href="./03-paketit.html"><span class="chapter-title">Paketit</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-rstudio-ikkunat.html">Osa 1: R- ja RStudio-perusteet</a></li><li class="breadcrumb-item"><a href="./04-oppaan_kayttajalle.html"><span class="chapter-title">Opiskeluohjeita ja lisäresursseja</span></a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">Paketit</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Koodi</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">Opiskeluohjeita ja lisäresursseja</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Koodi</button></div></div>
 </div>
 
 
@@ -351,38 +350,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="sec-paketit" class="level1">
-<h1>Paketit</h1>
-<section id="mikä-on-r-paketti" class="level2">
-<h2 class="anchored" data-anchor-id="mikä-on-r-paketti">Mikä on R-paketti?</h2>
-<p>Kun asennat R-kielen, saat käyttöösi perusfunktiot ja -komennot. R:n toiminnallisuutta voidaan kuitenkin laajentaa asentamalla erilaisia paketteja. Paketti on kokoelma funktioita, dataa ja dokumentaatiota, jotka on koottu yhteen. Paketti voi olla esimerkiksi pieni yhteen menetelmään liittyvät komennot sisältävä paketti, tai laajempi paketti, joka sisältää useita menetelmiä ja dataa. Paketteja voidaan asentaa R:n virallisesta pakettivarastosta CRAN:sta (Comprehensive R Archive Network) tai muista lähteistä, kuten GitHubista.</p>
-</section>
-<section id="paketin-asentaminen" class="level2">
-<h2 class="anchored" data-anchor-id="paketin-asentaminen">Paketin asentaminen</h2>
-<p>RStudiossa voit asentaa paketteja valitsemalla ylävalikosta “Tools” -&gt; “Install Packages…”. Avautuvassa ikkunassa voit kirjoittaa haluamasi paketin nimen ja painaa “Install”. Voit myös asentaa paketteja suoraan R-konsolista käyttämällä komentoa <code>install.packages("paketin_nimi")</code>.</p>
-</section>
-<section id="paketin-lataaminen-käyttöön" class="level2">
-<h2 class="anchored" data-anchor-id="paketin-lataaminen-käyttöön">Paketin lataaminen käyttöön</h2>
-<p>Paketti täytyy ladata käyttöön ennen kuin voit käyttää sen funktioita. Tämä tehdään komennolla <code>library(paketin_nimi)</code>. Esimerkiksi, jos haluat käyttää <code>ggplot2</code>-pakettia, kirjoitat:</p>
+<p><em>Tämä luku on valmisteilla.</em></p>
+<section id="yleistä-oppaan-käytöstä" class="level1">
+<h1>Yleistä oppaan käytöstä</h1>
+<section id="sec-r-tyylit" class="level2">
+<h2 class="anchored" data-anchor-id="sec-r-tyylit">R-kielen tyyleistä</h2>
+<p>R:n tyypillisin käyttötarkoitus on tilastollinen analyysi, mutta se on periaatteessa täysiverinen ohjelmointikieli. Tämän seurauksena saman asian voi tehdä monella eri tavalla R:llä: voit suorittaa analyysin sitä varten tehdyllä funktiolla, tai tehdä sen askel askeleelta matemaattisia operaatioita toteuttaen. Paketit ovat periaatteessa jonkun valitsemia tapoja tehdä jokin asia.</p>
+<p>Tästä on paljon hyötyjä, mutta aloittelevan käyttäjän kannalta se voi olla myös hankalaa. Yksittäisten komentojen osalta asialla ei niin suurta merkitystä, mutta erilaisista toimintatavoista syntyy kokonaisia koodaustyylejä, joiden elementtejä ei aina ole helppo yhdistellä.</p>
+<p>Tässä oppaassa käytetään kauttaaltaan <strong>tidyverse</strong>-pakettiperheen tyylejä. Tidyverse on kokoelma paketteja, joiden ajatuksena on se, että komentojen käyttöliittymä on mahdollisimman yhtenäinen. Komennot on myös rakennettu siten, että tehtäviä voi helposti pilkkoa ja ketjuttaa. Komennot on nimetty selkeillä englanninkielen sanoilla, yleensä verbeillä, jotka kertovat arkikielellä mistä on kysymys. Esimerkiksi jos halutaan ryhmitellä aineisto sukupuolittain ja sitten laskea kunkin ryhmän keskiarvo, voidaan käyttää seuraavaa komentoa:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>aineisto <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sukupuoli) <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">keskiarvo =</span> <span class="fu">mean</span>(tulot, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>tämän jälkeen voit käyttää <code>ggplot2</code>-paketin funktioita, kuten <code>ggplot()</code>.</p>
+<p>Toinen tyylivaihtoehto on pitäytyä R:n perusfunktioissa. Joskus esitetään ajatus, että tämä olisi hyvä tapa aloittaa - opetellaan ensin “peruskomennot” ja sitten “laajennukset”. Perusfunktioiden haaste on aloittelijalle kuitenkin se, että siinäkin on monta erilaista tapaa tehdä sama asia, ja eri funktioiden käyttöliittymät poikkeavat toisistaan. Yhden komennon oppiminen ei siis auta seuraavan funktion tai analyysin oppimisessa. Yllä olevaan analyysin voi toteuttaa perusfunktioilla esimerkiksi seuraavasti:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># aggregate()-funktion formula-rakenne</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(tulot <span class="sc">~</span> sukupuoli, <span class="at">data =</span> data, <span class="at">FUN =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># tapply()-funktio</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(data<span class="sc">$</span>tulot, data<span class="sc">$</span>sukupuoli, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ave()-funktio</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ave</span>(data<span class="sc">$</span>tulot, data<span class="sc">$</span>sukupuoli, <span class="at">FUN =</span> <span class="cf">function</span>(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Kaikissa on erilainen käyttöliittymä ja kaikkien tulokset ovat eri formaatissa. Komentojen ketjuttaminen ei usein toimi. Monet funktiot on nimetty tavalla, joka ei ole kovin läpinäkyvä (esim. <code>tapply()</code> ei varmaan sano uudelle käyttäjälle mitään, kun taas <code>group_by()</code> ja <code>summarise()</code> kertovat selkeästi, mitä ne tekevät). Näiden vuoksi tässä oppaassa noudatetaan kautta linja <strong>tidyverse-tyyliä</strong>. Perusfunktioiden käyttö voi hyvin seurata myöhemmin, jos kokin tarve nousee esiin.</p>
+<p>On olemassa vielä muitakin vaihtoehtoja, kuten data.table-paketti, mutta se on vielä enemmän erillinen tyylisuunta. Sen etuna on laskennallinen tehokkuus valtavilla aineistoilla. Tidyverse riittää kuitenkin yleisille yhteiskuntatieteellisille aineistoille.</p>
 </section>
-<section id="tässä-oppaassa-käytettävät-paketit" class="level2">
-<h2 class="anchored" data-anchor-id="tässä-oppaassa-käytettävät-paketit">Tässä oppaassa käytettävät paketit</h2>
-<p>Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta <code>tidyverse</code>-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten <code>dplyr</code>, <code>ggplot2</code>, <code>tidyr</code>, <code>readr</code>, <code>forcats</code> ja <code>stringr</code>. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän luvusta 04 {<a href="04-oppaan_kayttajalle.html#sec-r-tyylit" class="quarto-xref"><span>R-kielen tyyleistä</span></a>}.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>,  <span class="co"># dplyr, ggplot2, tidyr, readr, forcats, stringr...</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"haven"</span>,      <span class="co"># SPSS- ja Stata-tiedostojen lukeminen</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"janitor"</span>,    <span class="co"># Frekvenssitaulukot ja aineiston siistiminen</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"broom"</span>,      <span class="co"># Mallitulosten siistiminen taulukoksi</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"psych"</span>,      <span class="co"># Faktorianalyysi ja kuvailevia tunnuslukuja</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"corrr"</span>,      <span class="co"># Korrelaatiot tidyverse-tyyliin</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scales"</span>,     <span class="co"># Akseleiden muotoilu kuvioissa</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"knitr"</span>,      <span class="co"># Taulukoiden tulostus</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"writexl"</span>     <span class="co"># Taulukoiden tallennus Excel-muotoon</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="sec-tekoaly" class="level2">
+<h2 class="anchored" data-anchor-id="sec-tekoaly">Tekoälyn hyödyntämisestä</h2>
+<p>Tekoälytyökalut ovat mullistaneet maailmaa monella tavalla, mutta erityisesti ne ovat mullistaneet ohjelmointia, mukaan lukien R-ohjelmointia. R:n oppimisessa yksi hankalimmista asioista aloittelijalle on pilkuntarkkuus: yksikin merkki väärässä paikassa, ja komento ei toimi, usein vielä siten että virheilmoitus ei oikein kerro mistä on kyse. Tällaisten virheiden etsimisessä ja korjaamisessa tekoälykalut ovat paikallaan. Samoin ne ovat erinomaisia kertomaan mikä olikaan oikea komento johonkin toimenpiteeseen tai miten argumentit piti asettaa jollekin komennolle. Laajempiakin tehtäviä työkalut toteuttavat ohjeistettuna hienosti.</p>
+<p>Vaikka muuten välttäisi tekoälytyökalujen käyttöä, tilastoanalyysien teossa ne ovat siis hieno apuväline. Useimmille riittää hyvin sopivan chatbotin valinta. Bottia kannattaa opastaa omasta asemasta - kannattaa siis kysyessä kertoa, että olet aloittava R:n käyttäjä ja haluaisit tehdä tietyn asian tidyverse-tyylisesti. Tekoälytyökalut saa kuitenkin integroitua RStudioonkin, jolloin ne voivat toimia suoraan R-konsolissa. Tällöin voit kysyä suoraan, miten jokin asia tehdään ja saat vastauksen suoraan R-koodina. Tällöin voit myös pyytää, että koodi selitetään vaihe vaiheelta. Joka tapauksessa tekoälykalut erehtyvät, ja tulokset täytyy tarkastaa.</p>
+</section>
+<section id="sec-spss-r" class="level2">
+<h2 class="anchored" data-anchor-id="sec-spss-r">SPSS-ympäristöstä R:ään siirtyvälle</h2>
+<p>Moni yhteiskuntatieteilijä harkitsee SPSS:stä R:ään siirtymistä. Ilmeinen ero käyttäjälle on se, että R ei tarjoa valikkopolkuja, joista voidaan analyysikoodit generoida (analyysien toistettavuusvaatimus on tullut jo niin yleiseksi, että SPSS-käyttäjänkin yleensä täytyy viedä valikoista generoidut komennot Syntaxiin - periaatteessa on mahdollista käyttää SPSS:ää niin, että toimenpiteistä ei jää mitään logijälkeä, mutta näin ei kannata tehdä). Tekoälytyökalut pehmittävät tätä siirtymää, erityisesti kryptisten virheilmoitusten ratkaisemisessa, ja toivottavasti tämä opaskin kantaa kortensa kekoon.</p>
+<p>Muitakin eroja on. SPSS:n aineistoformaatissa sekä muuttujilla että muuttujien arvoilla voi olla kahdet arvot: nimet ja selitteet, tai numeroarvot ja näitä vastaavat selitteet. Tämän logiikan voi tuoda R-ympäristöön haven-paketin labelled-muuttujilla. Aika usein kannattaa kuitenkin muokata aineistot R:n sisäisen logiikan mukaisesti siten, että muuttujilla on vain yksi arvo: numeerisilla muuttujilla numero, luokitelluilla muuttujilla sanallinen selite. SPSS:n 1=mies, 2=nainen ei kuitenkaan sisällä mitään informaatiota ja johtaa helposti virheisiin. SPSS:n formaatissa on myös erillinen numeroitu puuttuva tieto (“99 = Ei osaa sanoa”). Tätäkin voi käyttää, mutta useimmiten on helpompaa vain päättää mitkä arvot ovat puuttuvia ja koodata ne sellaisiksi eli NA eli Not Available -arvolla.</p>
+<p>SPSS tekee myös kuviot ja taulukot automaattisesti omien tyylitiedostojensa mukaisesti ja näyttää ne erillisessä Output-ikkunassaan. Kuvioiden osalta tässä oppaassa käytetyn kuviotyökalun logiikka on aika samanlainen - ggplot2 sisältää oletustyylin, jota voidaan sitten muokata, ja Rstudiossa on erillinen plot-ikkuna. Taulukoiden osalta R:ssä toiminta on vähän erilaista: taulukot kannattaa työstää objekteina ja sen jälkeen ne voidaan viedä pelkkinä numeroina tiedostoon (esim. Excel-tiedostoon) ja työstää taitto sitten muualla, tai toisaalta voidaan tehdä taulukoihin taitto R:n työkaluilla ja tallentaa ne suoraan valmiiseen tiedostoon liitettävässä formaatissa (esim. HTML- tai PDF-tiedostoina).</p>
+<p>SPSS:ssä käytettävissä olevat työkalut ovat heti käytettävissä valikoissa - varsinaisia laajennuksia ei ole, ellei ajatella AMOS:n kaltaisia kokonaan erillisiä ohjelmistoja. R:ssä on tuhansia paketteja, eli aina löytyy työkalu. Paketit pitää kuitenkin muistaa asentaa ja työkalut ottaa esiin kun aloitetaan analyysi.</p>
 
 
 <!-- -->
@@ -844,57 +849,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./02-r-projekti-skripti.html" class="pagination-link" aria-label="Kooditiedostot (.R, .Rmd), R-projekti ja skriptit">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Kooditiedostot (.R, .Rmd), R-projekti ja skriptit</span></span>
+      <a href="./03-paketit.html" class="pagination-link" aria-label="Paketit">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Paketit</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04-oppaan_kayttajalle.html" class="pagination-link" aria-label="Opiskeluohjeita ja lisäresursseja">
-        <span class="nav-page-text"><span class="chapter-title">Opiskeluohjeita ja lisäresursseja</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./05-aineiston-lukeminen.html" class="pagination-link" aria-label="Aineiston lukeminen R:ään ja tallentaminen">
+        <span class="nav-page-text"><span class="chapter-title">Aineiston lukeminen R:ään ja tallentaminen</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Lähdekoodi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Paketit"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Opiskeluohjeita ja lisäresursseja"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># Paketit {#sec-paketit}</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>*Tämä luku on valmisteilla.*</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## Mikä on R-paketti?</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Yleistä oppaan käytöstä</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>Kun asennat R-kielen, saat käyttöösi perusfunktiot ja -komennot. R:n toiminnallisuutta voidaan kuitenkin laajentaa asentamalla erilaisia paketteja. Paketti on kokoelma funktioita, dataa ja dokumentaatiota, jotka on koottu yhteen. Paketti voi olla esimerkiksi pieni yhteen menetelmään liittyvät komennot sisältävä paketti, tai laajempi paketti, joka sisältää useita menetelmiä ja dataa. Paketteja voidaan asentaa R:n virallisesta pakettivarastosta CRAN:sta (Comprehensive R Archive Network) tai muista lähteistä, kuten GitHubista.</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## R-kielen tyyleistä {#sec-r-tyylit}</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paketin asentaminen</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>R:n tyypillisin käyttötarkoitus on tilastollinen analyysi, mutta se on periaatteessa täysiverinen ohjelmointikieli. Tämän seurauksena saman asian voi tehdä monella eri tavalla R<span class="sc">:llä:</span> voit suorittaa analyysin sitä varten tehdyllä funktiolla, tai tehdä sen askel askeleelta matemaattisia operaatioita toteuttaen. Paketit ovat periaatteessa jonkun valitsemia tapoja tehdä jokin asia. </span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>RStudiossa voit asentaa paketteja valitsemalla ylävalikosta "Tools" -&gt; "Install Packages...". Avautuvassa ikkunassa voit kirjoittaa haluamasi paketin nimen ja painaa "Install". Voit myös asentaa paketteja suoraan R-konsolista käyttämällä komentoa <span class="in">`install.packages("paketin_nimi")`</span>.</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>Tästä on paljon hyötyjä, mutta aloittelevan käyttäjän kannalta se voi olla myös hankalaa. Yksittäisten komentojen osalta asialla ei niin suurta merkitystä, mutta erilaisista toimintatavoista syntyy kokonaisia koodaustyylejä, joiden elementtejä ei aina ole helppo yhdistellä. </span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Paketin lataaminen käyttöön</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>Tässä oppaassa käytetään kauttaaltaan **tidyverse**-pakettiperheen tyylejä. Tidyverse on kokoelma paketteja, joiden ajatuksena on se, että komentojen käyttöliittymä on mahdollisimman yhtenäinen. Komennot on myös rakennettu siten, että tehtäviä voi helposti pilkkoa ja ketjuttaa. Komennot on nimetty selkeillä englanninkielen sanoilla, yleensä verbeillä, jotka kertovat arkikielellä mistä on kysymys. Esimerkiksi jos halutaan ryhmitellä aineisto sukupuolittain ja sitten laskea kunkin ryhmän keskiarvo, voidaan käyttää seuraavaa komentoa:</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>Paketti täytyy ladata käyttöön ennen kuin voit käyttää sen funktioita. Tämä tehdään komennolla <span class="in">`library(paketin_nimi)`</span>. Esimerkiksi, jos haluat käyttää <span class="in">`ggplot2`</span>-pakettia, kirjoitat:</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>tämän jälkeen voit käyttää <span class="in">`ggplot2`</span>-paketin funktioita, kuten <span class="in">`ggplot()`</span>.</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tässä oppaassa käytettävät paketit</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta <span class="in">`tidyverse`</span>-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten <span class="in">`dplyr`</span>, <span class="in">`ggplot2`</span>, <span class="in">`tidyr`</span>, <span class="in">`readr`</span>, <span class="in">`forcats`</span> ja <span class="in">`stringr`</span>. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän luvusta 04 {@sec-r-tyylit}.</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>,  <span class="co"># dplyr, ggplot2, tidyr, readr, forcats, stringr...</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"haven"</span>,      <span class="co"># SPSS- ja Stata-tiedostojen lukeminen</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"janitor"</span>,    <span class="co"># Frekvenssitaulukot ja aineiston siistiminen</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"broom"</span>,      <span class="co"># Mallitulosten siistiminen taulukoksi</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"psych"</span>,      <span class="co"># Faktorianalyysi ja kuvailevia tunnuslukuja</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"corrr"</span>,      <span class="co"># Korrelaatiot tidyverse-tyyliin</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scales"</span>,     <span class="co"># Akseleiden muotoilu kuvioissa</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"knitr"</span>,      <span class="co"># Taulukoiden tulostus</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"writexl"</span>     <span class="co"># Taulukoiden tallennus Excel-muotoon</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-</code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=FALSE}</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>aineisto <span class="sc">|&gt;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sukupuoli) <span class="sc">|&gt;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">keskiarvo =</span> <span class="fu">mean</span>(tulot, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>Toinen tyylivaihtoehto on pitäytyä R:n perusfunktioissa. Joskus esitetään ajatus, että tämä olisi hyvä tapa aloittaa - opetellaan ensin "peruskomennot" ja sitten "laajennukset". Perusfunktioiden haaste on aloittelijalle kuitenkin se, että siinäkin on monta erilaista tapaa tehdä sama asia, ja eri funktioiden käyttöliittymät poikkeavat toisistaan. Yhden komennon oppiminen ei siis auta seuraavan funktion tai analyysin oppimisessa. Yllä olevaan analyysin voi toteuttaa perusfunktioilla esimerkiksi seuraavasti:</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=F}</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># aggregate()-funktion formula-rakenne</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(tulot <span class="sc">~</span> sukupuoli, <span class="at">data =</span> data, <span class="at">FUN =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># tapply()-funktio</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(data<span class="sc">$</span>tulot, data<span class="sc">$</span>sukupuoli, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># ave()-funktio</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">ave</span>(data<span class="sc">$</span>tulot, data<span class="sc">$</span>sukupuoli, <span class="at">FUN =</span> <span class="cf">function</span>(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>Kaikissa on erilainen käyttöliittymä ja kaikkien tulokset ovat eri formaatissa. Komentojen ketjuttaminen ei usein toimi. Monet funktiot on nimetty tavalla, joka ei ole kovin läpinäkyvä (esim. <span class="in">`tapply()`</span> ei varmaan sano uudelle käyttäjälle mitään, kun taas <span class="in">`group_by()`</span> ja <span class="in">`summarise()`</span> kertovat selkeästi, mitä ne tekevät). Näiden vuoksi tässä oppaassa noudatetaan kautta linja **tidyverse-tyyliä**. Perusfunktioiden käyttö voi hyvin seurata myöhemmin, jos kokin tarve nousee esiin.</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>On olemassa vielä muitakin vaihtoehtoja, kuten data.table-paketti, mutta se on vielä enemmän erillinen tyylisuunta. Sen etuna on laskennallinen tehokkuus valtavilla aineistoilla. Tidyverse riittää kuitenkin yleisille yhteiskuntatieteellisille aineistoille.</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tekoälyn hyödyntämisestä {#sec-tekoaly}</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>Tekoälytyökalut ovat mullistaneet maailmaa monella tavalla, mutta erityisesti ne ovat mullistaneet ohjelmointia, mukaan lukien R-ohjelmointia. R:n oppimisessa yksi hankalimmista asioista aloittelijalle on pilkuntarkkuus: yksikin merkki väärässä paikassa, ja komento ei toimi, usein vielä siten että virheilmoitus ei oikein kerro mistä on kyse. Tällaisten virheiden etsimisessä ja korjaamisessa tekoälykalut ovat paikallaan. Samoin ne ovat erinomaisia kertomaan mikä olikaan oikea komento johonkin toimenpiteeseen tai miten argumentit piti asettaa jollekin komennolle. Laajempiakin tehtäviä työkalut toteuttavat ohjeistettuna hienosti. </span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>Vaikka muuten välttäisi tekoälytyökalujen käyttöä, tilastoanalyysien teossa ne ovat siis hieno apuväline. Useimmille riittää hyvin sopivan chatbotin valinta. Bottia kannattaa opastaa omasta asemasta - kannattaa siis kysyessä kertoa, että olet aloittava R:n käyttäjä ja haluaisit tehdä tietyn asian tidyverse-tyylisesti. Tekoälytyökalut saa kuitenkin integroitua RStudioonkin, jolloin ne voivat toimia suoraan R-konsolissa. Tällöin voit kysyä suoraan, miten jokin asia tehdään ja saat vastauksen suoraan R-koodina. Tällöin voit myös pyytää, että koodi selitetään vaihe vaiheelta. Joka tapauksessa tekoälykalut erehtyvät, ja tulokset täytyy tarkastaa.</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="fu">##  SPSS-ympäristöstä R:ään siirtyvälle {#sec-spss-r} </span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>Moni yhteiskuntatieteilijä harkitsee SPSS:stä R:ään siirtymistä. Ilmeinen ero käyttäjälle on se, että R ei tarjoa valikkopolkuja, joista voidaan analyysikoodit generoida (analyysien toistettavuusvaatimus on tullut jo niin yleiseksi, että SPSS-käyttäjänkin yleensä täytyy viedä valikoista generoidut komennot Syntaxiin - periaatteessa on mahdollista käyttää SPSS:ää niin, että toimenpiteistä ei jää mitään logijälkeä, mutta näin ei kannata tehdä). Tekoälytyökalut pehmittävät tätä siirtymää, erityisesti kryptisten virheilmoitusten ratkaisemisessa, ja toivottavasti tämä opaskin kantaa kortensa kekoon. </span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>Muitakin eroja on. SPSS:n aineistoformaatissa sekä muuttujilla että muuttujien arvoilla voi olla kahdet arvot: nimet ja selitteet, tai numeroarvot ja näitä vastaavat selitteet. Tämän logiikan voi tuoda R-ympäristöön haven-paketin labelled-muuttujilla. Aika usein kannattaa kuitenkin muokata aineistot R:n sisäisen logiikan mukaisesti siten, että muuttujilla on vain yksi arvo: numeerisilla muuttujilla numero, luokitelluilla muuttujilla sanallinen selite. SPSS:n 1=mies, 2=nainen ei kuitenkaan sisällä mitään informaatiota ja johtaa helposti virheisiin. SPSS:n formaatissa on myös erillinen numeroitu puuttuva tieto ("99 = Ei osaa sanoa"). Tätäkin voi käyttää, mutta useimmiten on helpompaa vain päättää mitkä arvot ovat puuttuvia ja koodata ne sellaisiksi eli NA eli Not Available -arvolla.</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>SPSS tekee myös kuviot ja taulukot automaattisesti omien tyylitiedostojensa mukaisesti ja näyttää ne erillisessä Output-ikkunassaan. Kuvioiden osalta tässä oppaassa käytetyn kuviotyökalun logiikka on aika samanlainen - ggplot2 sisältää oletustyylin, jota voidaan sitten muokata, ja Rstudiossa on erillinen plot-ikkuna. Taulukoiden osalta R:ssä toiminta on vähän erilaista: taulukot kannattaa työstää objekteina ja sen jälkeen ne voidaan viedä pelkkinä numeroina tiedostoon (esim. Excel-tiedostoon) ja työstää taitto sitten muualla, tai toisaalta voidaan tehdä taulukoihin taitto R:n työkaluilla ja tallentaa ne suoraan valmiiseen tiedostoon liitettävässä formaatissa (esim. HTML- tai PDF-tiedostoina). </span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>SPSS:ssä käytettävissä olevat työkalut ovat heti käytettävissä valikoissa - varsinaisia laajennuksia ei ole, ellei ajatella AMOS:n kaltaisia kokonaan erillisiä ohjelmistoja. R:ssä on tuhansia paketteja, eli aina löytyy työkalu. Paketit pitää kuitenkin muistaa asentaa ja työkalut ottaa esiin kun aloitetaan analyysi.</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
