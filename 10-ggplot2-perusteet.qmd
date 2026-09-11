@@ -46,7 +46,7 @@ ESS2023 |> ggplot(aes(x = C1, fill = Sukupuoli)) +
     theme_minimal()
 ```
 
-Tässä oppaassa esitellään kuvioita koskevissa luvuissa kunkin kuvion perussapluuna, ja sitten laajennetaan sitä erilaisilla tavoilla. Kuvion muokkaamisesta on oma lukunsa {@sec:kuvion-muokkaaminen}, jossa esitellään erilaisia tapoja muuttaa kuvion ulkoasua.
+Tässä oppaassa esitellään kuvioita koskevissa luvuissa kunkin kuvion perussapluuna, ja sitten laajennetaan sitä erilaisilla tavoilla. Kuvion muokkaamisesta on oma lukunsa @sec-kuvion-muokkaaminen, jossa esitellään erilaisia tapoja muuttaa kuvion ulkoasua.
 
 ## Kuvion tallentaminen
 

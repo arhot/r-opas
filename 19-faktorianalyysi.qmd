@@ -68,11 +68,11 @@ sorted <- faktorianalyysi |> fa.sort()
 lataukset <- sorted$loadings |>
   unclass() |>
   as_tibble(rownames = "Muuttuja") |>
-  mutate(across(where(is.numeric), ~ if_else(abs(.x) < 0.3, NA_real_, round(.x, 2))))
+  mutate(across(where(is.numeric), ~ if_else(abs(.x) < 0.3, NA_real_, round_half_up(.x, 2))))
 
 kommunaliteetit <- sorted$communality |>
   enframe(name = "Muuttuja", value = "h2") |>
-  mutate(h2 = round(h2, 2))
+  mutate(h2 = round_half_up(h2, 2))
 
 taulukko1 <- lataukset |> left_join(kommunaliteetit, by = "Muuttuja")
 

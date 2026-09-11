@@ -284,22 +284,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
+  <a href="./17-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
+  <a href="./18-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
+  <a href="./19-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./24-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
+  <a href="./20-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -348,7 +348,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="aineiston-rakenne" class="level2">
 <h2 class="anchored" data-anchor-id="aineiston-rakenne">Aineiston rakenne</h2>
-<p>Muista ladata aineisto luvun 5 ohjeiden mukaisesti.</p>
+<p>Muista ladata aineisto <a href="./05-aineiston-lukeminen.html">Aineiston lukeminen</a> -luvun ohjeiden mukaisesti.</p>
 <p>Uuden aineiston kanssa työskentely alkaa tutustumalla siihen. Tärkeämpää kuin tässä tapahtuva ladatun aineiston tarkastelu on aineiston dokumentaatioon tutustuminen, eli lue aineiston kanssa jaettu koodikirja tai vastaava dokumentaatio.</p>
 <p>Ainakin kolmella tavalla voi varmistaa R:ssä, että aineisto on latautunut oikein:</p>
 <p>head() -komennolla näkee aineiston ensimmäiset rivit (oletuksena 6 riviä) ja sarakkeet (määrä riippuu näytön koosta), ja näin varmistuu, että aineisto on ladattu ja että se näyttää siltä kuin pitääkin. Tulosteessa sarakkeiden nimien alla näkyy muuttujan tyyppi kulmasulkeissa &lt;&gt;. dbl eli double tarkoittaa numeerista muuttujaa, chr eli character tarkoittaa tekstimuotoista muuttujaa, fct eli factor tarkoittaa luokiteltua tekstiä, jossa on määritettynä selitetekstit kullekin arvolle ja lbl tarkoittaa labelled-muuttujaa, jossa on tallennettu sekä numeerinen että tekstimuotoinen arvo ja selitetekstit.</p>
@@ -579,7 +579,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                                 NA's   :3       </code></pre>
 </div>
 </div>
-<p>Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. Luvun 7 ohjeella voit muokata sen luokitelluksi ja sen jälkeen <code>summary()</code> on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.</p>
+<p>Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. <a href="./07-muuttujamuunnokset.html">Muuttujamuunnokset</a> -luvun ohjeella voit muokata sen luokitelluksi ja sen jälkeen <code>summary()</code> on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">count</span>(Sukupuoli)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -590,7 +590,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 2 2 [Nainen]   793</code></pre>
 </div>
 </div>
-<p><code>summary</code> on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa {<span class="citation" data-cites="sec:muuttujien_esittely_taulukot">@sec:muuttujien_esittely_taulukot</span>}.</p>
+<p><code>summary</code> on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa <a href="./08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html">Kuvailevat analyysit</a>.</p>
 
 
 <!-- -->
@@ -1072,7 +1072,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Aineiston rakenne</span></span>
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>Muista ladata aineisto luvun 5 ohjeiden mukaisesti. </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>Muista ladata aineisto <span class="co">[</span><span class="ot">Aineiston lukeminen</span><span class="co">](05-aineiston-lukeminen.qmd)</span> -luvun ohjeiden mukaisesti. </span>
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>Uuden aineiston kanssa työskentely alkaa tutustumalla siihen. Tärkeämpää kuin tässä tapahtuva ladatun aineiston tarkastelu on aineiston dokumentaatioon tutustuminen, eli lue aineiston kanssa jaettu koodikirja tai vastaava dokumentaatio.</span>
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
@@ -1107,12 +1107,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(Syntymävuosi, Sukupuoli, C1) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span>
 <span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. Luvun 7 ohjeella voit muokata sen luokitelluksi ja sen jälkeen <span class="in">`summary()`</span> on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. <span class="co">[</span><span class="ot">Muuttujamuunnokset</span><span class="co">](07-muuttujamuunnokset.qmd)</span> -luvun ohjeella voit muokata sen luokitelluksi ja sen jälkeen <span class="in">`summary()`</span> on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.</span>
 <span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">count</span>(Sukupuoli)</span>
 <span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a><span class="in">`summary`</span> on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa {@sec:muuttujien_esittely_taulukot}.</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a><span class="in">`summary`</span> on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa <span class="co">[</span><span class="ot">Kuvailevat analyysit</span><span class="co">](08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.qmd)</span>.</span>
 </code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

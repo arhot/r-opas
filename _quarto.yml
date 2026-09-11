@@ -36,10 +36,10 @@ book:
         - osa3-harjoitukset.qmd
     - part: "Osa 4: Analyysimenetelmät"
       chapters:
-        - 20-regressio.qmd
-        - 21-anova.qmd
-        - 22-faktorianalyysi.qmd
-        - 24-logistinen-regressio.qmd
+        - 17-regressio.qmd
+        - 18-anova.qmd
+        - 19-faktorianalyysi.qmd
+        - 20-logistinen-regressio.qmd
         - osa4-harjoitukset.qmd
 
 format:

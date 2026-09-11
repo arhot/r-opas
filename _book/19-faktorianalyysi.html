@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./24-logistinen-regressio.html" rel="next">
-<link href="./21-anova.html" rel="prev">
+<link href="./20-logistinen-regressio.html" rel="next">
+<link href="./18-anova.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./20-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./22-faktorianalyysi.html"><span class="chapter-title">Faktorianalyysi</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./19-faktorianalyysi.html"><span class="chapter-title">Faktorianalyysi</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Hae" onclick="window.quartoOpenSearch();">
@@ -284,22 +284,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
+  <a href="./17-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
+  <a href="./18-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22-faktorianalyysi.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Faktorianalyysi</span></a>
+  <a href="./19-faktorianalyysi.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Faktorianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./24-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
+  <a href="./20-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -334,7 +334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./20-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./22-faktorianalyysi.html"><span class="chapter-title">Faktorianalyysi</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./19-faktorianalyysi.html"><span class="chapter-title">Faktorianalyysi</span></a></li></ol></nav>
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">Faktorianalyysi</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Koodi</button></div></div>
 </div>
@@ -403,7 +403,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  NA's   :38      NA's   :41      NA's   :36     </code></pre>
 </div>
 </div>
-<p>Muitakin tapoja valita monta muuttujaa kerralla on - esimerkiksi <code>num_range()</code>, jos muuttujat on nimetty juoksevasti numeroin (<code>B6</code>-<code>B12</code>), tai suora listaus <code>select(B6, B7, B8)</code>. Muuttujien välisiä korrelaatioita kannattaa tarkastella jo ennen faktorianalyysia - ks. luku <a href="#sec-korrelaatio" class="quarto-xref"><span class="quarto-unresolved-ref">sec-korrelaatio</span></a>.</p>
+<p>Muitakin tapoja valita monta muuttujaa kerralla on - esimerkiksi <code>num_range()</code>, jos muuttujat on nimetty juoksevasti numeroin (<code>B6</code>-<code>B12</code>), tai suora listaus <code>select(B6, B7, B8)</code>. Muuttujien välisiä korrelaatioita kannattaa tarkastella jo ennen faktorianalyysia - ks. luku <a href="08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-korrelaatio" class="quarto-xref"><span>Korrelaatio</span></a>.</p>
 </section>
 <section id="faktorianalyysin-tarkoitus" class="level2">
 <h2 class="anchored" data-anchor-id="faktorianalyysin-tarkoitus">Faktorianalyysin tarkoitus</h2>
@@ -510,11 +510,11 @@ Minimum correlation of possible factor scores     0.52 0.47 0.43 0.37</code></pr
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>lataukset <span class="ot">&lt;-</span> sorted<span class="sc">$</span>loadings <span class="sc">|&gt;</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unclass</span>() <span class="sc">|&gt;</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"Muuttuja"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">if_else</span>(<span class="fu">abs</span>(.x) <span class="sc">&lt;</span> <span class="fl">0.3</span>, <span class="cn">NA_real_</span>, <span class="fu">round</span>(.x, <span class="dv">2</span>))))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">if_else</span>(<span class="fu">abs</span>(.x) <span class="sc">&lt;</span> <span class="fl">0.3</span>, <span class="cn">NA_real_</span>, <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>))))</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>kommunaliteetit <span class="ot">&lt;-</span> sorted<span class="sc">$</span>communality <span class="sc">|&gt;</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enframe</span>(<span class="at">name =</span> <span class="st">"Muuttuja"</span>, <span class="at">value =</span> <span class="st">"h2"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">h2 =</span> <span class="fu">round</span>(h2, <span class="dv">2</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">h2 =</span> <span class="fu">round_half_up</span>(h2, <span class="dv">2</span>))</span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>taulukko1 <span class="ot">&lt;-</span> lataukset <span class="sc">|&gt;</span> <span class="fu">left_join</span>(kommunaliteetit, <span class="at">by =</span> <span class="st">"Muuttuja"</span>)</span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
@@ -596,7 +596,7 @@ Minimum correlation of possible factor scores     0.52 0.47 0.43 0.37</code></pr
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="22-faktorianalyysi_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="19-faktorianalyysi_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -1062,12 +1062,12 @@ Minimum correlation of possible factor scores     0.52 0.47 0.43 0.37</code></pr
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./21-anova.html" class="pagination-link" aria-label="Varianssianalyysi">
+      <a href="./18-anova.html" class="pagination-link" aria-label="Varianssianalyysi">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Varianssianalyysi</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./24-logistinen-regressio.html" class="pagination-link" aria-label="Logistinen regressioanalyysi">
+      <a href="./20-logistinen-regressio.html" class="pagination-link" aria-label="Logistinen regressioanalyysi">
         <span class="nav-page-text"><span class="chapter-title">Logistinen regressioanalyysi</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1142,11 +1142,11 @@ Minimum correlation of possible factor scores     0.52 0.47 0.43 0.37</code></pr
 <span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>lataukset <span class="ot">&lt;-</span> sorted<span class="sc">$</span>loadings <span class="sc">|&gt;</span></span>
 <span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unclass</span>() <span class="sc">|&gt;</span></span>
 <span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"Muuttuja"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">if_else</span>(<span class="fu">abs</span>(.x) <span class="sc">&lt;</span> <span class="fl">0.3</span>, <span class="cn">NA_real_</span>, <span class="fu">round</span>(.x, <span class="dv">2</span>))))</span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">if_else</span>(<span class="fu">abs</span>(.x) <span class="sc">&lt;</span> <span class="fl">0.3</span>, <span class="cn">NA_real_</span>, <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>))))</span>
 <span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a>kommunaliteetit <span class="ot">&lt;-</span> sorted<span class="sc">$</span>communality <span class="sc">|&gt;</span></span>
 <span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enframe</span>(<span class="at">name =</span> <span class="st">"Muuttuja"</span>, <span class="at">value =</span> <span class="st">"h2"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">h2 =</span> <span class="fu">round</span>(h2, <span class="dv">2</span>))</span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">h2 =</span> <span class="fu">round_half_up</span>(h2, <span class="dv">2</span>))</span>
 <span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>taulukko1 <span class="ot">&lt;-</span> lataukset <span class="sc">|&gt;</span> <span class="fu">left_join</span>(kommunaliteetit, <span class="at">by =</span> <span class="st">"Muuttuja"</span>)</span>
 <span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a></span>

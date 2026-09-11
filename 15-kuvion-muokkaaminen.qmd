@@ -7,7 +7,7 @@ title: "Kuvioiden muokkaaminen"
 source("_common.R")
 ```
 
-# Ggplot2 ja kuvion muokkaus
+# Ggplot2 ja kuvion muokkaus {#sec-kuvion-muokkaaminen}
 
 Koska kaikki kuviot rakennetaan samoista elementeistä, kaikkiin kuvioihin voidaan tehdä muokkaukset samoilla komennoilla. Niin yksittäisiä elementtejä kuin kokonaisia kuviotyylejä voidaan lisätä kuvioon samalla tavalla kuin peruselementtejäkin eli liittämällä ne kuvion komentoihin +-merkillä. Voit tehdä yhden pitkän komennon tai tallentaa kuvion peruselementit ensin ja lisätä muokkaukset myöhemmin esimerkiksi tällaisella logiikalla:
 

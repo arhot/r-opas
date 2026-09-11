@@ -20,7 +20,7 @@ ESS2023 |> ggplot(aes(x = Syntymävuosi, y = C1)) +
   stat_summary(fun = mean, geom = "line")
 ```
 
-Toinen tapa on laskea keskiarvot ensin erikseen omaan taulukkoon. Tässä hyödynnetään luvussa 18 {@sec:taulukot} esiteltyä tapaa koota haluttuja tunnuslukuja taulukoksi, ja näin saatu taulukko toimii sitten kuvion aineistona. 
+Toinen tapa on laskea keskiarvot ensin erikseen omaan taulukkoon. Tässä hyödynnetään @sec-tunnuslukutaulukko-ryhmittain esiteltyä tapaa koota haluttuja tunnuslukuja taulukoksi, ja näin saatu taulukko toimii sitten kuvion aineistona. 
 
 Nyt sapluuna on siis normaali - paitsi aineistona on juuri tehty taulukko.
 

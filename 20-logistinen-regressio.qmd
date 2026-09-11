@@ -65,7 +65,7 @@ Vetosuhde alle yhden tarkoittaa, että veto pienenee selittäjän kasvaessa (tai
 
 ## Useamman mallin taulukko
 
-Sama `bind_rows(..., .id = "malli")`-kaava kokoaa useamman mallin vetosuhdetaulukot yhteen kuin regressioluvussakin.
+Sama `bind_rows(..., .id = "malli")`-kaava kokoaa useamman mallin vetosuhdetaulukot yhteen kuin [Regressio](17-regressio.qmd)-luvussakin.
 
 ```{r}
 mallitaulukko <- bind_rows(

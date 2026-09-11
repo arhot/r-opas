@@ -284,22 +284,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
+  <a href="./17-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
+  <a href="./18-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
+  <a href="./19-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./24-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
+  <a href="./20-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -371,7 +371,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tässä-oppaassa-käytettävät-paketit" class="level2">
 <h2 class="anchored" data-anchor-id="tässä-oppaassa-käytettävät-paketit">Tässä oppaassa käytettävät paketit</h2>
-<p>Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta <code>tidyverse</code>-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten <code>dplyr</code>, <code>ggplot2</code>, <code>tidyr</code>, <code>readr</code>, <code>forcats</code> ja <code>stringr</code>. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän luvusta 04 {<a href="#sec-r-tyylit" class="quarto-xref"><span class="quarto-unresolved-ref">sec-r-tyylit</span></a>}.</p>
+<p>Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta <code>tidyverse</code>-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten <code>dplyr</code>, <code>ggplot2</code>, <code>tidyr</code>, <code>readr</code>, <code>forcats</code> ja <code>stringr</code>. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän <a href="04-oppaan_kayttajalle.html#sec-r-tyylit" class="quarto-xref"><span>R-kielen tyyleistä</span></a>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>,  <span class="co"># dplyr, ggplot2, tidyr, readr, forcats, stringr...</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"haven"</span>,      <span class="co"># SPSS- ja Stata-tiedostojen lukeminen</span></span>
@@ -883,7 +883,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tässä oppaassa käytettävät paketit</span></span>
 <span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta <span class="in">`tidyverse`</span>-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten <span class="in">`dplyr`</span>, <span class="in">`ggplot2`</span>, <span class="in">`tidyr`</span>, <span class="in">`readr`</span>, <span class="in">`forcats`</span> ja <span class="in">`stringr`</span>. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän luvusta 04 {@sec-r-tyylit}.</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta <span class="in">`tidyverse`</span>-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten <span class="in">`dplyr`</span>, <span class="in">`ggplot2`</span>, <span class="in">`tidyr`</span>, <span class="in">`readr`</span>, <span class="in">`forcats`</span> ja <span class="in">`stringr`</span>. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän @sec-r-tyylit.</span>
 <span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
 <span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>

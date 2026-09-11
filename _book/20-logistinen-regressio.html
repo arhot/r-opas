@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./osa4-harjoitukset.html" rel="next">
-<link href="./22-faktorianalyysi.html" rel="prev">
+<link href="./19-faktorianalyysi.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./20-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./24-logistinen-regressio.html"><span class="chapter-title">Logistinen regressioanalyysi</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./20-logistinen-regressio.html"><span class="chapter-title">Logistinen regressioanalyysi</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Hae" onclick="window.quartoOpenSearch();">
@@ -284,22 +284,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
+  <a href="./17-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
+  <a href="./18-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
+  <a href="./19-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./24-logistinen-regressio.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
+  <a href="./20-logistinen-regressio.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -332,7 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./20-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./24-logistinen-regressio.html"><span class="chapter-title">Logistinen regressioanalyysi</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./20-logistinen-regressio.html"><span class="chapter-title">Logistinen regressioanalyysi</span></a></li></ol></nav>
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">Logistinen regressioanalyysi</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Koodi</button></div></div>
 </div>
@@ -416,7 +416,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="useamman-mallin-taulukko" class="level2">
 <h2 class="anchored" data-anchor-id="useamman-mallin-taulukko">Useamman mallin taulukko</h2>
-<p>Sama <code>bind_rows(..., .id = "malli")</code>-kaava kokoaa useamman mallin vetosuhdetaulukot yhteen kuin regressioluvussakin.</p>
+<p>Sama <code>bind_rows(..., .id = "malli")</code>-kaava kokoaa useamman mallin vetosuhdetaulukot yhteen kuin <a href="./17-regressio.html">Regressio</a>-luvussakin.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mallitaulukko <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Malli 1"</span> <span class="ot">=</span> <span class="fu">tidy</span>(m1, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>),</span>
@@ -466,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="24-logistinen-regressio_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="20-logistinen-regressio_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -508,7 +508,7 @@ Type: response</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="24-logistinen-regressio_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p><img src="20-logistinen-regressio_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -973,7 +973,7 @@ Type: response</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./22-faktorianalyysi.html" class="pagination-link" aria-label="Faktorianalyysi">
+      <a href="./19-faktorianalyysi.html" class="pagination-link" aria-label="Faktorianalyysi">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Faktorianalyysi</span></span>
       </a>          
   </div>
@@ -1050,7 +1050,7 @@ Type: response</code></pre>
 <span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## Useamman mallin taulukko</span></span>
 <span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a>Sama <span class="in">`bind_rows(..., .id = "malli")`</span>-kaava kokoaa useamman mallin vetosuhdetaulukot yhteen kuin regressioluvussakin.</span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a>Sama <span class="in">`bind_rows(..., .id = "malli")`</span>-kaava kokoaa useamman mallin vetosuhdetaulukot yhteen kuin <span class="co">[</span><span class="ot">Regressio</span><span class="co">](17-regressio.qmd)</span>-luvussakin.</span>
 <span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a>mallitaulukko <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>

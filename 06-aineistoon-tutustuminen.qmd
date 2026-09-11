@@ -9,7 +9,7 @@ source("_common.R")
 
 ## Aineiston rakenne
 
-Muista ladata aineisto luvun 5 ohjeiden mukaisesti. 
+Muista ladata aineisto [Aineiston lukeminen](05-aineiston-lukeminen.qmd) -luvun ohjeiden mukaisesti. 
 
 Uuden aineiston kanssa työskentely alkaa tutustumalla siihen. Tärkeämpää kuin tässä tapahtuva ladatun aineiston tarkastelu on aineiston dokumentaatioon tutustuminen, eli lue aineiston kanssa jaettu koodikirja tai vastaava dokumentaatio.
 
@@ -44,9 +44,9 @@ Otetaan siis aineisto, sitten valitaan komennolla `select()`-komennolla tarkaste
 ESS2023 |> select(Syntymävuosi, Sukupuoli, C1) |> summary()
 ```
 
-Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. Luvun 7 ohjeella voit muokata sen luokitelluksi ja sen jälkeen `summary()` on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.
+Syntymävuoden ja onnellisuuden osalta valitut tiedot ovat hyödyllisiä, mutta sukupuolen osalta summary() -komento ei anna kovin hyödyllistä tietoa - sukupuoli on tässä aineistossa kirjattu jatkuvana muuttujana, vaikka todellisuudessa se on tietysti luokiteltu muuttuja. [Muuttujamuunnokset](07-muuttujamuunnokset.qmd) -luvun ohjeella voit muokata sen luokitelluksi ja sen jälkeen `summary()` on informaativisempi. Suoraankin saat halutun tiedon esimerkiksi count() -komennolla, joka laskee kunkin luokan esiintymismäärän.
 ```{r}
 ESS2023 |> count(Sukupuoli)
 ```
 
-`summary` on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa {@sec:muuttujien_esittely_taulukot}.
+`summary` on komento pikaiseen tarkasteluun - jos haluat tehdä hiotumpia muuttujien esittelytaulukoita julkaisuun, nämä komennot esitellään luvussa [Kuvailevat analyysit](08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.qmd).

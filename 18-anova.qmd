@@ -62,7 +62,7 @@ keskiarvotaulukko |>
 
 ## Varianssianalyysi regressiomallina
 
-Koska varianssianalyysi on regressiomalli, se tehdään samalla `lm()`-komennolla kuin regressioluvussa. Päävaikutusmallin tulkinta on: kuinka paljon ryhmä eroaa vertailuryhmästä, kun muut mallissa olevat tekijät on vakioitu.
+Koska varianssianalyysi on regressiomalli, se tehdään samalla `lm()`-komennolla kuin [Regressio](17-regressio.qmd)-luvussa. Päävaikutusmallin tulkinta on: kuinka paljon ryhmä eroaa vertailuryhmästä, kun muut mallissa olevat tekijät on vakioitu.
 
 ```{r}
 malli1 <- ESS2023 |> lm(C1 ~ Sukupuoli + Koulutusaste, data = _)

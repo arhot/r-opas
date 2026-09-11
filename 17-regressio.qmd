@@ -53,7 +53,7 @@ ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +
 
 ## Tulosten raportointi
 
-Tulostaulukoita voi rakentaa komennolla tidy(). Tiedot mallista saa taulukkomuodossa, jossa on regressiokertoimet, niiden tilastollinen merkitsevyys ja luottamusvälit. `conf.int=TRUE`-argumentti lisää taulukkoon luottamusvälit. Taulukko on R:n data frame -muodossa, joten sitä voi muokata haluamakseen `mutate()`-komennolla, ja esimerkiksi pyöristää numeeriset sarakkeet halutun tarkkuisiksi `mutate(across(where(is.numeric), ~ round(.x, 2)))`-komennolla. Voit myös nimetä sarakkeet suomenkielisiksi `rename()`-komennolla, ja järjestää sarakkeet haluamaasi järjestykseen `select()`-komennolla. 
+Tulostaulukoita voi rakentaa komennolla tidy(). Tiedot mallista saa taulukkomuodossa, jossa on regressiokertoimet, niiden tilastollinen merkitsevyys ja luottamusvälit. `conf.int=TRUE`-argumentti lisää taulukkoon luottamusvälit. Taulukko on R:n data frame -muodossa, joten sitä voi muokata haluamakseen `mutate()`-komennolla, ja esimerkiksi pyöristää numeeriset sarakkeet halutun tarkkuisiksi `mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))`-komennolla. Voit myös nimetä sarakkeet suomenkielisiksi `rename()`-komennolla, ja järjestää sarakkeet haluamaasi järjestykseen `select()`-komennolla. 
 
 ```{r}
 taulukko1 <- malli1 |> tidy(conf.int=TRUE)
@@ -94,11 +94,11 @@ ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +
 
 3) Virheiden riippumattomuus toisistaan
 
-Esim. onko sama vastaaja vastannut kahdesti kyselyyn.
+Lähtökohtaisesti poikkileikkausaineistossa virheet ovat riippumattomia toisistaan, ja tätä voi tarkastella lähinnä teoreettisesti. Esim. onko sama vastaaja vastannut kahdesti kyselyyn.
 
 4) Virheiden varianssin yhtenäisyys selittäjien eri arvoilla
 
-Virheiden yhtä
+Virheiden yhtäsuuruus
 ```{r}
 
 ```

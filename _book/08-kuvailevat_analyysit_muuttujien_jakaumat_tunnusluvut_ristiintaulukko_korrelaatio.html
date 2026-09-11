@@ -284,22 +284,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
+  <a href="./17-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
+  <a href="./18-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
+  <a href="./19-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./24-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
+  <a href="./20-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -350,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Tässä luvussa käydään läpi komennot, joiden avulla voit tehdä julkaisuvalmista, APA:n ohjeistuksen mukaista, taulukkoa muuttujien esittelyyn lukijalle raportissa tai tehtävässä. Aineistoon tutustumiseen sopivat lyhyet ja nopeat komennot esiteltiin luvussa <a href="#sec-tutustuminen" class="quarto-xref"><span class="quarto-unresolved-ref">sec-tutustuminen</span></a>.</p>
+<p>Tässä luvussa käydään läpi komennot, joiden avulla voit tehdä julkaisuvalmista, APA:n ohjeistuksen mukaista, taulukkoa muuttujien esittelyyn lukijalle raportissa tai tehtävässä. Aineistoon tutustumiseen sopivat lyhyet ja nopeat komennot esiteltiin luvussa <a href="06-aineistoon-tutustuminen.html#sec-tutustuminen" class="quarto-xref"><span>Muuttujien tarkastelu</span></a>.</p>
 <p>Luokiteltujen muuttujien osalta esitellään vastaajamääriä ja prosenttijakaumia kuvaava frekvenssitaulukko, ja numeeristen muuttujien osalta esitellään keski- ja hajontalukuja kuvaava tunnuslukutaulukko.</p>
 <section id="sec-frekvenssijakauma" class="level2">
 <h2 class="anchored" data-anchor-id="sec-frekvenssijakauma">Frekvenssijakauma, yksi muuttuja</h2>
@@ -420,7 +420,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="sec-tunnuslukutaulukko" class="level2">
 <h2 class="anchored" data-anchor-id="sec-tunnuslukutaulukko">Tunnuslukutaulukko, yksi muuttuja</h2>
-<p>Julkaisukelpoisen ja tarpeen mukaan muokattavan tunnuslukutaulukon voi tehdä <code>summarise()</code>-komennolla, jossa määritellään halutut tunnusluvut. (Erotuksena <code>summary()</code>-komennosta, joka antaa vain tietyt luvut, ja jota käytetään aineiston nopeaan tarkasteluun luvun <a href="#sec-tutustuminen" class="quarto-xref"><span class="quarto-unresolved-ref">sec-tutustuminen</span></a> ohjeen mukaan.</p>
+<p>Julkaisukelpoisen ja tarpeen mukaan muokattavan tunnuslukutaulukon voi tehdä <code>summarise()</code>-komennolla, jossa määritellään halutut tunnusluvut. (Erotuksena <code>summary()</code>-komennosta, joka antaa vain tietyt luvut, ja jota käytetään aineiston nopeaan tarkasteluun luvun <a href="06-aineistoon-tutustuminen.html#sec-tutustuminen" class="quarto-xref"><span>Muuttujien tarkastelu</span></a> ohjeen mukaan.</p>
 <p>Esittelytaulukko voi yksinkertaisimmillaan olla vain keskiarvo ja keskihajonta, mutta tässä laitetaan lisäksi minimi ja maksimi. Mitä tahansa haluttuja tunnuslukuja voi lisätä samalla logiikalla.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>taulukko3 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">summarise</span>(</span>
@@ -443,7 +443,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="sec-tunnuslukutaulukko-useampi" class="level2">
 <h2 class="anchored" data-anchor-id="sec-tunnuslukutaulukko-useampi">Tunnuslukutaulukko, useampia muuttujia samassa taulukossa</h2>
 <p>Jos halutaan useampia muuttujia samaan taulukkoon, voidaan tehdä erikseen taulukko jokaisesta muuttujasta ja yhdistää ne sitten <code>bind_rows()</code>-komennolla. Tällöin on hyvä määritellä muuttujan nimi omaksi muuttujakseen, jotta taulukko on selkeä.</p>
-<p>Numeeriset sarakkeet voi pyöristää halutun tarkkuisiksi <code>mutate()</code>-komennolla, jossa määritellään <code>across(where(is.numeric), ~ round(.x, 2))</code>, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.</p>
+<p>Numeeriset sarakkeet voi pyöristää halutun tarkkuisiksi <code>mutate()</code>-komennolla, jossa määritellään <code>across(where(is.numeric), ~ round_half_up(.x, 2))</code>, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>taulukko4 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">summarise</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Muuttuja =</span> <span class="st">"Kiinnostus politiikkaan"</span>,</span>
@@ -462,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>yhdistetty_taulukko <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(taulukko3, taulukko4) <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round</span>(.x, <span class="dv">2</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>))</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>yhdistetty_taulukko</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
@@ -501,14 +501,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="sec-korrelaatio" class="level2">
 <h2 class="anchored" data-anchor-id="sec-korrelaatio">Korrelaatio</h2>
 <p>Kahden jatkuvan muuttujan yhteyttä tarkastellaan korrelaatiokertoimella. Useimmiten korrelaatioita halutaan tarkastella useamman muuttujan välillä. <code>corrr</code>-paketin <code>correlate()</code>-komento laskee korrelaatiokertoimet, ja <code>rplot()</code>-komento visualisoi ne. Korrelaatiokertoimet lasketaan vain numeerisille muuttujille, joten on tärkeää varmistaa, että kaikki korrelaatioihin mukaan otettavat muuttujat ovat numeerisia.</p>
-<p>Tässä valitaan institutionaalista luottamusta kuvaavat muuttujat eli kysymyssarja B6-B12. <code>correlate()</code>-komennolla lasketaan korrelaatiokertoimet ja siistitään taulukko <code>shave()</code>-komennolla, joka poistaa kahteen kertaan näkyvät kertoimet (korrelaatio on sama muuttujan B6 ja B7 välillä kuin B7 ja B6 välillä, joten toinen niistä voidaan poistaa). Pyöristetään vielä korrelaatiokertoimet kahteen desimaaliin <code>mutate()</code>-komennolla, jossa määritellään <code>across(where(is.numeric), ~ round(.x, 2))</code>, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.</p>
+<p>Tässä valitaan institutionaalista luottamusta kuvaavat muuttujat eli kysymyssarja B6-B12. <code>correlate()</code>-komennolla lasketaan korrelaatiokertoimet ja siistitään taulukko <code>shave()</code>-komennolla, joka poistaa kahteen kertaan näkyvät kertoimet (korrelaatio on sama muuttujan B6 ja B7 välillä kuin B7 ja B6 välillä, joten toinen niistä voidaan poistaa). Pyöristetään vielä korrelaatiokertoimet kahteen desimaaliin <code>mutate()</code>-komennolla, jossa määritellään <code>across(where(is.numeric), ~ round_half_up(.x, 2))</code>, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.</p>
 <p><code>rplot()</code>-komento visualisoidaan korrelaatiomatriisi.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>korrelaatiotaulukko <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(B6, B7, B8, B9, B10, B11, B12) <span class="sc">|&gt;</span> </span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">correlate</span>() <span class="sc">|&gt;</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shave</span>() <span class="sc">|&gt;</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round</span>(.x, <span class="dv">2</span>))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>))</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>korrelaatiotaulukko</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1090,7 +1090,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-93"><a href="#cb20-93" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-94"><a href="#cb20-94" aria-hidden="true" tabindex="-1"></a>Jos halutaan useampia muuttujia samaan taulukkoon, voidaan tehdä erikseen taulukko jokaisesta muuttujasta ja yhdistää ne sitten <span class="in">`bind_rows()`</span>-komennolla. Tällöin on hyvä määritellä muuttujan nimi omaksi muuttujakseen, jotta taulukko on selkeä.</span>
 <span id="cb20-95"><a href="#cb20-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a>Numeeriset sarakkeet voi pyöristää halutun tarkkuisiksi <span class="in">`mutate()`</span>-komennolla, jossa määritellään <span class="in">`across(where(is.numeric), ~ round(.x, 2))`</span>, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.</span>
+<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a>Numeeriset sarakkeet voi pyöristää halutun tarkkuisiksi <span class="in">`mutate()`</span>-komennolla, jossa määritellään <span class="in">`across(where(is.numeric), ~ round_half_up(.x, 2))`</span>, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.</span>
 <span id="cb20-97"><a href="#cb20-97" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-100"><a href="#cb20-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb20-101"><a href="#cb20-101" aria-hidden="true" tabindex="-1"></a>taulukko4 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">summarise</span>(</span>
@@ -1105,7 +1105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-110"><a href="#cb20-110" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-111"><a href="#cb20-111" aria-hidden="true" tabindex="-1"></a>yhdistetty_taulukko <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(taulukko3, taulukko4) <span class="sc">|&gt;</span></span>
 <span id="cb20-112"><a href="#cb20-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb20-113"><a href="#cb20-113" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round</span>(.x, <span class="dv">2</span>))</span>
+<span id="cb20-113"><a href="#cb20-113" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>))</span>
 <span id="cb20-114"><a href="#cb20-114" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb20-115"><a href="#cb20-115" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-116"><a href="#cb20-116" aria-hidden="true" tabindex="-1"></a>yhdistetty_taulukko</span>
@@ -1135,7 +1135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-142"><a href="#cb20-142" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-143"><a href="#cb20-143" aria-hidden="true" tabindex="-1"></a>Kahden jatkuvan muuttujan yhteyttä tarkastellaan korrelaatiokertoimella. Useimmiten korrelaatioita halutaan tarkastella useamman muuttujan välillä. <span class="in">`corrr`</span>-paketin <span class="in">`correlate()`</span>-komento laskee korrelaatiokertoimet, ja <span class="in">`rplot()`</span>-komento visualisoi ne. Korrelaatiokertoimet lasketaan vain numeerisille muuttujille, joten on tärkeää varmistaa, että kaikki korrelaatioihin mukaan otettavat muuttujat ovat numeerisia.</span>
 <span id="cb20-144"><a href="#cb20-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-145"><a href="#cb20-145" aria-hidden="true" tabindex="-1"></a>Tässä valitaan institutionaalista luottamusta kuvaavat muuttujat eli kysymyssarja B6-B12. <span class="in">`correlate()`</span>-komennolla lasketaan korrelaatiokertoimet ja siistitään taulukko <span class="in">`shave()`</span>-komennolla, joka poistaa kahteen kertaan näkyvät kertoimet (korrelaatio on sama muuttujan B6 ja B7 välillä kuin B7 ja B6 välillä, joten toinen niistä voidaan poistaa). Pyöristetään vielä korrelaatiokertoimet kahteen desimaaliin <span class="in">`mutate()`</span>-komennolla, jossa määritellään <span class="in">`across(where(is.numeric), ~ round(.x, 2))`</span>, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.</span>
+<span id="cb20-145"><a href="#cb20-145" aria-hidden="true" tabindex="-1"></a>Tässä valitaan institutionaalista luottamusta kuvaavat muuttujat eli kysymyssarja B6-B12. <span class="in">`correlate()`</span>-komennolla lasketaan korrelaatiokertoimet ja siistitään taulukko <span class="in">`shave()`</span>-komennolla, joka poistaa kahteen kertaan näkyvät kertoimet (korrelaatio on sama muuttujan B6 ja B7 välillä kuin B7 ja B6 välillä, joten toinen niistä voidaan poistaa). Pyöristetään vielä korrelaatiokertoimet kahteen desimaaliin <span class="in">`mutate()`</span>-komennolla, jossa määritellään <span class="in">`across(where(is.numeric), ~ round_half_up(.x, 2))`</span>, jolloin kaikki numeeriset sarakkeet pyöristetään kahden desimaalin tarkkuuteen.</span>
 <span id="cb20-146"><a href="#cb20-146" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-147"><a href="#cb20-147" aria-hidden="true" tabindex="-1"></a><span class="in">`rplot()`</span>-komento visualisoidaan korrelaatiomatriisi.</span>
 <span id="cb20-148"><a href="#cb20-148" aria-hidden="true" tabindex="-1"></a></span>
@@ -1145,7 +1145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-154"><a href="#cb20-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">correlate</span>() <span class="sc">|&gt;</span></span>
 <span id="cb20-155"><a href="#cb20-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shave</span>() <span class="sc">|&gt;</span></span>
 <span id="cb20-156"><a href="#cb20-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb20-157"><a href="#cb20-157" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round</span>(.x, <span class="dv">2</span>))</span>
+<span id="cb20-157"><a href="#cb20-157" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>))</span>
 <span id="cb20-158"><a href="#cb20-158" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb20-159"><a href="#cb20-159" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-160"><a href="#cb20-160" aria-hidden="true" tabindex="-1"></a>korrelaatiotaulukko</span>

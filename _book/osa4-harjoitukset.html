@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Laatikko-jana -kuviot eli boxplotit – R-opas</title>
+<title>Osa 4: Harjoitustehtävät – R-opas</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./14-sirontakuvio.html" rel="next">
-<link href="./12-viivakuvio.html" rel="prev">
+<link href="./20-logistinen-regressio.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -120,7 +119,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10-ggplot2-perusteet.html">Osa 3: Kuviot</a></li><li class="breadcrumb-item"><a href="./13-boxplot.html"><span class="chapter-title">Laatikko-jana -kuviot eli boxplotit</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./osa4-harjoitukset.html"><span class="chapter-title">Osa 4: Harjoitustehtävät</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Vaihda sivupalkki" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Hae" onclick="window.quartoOpenSearch();">
@@ -248,7 +247,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./13-boxplot.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Laatikko-jana -kuviot eli boxplotit</span></a>
+  <a href="./13-boxplot.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Laatikko-jana -kuviot eli boxplotit</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -304,7 +303,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./osa4-harjoitukset.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Osa 4: Harjoitustehtävät</span></a>
+  <a href="./osa4-harjoitukset.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Osa 4: Harjoitustehtävät</span></a>
   </div>
 </li>
       </ul>
@@ -314,22 +313,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Sisällysluettelo</h2>
-   
-  <ul>
-  <li><a href="#boxplotin-rakenne" id="toc-boxplotin-rakenne" class="nav-link active" data-scroll-target="#boxplotin-rakenne">Boxplotin rakenne</a></li>
-  <li><a href="#boxplot-rllä" id="toc-boxplot-rllä" class="nav-link" data-scroll-target="#boxplot-rllä">Boxplot R:llä</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./10-ggplot2-perusteet.html">Osa 3: Kuviot</a></li><li class="breadcrumb-item"><a href="./13-boxplot.html"><span class="chapter-title">Laatikko-jana -kuviot eli boxplotit</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./17-regressio.html">Osa 4: Analyysimenetelmät</a></li><li class="breadcrumb-item"><a href="./osa4-harjoitukset.html"><span class="chapter-title">Osa 4: Harjoitustehtävät</span></a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">Laatikko-jana -kuviot eli boxplotit</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Koodi</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-title">Osa 4: Harjoitustehtävät</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Koodi</button></div></div>
 </div>
 
 
@@ -346,31 +338,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="boxplotin-rakenne" class="level2">
-<h2 class="anchored" data-anchor-id="boxplotin-rakenne">Boxplotin rakenne</h2>
-<p>Muuttujien jakaumaa voidaan kuvata tunnuslukuja kuvaavilla laatikko-jana -kuvioilla. Kuviossa voidaan esittää kaksi hajontalukua siten, että toista kuvataan laatikolla eli suorakaiteella ja toista Janalla, joka kulkee laatikon läpi. Lisäksi yleensä esitetään yksi keskiluku laatikon halkaisevan viivan muodossa.</p>
-<p>Yleensä kuviossa esitetään keskilukuna mediaani ja tämän ympäriltä laatikolla 25. ja 75. persentiili. Laatikon koko kuvaa näin siis kvartiiliväliä (Interquartile range). Janalla voidaan esittää minimi ja maksimi, mutta usein nillä ilmaistaan vielä korostetun poikkeavia havaintoja siten, että janan pituus laatikon reunasta 1,5 kertaa kvartiiliväli eli laatikon pituus. Tämän ulkopuolelle jäävät havainnot merkitään kuvioon erillisinä pisteinä kuten hajointakuviossa.</p>
-</section>
-<section id="boxplot-rllä" class="level2">
-<h2 class="anchored" data-anchor-id="boxplot-rllä">Boxplot R:llä</h2>
-<p>Yhden muuttujan jakaumaa toisen luokissa voi kuvata seuraavalla boxplotilla:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Esimerkki boxplotin piirtämisestä ggplot2:lla</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as_factor</span>(F14), <span class="at">y =</span> Syntymävuosi)) <span class="sc">+</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">coord_flip</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="13-boxplot_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
+<p><em>Tämä luku on valmisteilla.</em></p>
 
 
 <!-- -->
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -826,41 +798,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./12-viivakuvio.html" class="pagination-link" aria-label="Viivakuviot">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Viivakuviot</span></span>
+      <a href="./20-logistinen-regressio.html" class="pagination-link" aria-label="Logistinen regressioanalyysi">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Logistinen regressioanalyysi</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./14-sirontakuvio.html" class="pagination-link" aria-label="Hajontakuviot">
-        <span class="nav-page-text"><span class="chapter-title">Hajontakuviot</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Lähdekoodi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Laatikko-jana -kuviot eli boxplotit"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Boxplotin rakenne</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>Muuttujien jakaumaa voidaan kuvata tunnuslukuja kuvaavilla laatikko-jana -kuvioilla. Kuviossa voidaan esittää kaksi hajontalukua siten, että toista kuvataan laatikolla eli suorakaiteella ja toista Janalla, joka kulkee laatikon läpi. Lisäksi yleensä esitetään yksi keskiluku laatikon halkaisevan viivan muodossa.</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>Yleensä kuviossa esitetään keskilukuna mediaani ja tämän ympäriltä laatikolla 25. ja 75. persentiili. Laatikon koko kuvaa näin siis kvartiiliväliä (Interquartile range). Janalla voidaan esittää minimi ja maksimi, mutta usein nillä ilmaistaan vielä korostetun poikkeavia havaintoja siten, että janan pituus laatikon reunasta 1,5 kertaa kvartiiliväli eli laatikon pituus. Tämän ulkopuolelle jäävät havainnot merkitään kuvioon erillisinä pisteinä kuten hajointakuviossa.</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Boxplot R:llä</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>Yhden muuttujan jakaumaa toisen luokissa voi kuvata seuraavalla boxplotilla:</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Esimerkki boxplotin piirtämisestä ggplot2:lla</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as_factor</span>(F14), <span class="at">y =</span> Syntymävuosi)) <span class="sc">+</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">coord_flip</span>()</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Osa 4: Harjoitustehtävät"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>*Tämä luku on valmisteilla.*</span>
 </code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

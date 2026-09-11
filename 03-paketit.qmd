@@ -27,7 +27,7 @@ tämän jälkeen voit käyttää `ggplot2`-paketin funktioita, kuten `ggplot()`.
 
 ## Tässä oppaassa käytettävät paketit
 
-Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta `tidyverse`-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten `dplyr`, `ggplot2`, `tidyr`, `readr`, `forcats` ja `stringr`. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän luvusta 04 {@sec-r-tyylit}.
+Tässä oppaassa käytetään seuraavia paketteja. Muut ovat aika yksinkertaisia, mutta `tidyverse`-pakettiperhe sisältää useita hyödyllisiä paketteja, kuten `dplyr`, `ggplot2`, `tidyr`, `readr`, `forcats` ja `stringr`. Nämä paketit tarjoavat työkaluja datan käsittelyyn, visualisointiin ja analysointiin. Tähän liittyvistä asioista voit lukea enemmän @sec-r-tyylit.
 
 ```r
 install.packages(c(

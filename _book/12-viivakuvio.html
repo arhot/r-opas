@@ -284,22 +284,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./20-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
+  <a href="./17-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./21-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
+  <a href="./18-anova.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Varianssianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./22-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
+  <a href="./19-faktorianalyysi.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Faktorianalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./24-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
+  <a href="./20-logistinen-regressio.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logistinen regressioanalyysi</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -361,7 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Toinen tapa on laskea keskiarvot ensin erikseen omaan taulukkoon. Tässä hyödynnetään luvussa 18 {<span class="citation" data-cites="sec:taulukot">@sec:taulukot</span>} esiteltyä tapaa koota haluttuja tunnuslukuja taulukoksi, ja näin saatu taulukko toimii sitten kuvion aineistona.</p>
+<p>Toinen tapa on laskea keskiarvot ensin erikseen omaan taulukkoon. Tässä hyödynnetään <a href="08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-tunnuslukutaulukko-ryhmittain" class="quarto-xref"><span>Tunnuslukutaulukko, ryhmittäin</span></a> esiteltyä tapaa koota haluttuja tunnuslukuja taulukoksi, ja näin saatu taulukko toimii sitten kuvion aineistona.</p>
 <p>Nyt sapluuna on siis normaali - paitsi aineistona on juuri tehty taulukko.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>keskiarvot <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">group_by</span>(Syntymävuosi) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">C1_keskiarvo =</span> <span class="fu">mean</span>(C1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
@@ -869,7 +869,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"line"</span>)</span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>Toinen tapa on laskea keskiarvot ensin erikseen omaan taulukkoon. Tässä hyödynnetään luvussa 18 {@sec:taulukot} esiteltyä tapaa koota haluttuja tunnuslukuja taulukoksi, ja näin saatu taulukko toimii sitten kuvion aineistona. </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>Toinen tapa on laskea keskiarvot ensin erikseen omaan taulukkoon. Tässä hyödynnetään @sec-tunnuslukutaulukko-ryhmittain esiteltyä tapaa koota haluttuja tunnuslukuja taulukoksi, ja näin saatu taulukko toimii sitten kuvion aineistona. </span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>Nyt sapluuna on siis normaali - paitsi aineistona on juuri tehty taulukko.</span>
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
