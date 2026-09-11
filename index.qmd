@@ -38,7 +38,9 @@ install.packages(c(
   "corrr",      # Korrelaatiot tidyverse-tyyliin
   "scales",     # Akseleiden muotoilu kuvioissa
   "knitr",      # Taulukoiden tulostus
-  "writexl"     # Taulukoiden tallennus Excel-muotoon
+  "writexl",    # Taulukoiden tallennus Excel-muotoon
+  "emmeans"     # Marginaaliset keskiarvot ja post-hoc -testit varianssianalyysiin
+  "marginaleffects" # Marginaaliset vaikutukset regressiomalleihin
 ))
 ```
 

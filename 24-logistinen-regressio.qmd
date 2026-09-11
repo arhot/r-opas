@@ -7,13 +7,116 @@ title: "Logistinen regressioanalyysi"
 source("_common.R")
 ```
 
-*Tämä luku on valmisteilla.*
+Logistinen regressio ennustaa lineaarisen regression tapaan selitettävää tekijää yhden tai useamman selittäjän avulla, mutta selitettävä tekijä on nyt kaksiluokkainen - esimerkiksi kyllä/ei, tai kuuluuko johonkin ryhmään vai ei. Malli on muuten samanlainen kuin lineaarinen regressio, mutta sen tuloksena saatavat kertoimet kuvaavat vetosuhteita (odds ratio), eivät suoraan selitettävän tekijän muutosta.
 
+## Kaksiluokkaisen selitettävän tekijän muodostaminen
 
-## Milloin logistinen regressio sopii?
+Jos aineistossa on valmiiksi kaksiluokkainen muuttuja, riittää merkitä se luokitelluksi `as_factor()`-komennolla. Jos taas selitettävä tekijä on alun perin jatkuva, sen voi jakaa kahtia `cut()`-komennolla - otetaan nyt esimerkiksi onnellisuutta mittaava muuttuja `C1`, ja muodostetaan siitä kaksiluokkainen muuttuja, jossa arvot 0-8 ovat "Ei kovin onnellinen" ja arvot 9-10 "Onnellinen".
 
-## Logistinen regressio R:llä
+```{r}
+ESS2023 <- ESS2023 |>
+  mutate(Onnellinen = cut(C1,
+                           breaks = c(-Inf, 8, Inf),
+                           labels = c("Ei kovin onnellinen", "Onnellinen")))
 
-## Ristitulosuhteet (odds ratios)
+ESS2023 |> tabyl(Onnellinen) |> adorn_pct_formatting(digits = 1) |> as_tibble()
+```
 
-## Mallin sopivuus
+Kannattaa aina tarkastaa, että selitettävässä tekijässä on täsmälleen kaksi luokkaa (puuttuvien tietojen lisäksi).
+
+## Muuttujien valmistelu
+
+Käytetään selittäjinä jo tuttuja muuttujia: ikä, sukupuoli ja koulutusaste.
+
+```{r}
+ESS2023 <- ESS2023 |>
+  mutate(
+    Ikä = 2023 - Syntymävuosi,
+    Sukupuoli = as_factor(Sukupuoli),
+    Koulutusaste = cut(F15,
+                        breaks = c(0, 3, 8, 15),
+                        labels = c("1. aste", "2. aste", "3. aste tai korkeampi"))
+  )
+```
+
+## Logistinen regressiomalli
+
+Malli tehdään `glm()`-komennolla (*generalized linear model*), joka toimii `lm()`:n tavoin, mutta lisäargumentilla `family` kerrotaan mallin tarkempi tyyppi - logistiseen regressioon `family = binomial(link = "logit")`.
+
+Rakennetaan malli hierarkkisesti lisäämällä selittäjiä yksi kerrallaan, ja viimeiseen malliin vielä iän ja sukupuolen yhdysvaikutus.
+
+```{r}
+m1 <- ESS2023 |> glm(Onnellinen ~ Ikä, data = _, family = binomial(link = "logit"))
+m2 <- ESS2023 |> glm(Onnellinen ~ Ikä + Sukupuoli, data = _, family = binomial(link = "logit"))
+m3 <- ESS2023 |> glm(Onnellinen ~ Ikä + Sukupuoli + Koulutusaste, data = _, family = binomial(link = "logit"))
+m4 <- ESS2023 |> glm(Onnellinen ~ Ikä * Sukupuoli + Koulutusaste, data = _, family = binomial(link = "logit"))
+```
+
+## Vetosuhteet
+
+`summary()` antaa mallin kertoimet logaritmisella asteikolla ja niitä on hankala tulkita suoraan. Vetosuhteet (ja niiden luottamusvälit) saa `tidy()`-komennolla asettamalla `exponentiate = TRUE`.
+
+```{r}
+m1 |> tidy(exponentiate = TRUE, conf.int = TRUE) |>
+  mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))
+```
+
+Vetosuhde alle yhden tarkoittaa, että veto pienenee selittäjän kasvaessa (tai verrattuna vertailuryhmään), ja yli yhden, että veto kasvaa. Esimerkiksi jos iän vetosuhde on 1.02, ikävuoden lisäys kasvattaa vetoa 2 %:lla.
+
+## Useamman mallin taulukko
+
+Sama `bind_rows(..., .id = "malli")`-kaava kokoaa useamman mallin vetosuhdetaulukot yhteen kuin regressioluvussakin.
+
+```{r}
+mallitaulukko <- bind_rows(
+  "Malli 1" = tidy(m1, exponentiate = TRUE, conf.int = TRUE),
+  "Malli 2" = tidy(m2, exponentiate = TRUE, conf.int = TRUE),
+  "Malli 3" = tidy(m3, exponentiate = TRUE, conf.int = TRUE),
+  "Malli 4" = tidy(m4, exponentiate = TRUE, conf.int = TRUE),
+  .id = "malli"
+) |>
+  mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))
+
+mallitaulukko
+
+write_xlsx(mallitaulukko, "logistisen_regression_tulostaulukko.xlsx")
+```
+
+## Tulosten visualisointi
+
+Vetosuhteita on vaikea hahmottaa suoraan, joten tulkinta kannattaa tehdä kuvion avulla. `augment()`-komento laskee mallin ennustamat todennäköisyydet - `type.predict = "response"` varmistaa, että ne ovat prosentteina (0-1) eivätkä logaritmisella asteikolla.
+
+```{r}
+m4tulokset <- augment(m4, type.predict = "response")
+
+ggplot(m4tulokset, aes(x = Ikä, y = .fitted, colour = Sukupuoli)) +
+  geom_point() +
+  labs(y = "Ennustettu todennäköisyys") +
+  coord_cartesian(ylim = c(0, 1)) +
+  theme_minimal()
+```
+
+Jos mallissa on enemmän selittäjiä kuin kuvioon mahtuu, ennusteet eivät enää näytä yhtä systemaattisilta - kuvaan valitsematon selittäjä (tässä koulutusaste) vaikuttaa silti ennusteeseen taustalla.
+
+## Marginaalivaikutukset
+
+Vetosuhde kertoo vedon suhteellisen muutoksen, mutta ei suoraan sitä, kuinka paljon ennustettu todennäköisyys muuttuu - se riippuu siitä, mistä kohtaa todennäköisyysasteikkoa lähdetään. `marginaleffects`-paketin `avg_slopes()` laskee keskimääräisen marginaalivaikutuksen (*average marginal effect*): kuinka monta prosenttiyksikköä ennustettu todennäköisyys keskimäärin muuttuu, kun selittäjä kasvaa yhdellä yksiköllä (tai luokitellulla selittäjällä, kun siirrytään vertailuryhmästä toiseen).
+
+```{r}
+m4 |> avg_slopes(variables = "Ikä")
+```
+
+Tulos on suoraan prosenttiyksikköinä todennäköisyysasteikolla, mikä on usein helpompi viestiä kuin vetosuhde.
+
+Luokitellulle selittäjälle vastaava luku saadaan samalla komennolla, tai ennustettuina todennäköisyyksinä ryhmittäin `avg_predictions()`-komennolla, kun muut selittäjät pidetään vakioina:
+
+```{r}
+m4 |> avg_predictions(by = "Sukupuoli")
+```
+
+Myös kuvion pystyy tekemään suoraan mallista `plot_predictions()`-komennolla ilman `augment()`-välivaihetta:
+
+```{r}
+plot_predictions(m4, condition = c("Ikä", "Sukupuoli")) +
+  theme_minimal()
+```

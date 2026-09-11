@@ -14,6 +14,8 @@ suppressPackageStartupMessages({
   library(knitr)
   library(skimr)
   library(writexl)
+  library(emmeans)
+  library(marginaleffects)
 })
 
 # Harjoitusaineisto --------------------------------------------------------

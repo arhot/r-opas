@@ -7,10 +7,111 @@ title: "Varianssianalyysi"
 source("_common.R")
 ```
 
-Varianssianalyysi on lineaarinen regressioanalyysi eri perspektiivistä: siinä nostetaan keskiöön kaikkien ryhmien vertailut sekä muuttujakohtaiset selitysosuudet. 
+Varianssianalyysi (engl. ANOVA, *analysis of variance*) tarkastelee jatkuvan selitettävän tekijän keskiarvojen eroja luokitelluissa ryhmissä. Tilastollisesti kyse on samasta asiasta kuin regressioanalyysissä - varianssianalyysi on regressiomalli, jossa kaikki selittäjät ovat luokiteltuja - mutta tulokset on perinteisesti raportoitu hieman eri tavalla: ryhmäkeskiarvoina, F-testeinä ja selitysosuuksina suorien regressiokertoimien sijaan.
 
-## Yksisuuntainen varianssianalyysi
+## Käytetty aineisto
 
-## Post-hoc-testit
+Käytetään samaa onnellisuutta mittaavaa muuttujaa (`C1`) kuin regressioluvussa, mutta nyt molemmat selittäjät ovat luokiteltuja: sukupuoli ja koulutusaste. Koulutusaste muodostetaan jatkuvasta koulutusvuosia kuvaavasta muuttujasta `cut()`-komennolla samalla tavalla kuin luvussa [Muuttujamuunnokset](07-muuttujamuunnokset.qmd).
 
-## Tulosten tulkinta
+```{r}
+ESS2023 <- ESS2023 |>
+  mutate(
+    Sukupuoli = as_factor(Sukupuoli),
+    Koulutusaste = cut(F15,
+                        breaks = c(0, 3, 8, 15),
+                        labels = c("1. aste", "2. aste", "3. aste tai korkeampi"))
+  )
+
+ESS2023 |> tabyl(Koulutusaste) |> adorn_pct_formatting(digits = 1) |> as_tibble()
+```
+
+## Ryhmäkeskiarvot ja niiden visualisointi
+
+Varianssianalyysissa kaikki selittäjät ovat luokiteltuja, joten tuloksia on luontevaa tarkastella ensin ryhmäkeskiarvojen kautta. Lasketaan kussakin ryhmässä havaintomäärä, keskiarvo, keskihajonta ja keskiarvon 95 %:n luottamusväli.
+
+Keskiarvon keskivirhe kertoo, kuinka kaukana otoskeskiarvo yleisesti ottaen voisi olla todellisesta keskiarvosta - se lasketaan keskihajonnasta jakamalla se otoskoon neliöjuurella. 95 %:n luottamusväliä vastaa kriittinen arvo 1.96, jolla keskivirhe kerrotaan.
+
+```{r}
+keskiarvotaulukko <- ESS2023 |>
+  group_by(Sukupuoli, Koulutusaste) |>
+  summarise(
+    n = n(),
+    Keskiarvo = mean(C1, na.rm = TRUE),
+    Keskihajonta = sd(C1, na.rm = TRUE),
+    Luottamusvalin_alaraja = Keskiarvo - 1.96 * Keskihajonta / sqrt(n),
+    Luottamusvalin_ylaraja = Keskiarvo + 1.96 * Keskihajonta / sqrt(n)
+  ) |>
+  mutate(across(where(is.numeric), ~ round_half_up(.x, 2))) |>
+  na.omit()
+
+keskiarvotaulukko
+
+write_xlsx(keskiarvotaulukko, "keskiarvotaulukko.xlsx")
+```
+
+Erot näkee toki taulukostakin, mutta kuvio on selkein. `geom_errorbar()` piirtää luottamusvälin, ja `position_dodge()` siirtää päällekkäin osuvat pisteet ja janat hieman sivuun toisistaan.
+
+```{r}
+keskiarvotaulukko |>
+  ggplot(aes(x = Koulutusaste, y = Keskiarvo, color = Sukupuoli)) +
+  geom_point(position = position_dodge(0.5)) +
+  geom_errorbar(aes(ymin = Luottamusvalin_alaraja, ymax = Luottamusvalin_ylaraja),
+                position = position_dodge(0.5)) +
+  theme_minimal()
+```
+
+## Varianssianalyysi regressiomallina
+
+Koska varianssianalyysi on regressiomalli, se tehdään samalla `lm()`-komennolla kuin regressioluvussa. Päävaikutusmallin tulkinta on: kuinka paljon ryhmä eroaa vertailuryhmästä, kun muut mallissa olevat tekijät on vakioitu.
+
+```{r}
+malli1 <- ESS2023 |> lm(C1 ~ Sukupuoli + Koulutusaste, data = _)
+
+malli1 |> tidy(conf.int = TRUE)
+```
+
+## Yhdysvaikutus
+
+Päävaikutusmalli olettaa, että sukupuolten välinen ero on samansuuruinen kaikilla koulutusasteilla (ja päinvastoin). Jos tämä oletus ei pidä paikkaansa, malliin kannattaa lisätä yhdysvaikutus (interaktio) `*`-merkillä, joka lisää malliin sekä päävaikutukset että niiden yhdysvaikutuksen.
+
+```{r}
+malli2 <- ESS2023 |> lm(C1 ~ Sukupuoli * Koulutusaste, data = _)
+
+malli2 |> tidy(conf.int = TRUE)
+```
+
+Kun molemmat selittäjät ovat luokiteltuja, yhdysvaikutustermit kertovat, poikkeaako sukupuolten välinen ero kussakin koulutusasteryhmässä siitä, mitä päävaikutusmalli ennustaisi. Jos mikään yhdysvaikutustermeistä ei ole tilastollisesti merkitsevä, päävaikutusmalli riittää ja on myös yksinkertaisempi tulkita.
+
+## Tulosten raportointi: testisuureet ja selitysosuus
+
+Varianssianalyysissa on tapana raportoida myös kunkin selittäjän tilastollinen merkitsevyys ja selitysosuus (eta neliö) yhdessä pelkkien regressiokertoimien lisäksi tai sijasta. `emmeans`-paketin `joint_tests()` laskee tyypin III -tyyppiset F-testit suoraan - toisin kuin `car::Anova(type=3)`, se ei vaadi erillistä kontrastien asettamista, koska testit perustuvat mallin ennusteisiin (estimoituihin ryhmäkeskiarvoihin), ei suoraan mallin kertoimiin.
+
+```{r}
+malli2 |> emmeans::joint_tests() |>
+  as_tibble() |>
+  rename(term = 1) |>
+  mutate(eta2_partial = (F.ratio * df1) / (F.ratio * df1 + df2)) |>
+  select(term, df1, df2, F.ratio, p.value, eta2_partial) |>
+  mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))
+```
+
+Osittainen eta neliö lasketaan tässä suoraan F-testisuureesta ja vapausasteista: $\eta^2_{\text{osittainen}} = (F \cdot df_1) / (F \cdot df_1 + df_2)$.
+
+APAn mukainen tapa raportoida tulos tekstissä on muotoa: *testisuure*(vapausasteet muuttujassa, vapausasteet residuaaleissa) = *testisuureen arvo*, *p* = tarkka arvo tai < .001, *selitysosuus* = partial eta squared. Esimerkiksi sukupuolen päävaikutuksen osalta tämä voisi olla muotoa F(1, 1557) = 3.86, p = .050, η² = .002.
+
+## Post hoc -vertailut
+
+Jos luokkia on enemmän kuin kaksi, voi olla kiinnostavaa testata tarkemmin, mitkä yksittäiset ryhmät eroavat toisistaan tilastollisesti merkitsevästi. Tähän sopii post hoc -testi, esimerkiksi `TukeyHSD()`, joka vertailee kaikkia ryhmäpareja keskenään ja korjaa vertailujen määrän vaikutuksen merkitsevyystasoon.
+
+```{r}
+malli2 |> aov() |> TukeyHSD()
+```
+
+Uudempi ja joustavampi vaihtoehto samaan on `emmeans`-paketti, joka laskee estimoidut ryhmäkeskiarvot (*estimated marginal means*) mallista ja niiden parivertailut. Se toimii `TukeyHSD()`:ia luotettavammin myös silloin, kun ryhmäkoot ovat epätasaisia tai mallissa on mukana muita selittäjiä.
+
+```{r}
+emmeans::emmeans(malli2, ~ Sukupuoli | Koulutusaste) |>
+  emmeans::contrast(method = "pairwise")
+```
+
+Kaikkea tätä ei kannata raportoida sellaisenaan - tekstiin poimitaan sisällöllisesti kiinnostavimmat parivertailut.

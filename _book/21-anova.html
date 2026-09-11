@@ -108,6 +108,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -319,9 +348,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Sisällysluettelo</h2>
    
   <ul>
-  <li><a href="#yksisuuntainen-varianssianalyysi" id="toc-yksisuuntainen-varianssianalyysi" class="nav-link active" data-scroll-target="#yksisuuntainen-varianssianalyysi">Yksisuuntainen varianssianalyysi</a></li>
-  <li><a href="#post-hoc-testit" id="toc-post-hoc-testit" class="nav-link" data-scroll-target="#post-hoc-testit">Post-hoc-testit</a></li>
-  <li><a href="#tulosten-tulkinta" id="toc-tulosten-tulkinta" class="nav-link" data-scroll-target="#tulosten-tulkinta">Tulosten tulkinta</a></li>
+  <li><a href="#käytetty-aineisto" id="toc-käytetty-aineisto" class="nav-link active" data-scroll-target="#käytetty-aineisto">Käytetty aineisto</a></li>
+  <li><a href="#ryhmäkeskiarvot-ja-niiden-visualisointi" id="toc-ryhmäkeskiarvot-ja-niiden-visualisointi" class="nav-link" data-scroll-target="#ryhmäkeskiarvot-ja-niiden-visualisointi">Ryhmäkeskiarvot ja niiden visualisointi</a></li>
+  <li><a href="#varianssianalyysi-regressiomallina" id="toc-varianssianalyysi-regressiomallina" class="nav-link" data-scroll-target="#varianssianalyysi-regressiomallina">Varianssianalyysi regressiomallina</a></li>
+  <li><a href="#yhdysvaikutus" id="toc-yhdysvaikutus" class="nav-link" data-scroll-target="#yhdysvaikutus">Yhdysvaikutus</a></li>
+  <li><a href="#tulosten-raportointi-testisuureet-ja-selitysosuus" id="toc-tulosten-raportointi-testisuureet-ja-selitysosuus" class="nav-link" data-scroll-target="#tulosten-raportointi-testisuureet-ja-selitysosuus">Tulosten raportointi: testisuureet ja selitysosuus</a></li>
+  <li><a href="#post-hoc--vertailut" id="toc-post-hoc--vertailut" class="nav-link" data-scroll-target="#post-hoc--vertailut">Post hoc -vertailut</a></li>
   </ul>
 </nav>
     </div>
@@ -347,15 +379,233 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Varianssianalyysi on lineaarinen regressioanalyysi eri perspektiivistä: siinä nostetaan keskiöön kaikkien ryhmien vertailut sekä muuttujakohtaiset selitysosuudet.</p>
-<section id="yksisuuntainen-varianssianalyysi" class="level2">
-<h2 class="anchored" data-anchor-id="yksisuuntainen-varianssianalyysi">Yksisuuntainen varianssianalyysi</h2>
+<p>Varianssianalyysi (engl. ANOVA, <em>analysis of variance</em>) tarkastelee jatkuvan selitettävän tekijän keskiarvojen eroja luokitelluissa ryhmissä. Tilastollisesti kyse on samasta asiasta kuin regressioanalyysissä - varianssianalyysi on regressiomalli, jossa kaikki selittäjät ovat luokiteltuja - mutta tulokset on perinteisesti raportoitu hieman eri tavalla: ryhmäkeskiarvoina, F-testeinä ja selitysosuuksina suorien regressiokertoimien sijaan.</p>
+<section id="käytetty-aineisto" class="level2">
+<h2 class="anchored" data-anchor-id="käytetty-aineisto">Käytetty aineisto</h2>
+<p>Käytetään samaa onnellisuutta mittaavaa muuttujaa (<code>C1</code>) kuin regressioluvussa, mutta nyt molemmat selittäjät ovat luokiteltuja: sukupuoli ja koulutusaste. Koulutusaste muodostetaan jatkuvasta koulutusvuosia kuvaavasta muuttujasta <code>cut()</code>-komennolla samalla tavalla kuin luvussa <a href="./07-muuttujamuunnokset.html">Muuttujamuunnokset</a>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Koulutusaste =</span> <span class="fu">cut</span>(F15,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="dv">15</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"1. aste"</span>, <span class="st">"2. aste"</span>, <span class="st">"3. aste tai korkeampi"</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">tabyl</span>(Koulutusaste) <span class="sc">|&gt;</span> <span class="fu">adorn_pct_formatting</span>(<span class="at">digits =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  Koulutusaste              n percent valid_percent
+  &lt;fct&gt;                 &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;        
+1 1. aste                 253 16.2%   16.2%        
+2 2. aste                 715 45.7%   45.8%        
+3 3. aste tai korkeampi   593 37.9%   38.0%        
+4 &lt;NA&gt;                      2 0.1%    -            </code></pre>
+</div>
+</div>
 </section>
-<section id="post-hoc-testit" class="level2">
-<h2 class="anchored" data-anchor-id="post-hoc-testit">Post-hoc-testit</h2>
+<section id="ryhmäkeskiarvot-ja-niiden-visualisointi" class="level2">
+<h2 class="anchored" data-anchor-id="ryhmäkeskiarvot-ja-niiden-visualisointi">Ryhmäkeskiarvot ja niiden visualisointi</h2>
+<p>Varianssianalyysissa kaikki selittäjät ovat luokiteltuja, joten tuloksia on luontevaa tarkastella ensin ryhmäkeskiarvojen kautta. Lasketaan kussakin ryhmässä havaintomäärä, keskiarvo, keskihajonta ja keskiarvon 95 %:n luottamusväli.</p>
+<p>Keskiarvon keskivirhe kertoo, kuinka kaukana otoskeskiarvo yleisesti ottaen voisi olla todellisesta keskiarvosta - se lasketaan keskihajonnasta jakamalla se otoskoon neliöjuurella. 95 %:n luottamusväliä vastaa kriittinen arvo 1.96, jolla keskivirhe kerrotaan.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>keskiarvotaulukko <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sukupuoli, Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Keskiarvo =</span> <span class="fu">mean</span>(C1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Keskihajonta =</span> <span class="fu">sd</span>(C1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Luottamusvalin_alaraja =</span> Keskiarvo <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> Keskihajonta <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Luottamusvalin_ylaraja =</span> Keskiarvo <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> Keskihajonta <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>keskiarvotaulukko</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+# Groups:   Sukupuoli [2]
+  Sukupuoli Koulutusaste         n Keskiarvo Keskihajonta Luottamusvalin_alaraja
+  &lt;fct&gt;     &lt;fct&gt;            &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;                  &lt;dbl&gt;
+1 Mies      1. aste            126      7.8          1.73                   7.5 
+2 Mies      2. aste            382      7.96         1.53                   7.8 
+3 Mies      3. aste tai kor…   261      8.18         1.25                   8.03
+4 Nainen    1. aste            127      8.01         1.7                    7.71
+5 Nainen    2. aste            333      8.06         1.6                    7.88
+6 Nainen    3. aste tai kor…   332      8.27         1.19                   8.14
+# ℹ 1 more variable: Luottamusvalin_ylaraja &lt;dbl&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(keskiarvotaulukko, <span class="st">"keskiarvotaulukko.xlsx"</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Erot näkee toki taulukostakin, mutta kuvio on selkein. <code>geom_errorbar()</code> piirtää luottamusvälin, ja <code>position_dodge()</code> siirtää päällekkäin osuvat pisteet ja janat hieman sivuun toisistaan.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>keskiarvotaulukko <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Koulutusaste, <span class="at">y =</span> Keskiarvo, <span class="at">color =</span> Sukupuoli)) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> Luottamusvalin_alaraja, <span class="at">ymax =</span> Luottamusvalin_ylaraja),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="21-anova_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="tulosten-tulkinta" class="level2">
-<h2 class="anchored" data-anchor-id="tulosten-tulkinta">Tulosten tulkinta</h2>
+<section id="varianssianalyysi-regressiomallina" class="level2">
+<h2 class="anchored" data-anchor-id="varianssianalyysi-regressiomallina">Varianssianalyysi regressiomallina</h2>
+<p>Koska varianssianalyysi on regressiomalli, se tehdään samalla <code>lm()</code>-komennolla kuin regressioluvussa. Päävaikutusmallin tulkinta on: kuinka paljon ryhmä eroaa vertailuryhmästä, kun muut mallissa olevat tekijät on vakioitu.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>malli1 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Sukupuoli <span class="sc">+</span> Koulutusaste, <span class="at">data =</span> _)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>malli1 <span class="sc">|&gt;</span> <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 7
+  term                   estimate std.error statistic p.value conf.low conf.high
+  &lt;chr&gt;                     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)               7.85     0.1000    78.5   0         7.65       8.04 
+2 SukupuoliNainen           0.114    0.0748     1.53  0.127    -0.0325     0.261
+3 Koulutusaste2. aste       0.102    0.108      0.950 0.342    -0.109      0.314
+4 Koulutusaste3. aste t…    0.319    0.111      2.88  0.00403   0.102      0.536</code></pre>
+</div>
+</div>
+</section>
+<section id="yhdysvaikutus" class="level2">
+<h2 class="anchored" data-anchor-id="yhdysvaikutus">Yhdysvaikutus</h2>
+<p>Päävaikutusmalli olettaa, että sukupuolten välinen ero on samansuuruinen kaikilla koulutusasteilla (ja päinvastoin). Jos tämä oletus ei pidä paikkaansa, malliin kannattaa lisätä yhdysvaikutus (interaktio) <code>*</code>-merkillä, joka lisää malliin sekä päävaikutukset että niiden yhdysvaikutuksen.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>malli2 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Sukupuoli <span class="sc">*</span> Koulutusaste, <span class="at">data =</span> _)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>malli2 <span class="sc">|&gt;</span> <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 7
+  term                   estimate std.error statistic p.value conf.low conf.high
+  &lt;chr&gt;                     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)               7.80      0.132    59.3    0        7.54       8.06 
+2 SukupuoliNainen           0.208     0.185     1.12   0.262   -0.156      0.571
+3 Koulutusaste2. aste       0.155     0.152     1.03   0.306   -0.142      0.453
+4 Koulutusaste3. aste t…    0.380     0.160     2.38   0.0176   0.0663     0.694
+5 SukupuoliNainen:Koulu…   -0.106     0.216    -0.492  0.622   -0.529      0.317
+6 SukupuoliNainen:Koulu…   -0.119     0.222    -0.537  0.591   -0.554      0.316</code></pre>
+</div>
+</div>
+<p>Kun molemmat selittäjät ovat luokiteltuja, yhdysvaikutustermit kertovat, poikkeaako sukupuolten välinen ero kussakin koulutusasteryhmässä siitä, mitä päävaikutusmalli ennustaisi. Jos mikään yhdysvaikutustermeistä ei ole tilastollisesti merkitsevä, päävaikutusmalli riittää ja on myös yksinkertaisempi tulkita.</p>
+</section>
+<section id="tulosten-raportointi-testisuureet-ja-selitysosuus" class="level2">
+<h2 class="anchored" data-anchor-id="tulosten-raportointi-testisuureet-ja-selitysosuus">Tulosten raportointi: testisuureet ja selitysosuus</h2>
+<p>Varianssianalyysissa on tapana raportoida myös kunkin selittäjän tilastollinen merkitsevyys ja selitysosuus (eta neliö) yhdessä pelkkien regressiokertoimien lisäksi tai sijasta. <code>emmeans</code>-paketin <code>joint_tests()</code> laskee tyypin III -tyyppiset F-testit suoraan - toisin kuin <code>car::Anova(type=3)</code>, se ei vaadi erillistä kontrastien asettamista, koska testit perustuvat mallin ennusteisiin (estimoituihin ryhmäkeskiarvoihin), ei suoraan mallin kertoimiin.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>malli2 <span class="sc">|&gt;</span> emmeans<span class="sc">::</span><span class="fu">joint_tests</span>() <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">term =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">eta2_partial =</span> (F.ratio <span class="sc">*</span> df1) <span class="sc">/</span> (F.ratio <span class="sc">*</span> df1 <span class="sc">+</span> df2)) <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, df1, df2, F.ratio, p.value, eta2_partial) <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>)))</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  term                     df1   df2 F.ratio p.value eta2_partial
+  &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;
+1 Sukupuoli                  1  1552    2.59    0.11         0   
+2 Koulutusaste               2  1552    5.49    0            0.01
+3 Sukupuoli:Koulutusaste     2  1552    0.16    0.86         0   </code></pre>
+</div>
+</div>
+<p>Osittainen eta neliö lasketaan tässä suoraan F-testisuureesta ja vapausasteista: <span class="math inline">\(\eta^2_{\text{osittainen}} = (F \cdot df_1) / (F \cdot df_1 + df_2)\)</span>.</p>
+<p>APAn mukainen tapa raportoida tulos tekstissä on muotoa: <em>testisuure</em>(vapausasteet muuttujassa, vapausasteet residuaaleissa) = <em>testisuureen arvo</em>, <em>p</em> = tarkka arvo tai &lt; .001, <em>selitysosuus</em> = partial eta squared. Esimerkiksi sukupuolen päävaikutuksen osalta tämä voisi olla muotoa F(1, 1557) = 3.86, p = .050, η² = .002.</p>
+</section>
+<section id="post-hoc--vertailut" class="level2">
+<h2 class="anchored" data-anchor-id="post-hoc--vertailut">Post hoc -vertailut</h2>
+<p>Jos luokkia on enemmän kuin kaksi, voi olla kiinnostavaa testata tarkemmin, mitkä yksittäiset ryhmät eroavat toisistaan tilastollisesti merkitsevästi. Tähän sopii post hoc -testi, esimerkiksi <code>TukeyHSD()</code>, joka vertailee kaikkia ryhmäpareja keskenään ja korjaa vertailujen määrän vaikutuksen merkitsevyystasoon.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>malli2 <span class="sc">|&gt;</span> <span class="fu">aov</span>() <span class="sc">|&gt;</span> <span class="fu">TukeyHSD</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = malli2)
+
+$Sukupuoli
+                 diff         lwr      upr     p adj
+Nainen-Mies 0.1312813 -0.01490227 0.277465 0.0783448
+
+$Koulutusaste
+                                   diff         lwr       upr     p adj
+2. aste-1. aste               0.1029730 -0.14982462 0.3557706 0.6051250
+3. aste tai korkeampi-1. aste 0.3177272  0.05822332 0.5772311 0.0115037
+3. aste tai korkeampi-2. aste 0.2147542  0.02297771 0.4065307 0.0236251
+
+$`Sukupuoli:Koulutusaste`
+                                                               diff
+Nainen:1. aste-Mies:1. aste                              0.20787402
+Mies:2. aste-Mies:1. aste                                0.15538058
+Nainen:2. aste-Mies:1. aste                              0.25705706
+Mies:3. aste tai korkeampi-Mies:1. aste                  0.38007663
+Nainen:3. aste tai korkeampi-Mies:1. aste                0.46888218
+Mies:2. aste-Nainen:1. aste                             -0.05249344
+Nainen:2. aste-Nainen:1. aste                            0.04918304
+Mies:3. aste tai korkeampi-Nainen:1. aste                0.17220261
+Nainen:3. aste tai korkeampi-Nainen:1. aste              0.26100816
+Nainen:2. aste-Mies:2. aste                              0.10167648
+Mies:3. aste tai korkeampi-Mies:2. aste                  0.22469605
+Nainen:3. aste tai korkeampi-Mies:2. aste                0.31350160
+Mies:3. aste tai korkeampi-Nainen:2. aste                0.12301957
+Nainen:3. aste tai korkeampi-Nainen:2. aste              0.21182512
+Nainen:3. aste tai korkeampi-Mies:3. aste tai korkeampi  0.08880555
+                                                                 lwr       upr
+Nainen:1. aste-Mies:1. aste                             -0.320816116 0.7365641
+Mies:2. aste-Mies:1. aste                               -0.277148755 0.5879099
+Nainen:2. aste-Mies:1. aste                             -0.183105825 0.6972199
+Mies:3. aste tai korkeampi-Mies:1. aste                 -0.076355486 0.8365087
+Nainen:3. aste tai korkeampi-Mies:1. aste                0.028356507 0.9094078
+Mies:2. aste-Nainen:1. aste                             -0.482450720 0.3774638
+Nainen:2. aste-Nainen:1. aste                           -0.388452656 0.4868187
+Mies:3. aste tai korkeampi-Nainen:1. aste               -0.281792889 0.6261981
+Nainen:3. aste tai korkeampi-Nainen:1. aste             -0.176992418 0.6990087
+Nainen:2. aste-Mies:2. aste                             -0.213114517 0.4164675
+Mies:3. aste tai korkeampi-Mies:2. aste                 -0.112469017 0.5618611
+Nainen:3. aste tai korkeampi-Mies:2. aste               -0.001796473 0.6287997
+Mies:3. aste tai korkeampi-Nainen:2. aste               -0.223883906 0.4699230
+Nainen:3. aste tai korkeampi-Nainen:2. aste             -0.113865859 0.5375161
+Nainen:3. aste tai korkeampi-Mies:3. aste tai korkeampi -0.258558131 0.4361692
+                                                            p adj
+Nainen:1. aste-Mies:1. aste                             0.8724224
+Mies:2. aste-Mies:1. aste                               0.9096452
+Nainen:2. aste-Mies:1. aste                             0.5544126
+Mies:3. aste tai korkeampi-Mies:1. aste                 0.1653143
+Nainen:3. aste tai korkeampi-Mies:1. aste               0.0292530
+Mies:2. aste-Nainen:1. aste                             0.9993268
+Nainen:2. aste-Nainen:1. aste                           0.9995505
+Mies:3. aste tai korkeampi-Nainen:1. aste               0.8885565
+Nainen:3. aste tai korkeampi-Nainen:1. aste             0.5317475
+Nainen:2. aste-Mies:2. aste                             0.9410463
+Mies:3. aste tai korkeampi-Mies:2. aste                 0.4015180
+Nainen:3. aste tai korkeampi-Mies:2. aste               0.0523260
+Mies:3. aste tai korkeampi-Nainen:2. aste               0.9141197
+Nainen:3. aste tai korkeampi-Nainen:2. aste             0.4301823
+Nainen:3. aste tai korkeampi-Mies:3. aste tai korkeampi 0.9783299</code></pre>
+</div>
+</div>
+<p>Uudempi ja joustavampi vaihtoehto samaan on <code>emmeans</code>-paketti, joka laskee estimoidut ryhmäkeskiarvot (<em>estimated marginal means</em>) mallista ja niiden parivertailut. Se toimii <code>TukeyHSD()</code>:ia luotettavammin myös silloin, kun ryhmäkoot ovat epätasaisia tai mallissa on mukana muita selittäjiä.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(malli2, <span class="sc">~</span> Sukupuoli <span class="sc">|</span> Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  emmeans<span class="sc">::</span><span class="fu">contrast</span>(<span class="at">method =</span> <span class="st">"pairwise"</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Koulutusaste = 1. aste:
+ contrast      estimate    SE   df t.ratio p.value
+ Mies - Nainen  -0.2079 0.185 1552  -1.122  0.2621
+
+Koulutusaste = 2. aste:
+ contrast      estimate    SE   df t.ratio p.value
+ Mies - Nainen  -0.1017 0.110 1552  -0.922  0.3569
+
+Koulutusaste = 3. aste tai korkeampi:
+ contrast      estimate    SE   df t.ratio p.value
+ Mies - Nainen  -0.0888 0.122 1552  -0.729  0.4658</code></pre>
+</div>
+</div>
+<p>Kaikkea tätä ei kannata raportoida sellaisenaan - tekstiin poimitaan sisällöllisesti kiinnostavimmat parivertailut.</p>
 
 
 <!-- -->
@@ -826,22 +1076,123 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Lähdekoodi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Varianssianalyysi"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>Varianssianalyysi on lineaarinen regressioanalyysi eri perspektiivistä: siinä nostetaan keskiöön kaikkien ryhmien vertailut sekä muuttujakohtaiset selitysosuudet. </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Yksisuuntainen varianssianalyysi</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Post-hoc-testit</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tulosten tulkinta</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Varianssianalyysi"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>Varianssianalyysi (engl. ANOVA, *analysis of variance*) tarkastelee jatkuvan selitettävän tekijän keskiarvojen eroja luokitelluissa ryhmissä. Tilastollisesti kyse on samasta asiasta kuin regressioanalyysissä - varianssianalyysi on regressiomalli, jossa kaikki selittäjät ovat luokiteltuja - mutta tulokset on perinteisesti raportoitu hieman eri tavalla: ryhmäkeskiarvoina, F-testeinä ja selitysosuuksina suorien regressiokertoimien sijaan.</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Käytetty aineisto</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>Käytetään samaa onnellisuutta mittaavaa muuttujaa (<span class="in">`C1`</span>) kuin regressioluvussa, mutta nyt molemmat selittäjät ovat luokiteltuja: sukupuoli ja koulutusaste. Koulutusaste muodostetaan jatkuvasta koulutusvuosia kuvaavasta muuttujasta <span class="in">`cut()`</span>-komennolla samalla tavalla kuin luvussa <span class="co">[</span><span class="ot">Muuttujamuunnokset</span><span class="co">](07-muuttujamuunnokset.qmd)</span>.</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">Koulutusaste =</span> <span class="fu">cut</span>(F15,</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>                        <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="dv">15</span>),</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"1. aste"</span>, <span class="st">"2. aste"</span>, <span class="st">"3. aste tai korkeampi"</span>))</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">tabyl</span>(Koulutusaste) <span class="sc">|&gt;</span> <span class="fu">adorn_pct_formatting</span>(<span class="at">digits =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ryhmäkeskiarvot ja niiden visualisointi</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>Varianssianalyysissa kaikki selittäjät ovat luokiteltuja, joten tuloksia on luontevaa tarkastella ensin ryhmäkeskiarvojen kautta. Lasketaan kussakin ryhmässä havaintomäärä, keskiarvo, keskihajonta ja keskiarvon 95 %:n luottamusväli.</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>Keskiarvon keskivirhe kertoo, kuinka kaukana otoskeskiarvo yleisesti ottaen voisi olla todellisesta keskiarvosta - se lasketaan keskihajonnasta jakamalla se otoskoon neliöjuurella. 95 %:n luottamusväliä vastaa kriittinen arvo 1.96, jolla keskivirhe kerrotaan.</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>keskiarvotaulukko <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sukupuoli, Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">Keskiarvo =</span> <span class="fu">mean</span>(C1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">Keskihajonta =</span> <span class="fu">sd</span>(C1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">Luottamusvalin_alaraja =</span> Keskiarvo <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> Keskihajonta <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">Luottamusvalin_ylaraja =</span> Keskiarvo <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> Keskihajonta <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>keskiarvotaulukko</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(keskiarvotaulukko, <span class="st">"keskiarvotaulukko.xlsx"</span>)</span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>Erot näkee toki taulukostakin, mutta kuvio on selkein. <span class="in">`geom_errorbar()`</span> piirtää luottamusvälin, ja <span class="in">`position_dodge()`</span> siirtää päällekkäin osuvat pisteet ja janat hieman sivuun toisistaan.</span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a>keskiarvotaulukko <span class="sc">|&gt;</span></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Koulutusaste, <span class="at">y =</span> Keskiarvo, <span class="at">color =</span> Sukupuoli)) <span class="sc">+</span></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> Luottamusvalin_alaraja, <span class="at">ymax =</span> Luottamusvalin_ylaraja),</span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a><span class="fu">## Varianssianalyysi regressiomallina</span></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a>Koska varianssianalyysi on regressiomalli, se tehdään samalla <span class="in">`lm()`</span>-komennolla kuin regressioluvussa. Päävaikutusmallin tulkinta on: kuinka paljon ryhmä eroaa vertailuryhmästä, kun muut mallissa olevat tekijät on vakioitu.</span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>malli1 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Sukupuoli <span class="sc">+</span> Koulutusaste, <span class="at">data =</span> _)</span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>malli1 <span class="sc">|&gt;</span> <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a><span class="fu">## Yhdysvaikutus</span></span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a>Päävaikutusmalli olettaa, että sukupuolten välinen ero on samansuuruinen kaikilla koulutusasteilla (ja päinvastoin). Jos tämä oletus ei pidä paikkaansa, malliin kannattaa lisätä yhdysvaikutus (interaktio) <span class="in">`*`</span>-merkillä, joka lisää malliin sekä päävaikutukset että niiden yhdysvaikutuksen.</span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a>malli2 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Sukupuoli <span class="sc">*</span> Koulutusaste, <span class="at">data =</span> _)</span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a>malli2 <span class="sc">|&gt;</span> <span class="fu">tidy</span>(<span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a>Kun molemmat selittäjät ovat luokiteltuja, yhdysvaikutustermit kertovat, poikkeaako sukupuolten välinen ero kussakin koulutusasteryhmässä siitä, mitä päävaikutusmalli ennustaisi. Jos mikään yhdysvaikutustermeistä ei ole tilastollisesti merkitsevä, päävaikutusmalli riittää ja on myös yksinkertaisempi tulkita.</span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tulosten raportointi: testisuureet ja selitysosuus</span></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>Varianssianalyysissa on tapana raportoida myös kunkin selittäjän tilastollinen merkitsevyys ja selitysosuus (eta neliö) yhdessä pelkkien regressiokertoimien lisäksi tai sijasta. <span class="in">`emmeans`</span>-paketin <span class="in">`joint_tests()`</span> laskee tyypin III -tyyppiset F-testit suoraan - toisin kuin <span class="in">`car::Anova(type=3)`</span>, se ei vaadi erillistä kontrastien asettamista, koska testit perustuvat mallin ennusteisiin (estimoituihin ryhmäkeskiarvoihin), ei suoraan mallin kertoimiin.</span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>malli2 <span class="sc">|&gt;</span> emmeans<span class="sc">::</span><span class="fu">joint_tests</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">term =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">eta2_partial =</span> (F.ratio <span class="sc">*</span> df1) <span class="sc">/</span> (F.ratio <span class="sc">*</span> df1 <span class="sc">+</span> df2)) <span class="sc">|&gt;</span></span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, df1, df2, F.ratio, p.value, eta2_partial) <span class="sc">|&gt;</span></span>
+<span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">round_half_up</span>(.x, <span class="dv">2</span>)))</span>
+<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a>Osittainen eta neliö lasketaan tässä suoraan F-testisuureesta ja vapausasteista: $\eta^2_{\text{osittainen}} = (F \cdot df_1) / (F \cdot df_1 + df_2)$.</span>
+<span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a>APAn mukainen tapa raportoida tulos tekstissä on muotoa: *testisuure*(vapausasteet muuttujassa, vapausasteet residuaaleissa) = *testisuureen arvo*, *p* = tarkka arvo tai &lt; .001, *selitysosuus* = partial eta squared. Esimerkiksi sukupuolen päävaikutuksen osalta tämä voisi olla muotoa F(1, 1557) = 3.86, p = .050, η² = .002.</span>
+<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a><span class="fu">## Post hoc -vertailut</span></span>
+<span id="cb17-117"><a href="#cb17-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a>Jos luokkia on enemmän kuin kaksi, voi olla kiinnostavaa testata tarkemmin, mitkä yksittäiset ryhmät eroavat toisistaan tilastollisesti merkitsevästi. Tähän sopii post hoc -testi, esimerkiksi <span class="in">`TukeyHSD()`</span>, joka vertailee kaikkia ryhmäpareja keskenään ja korjaa vertailujen määrän vaikutuksen merkitsevyystasoon.</span>
+<span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-123"><a href="#cb17-123" aria-hidden="true" tabindex="-1"></a>malli2 <span class="sc">|&gt;</span> <span class="fu">aov</span>() <span class="sc">|&gt;</span> <span class="fu">TukeyHSD</span>()</span>
+<span id="cb17-124"><a href="#cb17-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a>Uudempi ja joustavampi vaihtoehto samaan on <span class="in">`emmeans`</span>-paketti, joka laskee estimoidut ryhmäkeskiarvot (*estimated marginal means*) mallista ja niiden parivertailut. Se toimii <span class="in">`TukeyHSD()`</span>:ia luotettavammin myös silloin, kun ryhmäkoot ovat epätasaisia tai mallissa on mukana muita selittäjiä.</span>
+<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(malli2, <span class="sc">~</span> Sukupuoli <span class="sc">|</span> Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb17-132"><a href="#cb17-132" aria-hidden="true" tabindex="-1"></a>  emmeans<span class="sc">::</span><span class="fu">contrast</span>(<span class="at">method =</span> <span class="st">"pairwise"</span>)</span>
+<span id="cb17-133"><a href="#cb17-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a>Kaikkea tätä ei kannata raportoida sellaisenaan - tekstiin poimitaan sisällöllisesti kiinnostavimmat parivertailut.</span>
 </code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
