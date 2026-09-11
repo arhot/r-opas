@@ -2,6 +2,10 @@
 title: "Paketit"
 ---
 
+```{r}
+#| include: false
+source("_common.R")
+```
 # Paketit {#sec-paketit}
 
 ## Mikä on R-paketti?

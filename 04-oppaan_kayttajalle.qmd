@@ -2,7 +2,10 @@
 title: "Opiskeluohjeita ja lisäresursseja"
 ---
 
-*Tämä luku on valmisteilla.*
+```{r}
+#| include: false
+source("_common.R")
+```
 
 # Yleistä oppaan käytöstä
 

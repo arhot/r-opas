@@ -7,9 +7,81 @@ title: "Kuvioiden muokkaaminen"
 source("_common.R")
 ```
 
-## Otsikot ja akselien nimet
+# Ggplot2 ja kuvion muokkaus
+
+Koska kaikki kuviot rakennetaan samoista elementeistä, kaikkiin kuvioihin voidaan tehdä muokkaukset samoilla komennoilla. Niin yksittäisiä elementtejä kuin kokonaisia kuviotyylejä voidaan lisätä kuvioon samalla tavalla kuin peruselementtejäkin eli liittämällä ne kuvion komentoihin +-merkillä. Voit tehdä yhden pitkän komennon tai tallentaa kuvion peruselementit ensin ja lisätä muokkaukset myöhemmin esimerkiksi tällaisella logiikalla:
+
+```{r}
+kuvio1 <- ESS2023 |> ggplot(aes(x = C1, fill = Sukupuoli)) + 
+    geom_bar(position = "dodge")
+
+kuvio1 # + muokkaukset()
+```
+
+## Tekstit: Otsikot ja akselien nimet
+
+Yleisin muokkaus on otsikoiden ja akselien nimeäminen. Tämä onnistuu `labs()`-komennolla, jolla voi määritellä erilaisia otsakkeita kuvioon 
+
+```{r}
+kuvio1 <- kuvio1 + labs(
+    title = "Onnellisuus sukupuolittain",  # Otsikko 
+    subtitle = "Aineisto: ESS2023", # Alaotsikko
+    x = "Koettu onnellisuus", # Vaaka-akselin otsikko
+    y = "Havaintojen määrä", # Pysty-akselin otsikko
+    fill = "Sukupuoli", # Kuvion selitteen otsikko - jos kuviossa color(), shape(), niin niille sama logiikka
+    alt = "Kuvio, jossa on pylväät, jotka kuvaavat onnellisuuden jakaumaa sukupuolittain. Naiset ovat keskimäärin hieman onnellisempia kuin miehet ") # Vaihtoehtoinen teksti kuvion sisällöstä, joka on tärkeä saavutettavuuden kannalta
+```
+
+## Akselin rajaus 
+
+Oletuksena GGplot asettaa akselien rajat automaattisesti aineistossa havaittujen mukaisesti, mutta ne voi muuttaa:
+
+```{r}
+kuvio1 <- kuvio1 + xlim(0, 10) + ylim(0, 1000)
+```
+
+## Kuvion koon muuttaminen
+
+Varsinainen valmiin kuvion koko kannattaa määrittää tallennusvaiheessa: esikatselussa Rstudio pyrkii hyödyntämään koko käytettävissä olevan tilan. Tallennettavan kuvan koko määritellään oletuksena tuumina, mutta argumentilla `units = "cm"` voi käyttää senttejä. Dots per inch eli dpi määrittää tallenettavan kuvan tarkkuuden.
+
+```{r}
+ggsave("kuvio.png", width = 16, height = 10, units = "cm", dpi = 300)
+```
 
 ## Teemat
 
-## Värit
+Yksittäisten elementtien muokkaamisen lisäksi voidaan muokata koko kuvion ulkoasun määrittävää teemaa, tai valita kokonaan uusi teema. Itse paketissa on mukana joukko simppelejä teemoja ja teemoja voi myös ladata lisää esimerkiksi ggthemes-paketista, https://jrnold.github.io/ggthemes/. Esimerkiksi tällaisia vaihtoehtoja on käytettävissä:
 
+```{r}
+
+kuvio1 <- kuvio1 + theme_grey()
+kuvio1 <- kuvio1 + theme_minimal()
+
+## Ladattavia teemoja
+library(ggthemes)
+kuvio1 <- kuvio1 + theme_economist() 
+
+```
+
+## Värit ja väriskeemat
+
+Yksittäisten kuvioelementtien värin voi määritellä suoraan komennossa. Color määrittää elementin reunuksen värin ja fill täyttövärin. Yleensä helpointa on käyttää värien englanninkielisiä nimiä, mutta myös heksakoodit toimivat.
+```{r}
+ESS2023 |> ggplot(aes(x = C1, fill = Sukupuoli)) + 
+    geom_bar(position = "dodge", color = "black", fill = "lightblue")
+```
+
+Kokonaisia väripaletteja voidaan määritellä `scale_*()`-komennoilla. Paletteja on ggplot2-paketissa valmiina, mutta niitä voi ladata lisää esimerkiksi RColorBrewer-paketista. Viridis-nimiset väripaletit taas on suunniteltu erityisesti saavutettavuuden ja värisokeiden huomioimisen kannalta. Esimerkiksi tällaisia vaihtoehtoja on käytettävissä:
+
+
+```{r}
+kuvio1 <- kuvio1 + scale_fill_brewer(palette = "Set2") # RColorBrewer-paketin paletti
+
+kuvio1 <- kuvio1 + scale_fill_viridis_d() # Luokiteltu väriasteikko
+
+kuvio1 <- kuvio1 + scale_fill_viridis_c() # Jatkuva väriasteikko
+
+kuvio1 <- kuvio1 + scale_fill_manual(values = c("lightblue", "lightpink")) # Väripaletin voi toki määritellä itsekin
+
+
+```

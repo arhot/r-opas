@@ -322,7 +322,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#käytetty-aineisto" id="toc-käytetty-aineisto" class="nav-link active" data-scroll-target="#käytetty-aineisto">Käytetty aineisto</a></li>
   <li><a href="#faktorianalyysin-tarkoitus" id="toc-faktorianalyysin-tarkoitus" class="nav-link" data-scroll-target="#faktorianalyysin-tarkoitus">Faktorianalyysin tarkoitus</a></li>
   <li><a href="#faktoriluku-ja-rotatointi" id="toc-faktoriluku-ja-rotatointi" class="nav-link" data-scroll-target="#faktoriluku-ja-rotatointi">Faktoriluku ja rotatointi</a></li>
-  <li><a href="#tulosten-tulkinta" id="toc-tulosten-tulkinta" class="nav-link" data-scroll-target="#tulosten-tulkinta">Tulosten tulkinta</a></li>
+  <li><a href="#tulosten-tulkinta" id="toc-tulosten-tulkinta" class="nav-link" data-scroll-target="#tulosten-tulkinta">Tulosten tulkinta</a>
+  <ul class="collapse">
+  <li><a href="#faktorilataukset-ja-kommunaliteetit" id="toc-faktorilataukset-ja-kommunaliteetit" class="nav-link" data-scroll-target="#faktorilataukset-ja-kommunaliteetit">Faktorilataukset ja kommunaliteetit</a></li>
+  <li><a href="#julkaisukelpoinen-taulukko" id="toc-julkaisukelpoinen-taulukko" class="nav-link" data-scroll-target="#julkaisukelpoinen-taulukko">Julkaisukelpoinen taulukko</a></li>
+  </ul></li>
+  <li><a href="#faktoripistemuuttujat" id="toc-faktoripistemuuttujat" class="nav-link" data-scroll-target="#faktoripistemuuttujat">Faktoripistemuuttujat</a></li>
   </ul>
 </nav>
     </div>
@@ -348,18 +353,255 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><em>Tämä luku on valmisteilla.</em></p>
+<p>Faktorianalyysi on menetelmä, jolla suuri joukko muuttujia tiivistetään pienemmäksi joukoksi ulottuvuuksia eli faktoreita. Sitä käytetään erityisesti silloin, kun aineistossa on paljon samaa ilmiötä eri näkökulmista mittaavia kysymyksiä, ja niistä halutaan muodostaa harvempia, sisällöllisesti tulkittavia summamuuttujia jatkoanalyyseja varten.</p>
 <section id="käytetty-aineisto" class="level2">
 <h2 class="anchored" data-anchor-id="käytetty-aineisto">Käytetty aineisto</h2>
+<p>Esimerkkinä käytetään ESS 2023 -aineiston Schwartzin perusarvoteoriaan pohjautuvia arvokysymyksiä, jotka on nimetty juoksevasti kirjaimella H alkaen (esim. <code>H1a</code>, <code>H1b</code>, …). Kysymykset on tallennettu jatkuvina muuttujina, vaikka kyse on Likert-tyyppisistä väittämistä - faktorianalyysissä tämä on tavanomaista, sillä menetelmä olettaa muuttujien olevan vähintään järjestysasteikollisia ja riittävän monta luokkaa sisältäviä, jotta niitä on mielekästä käsitellä jatkuvina.</p>
+<p>Kysymyssarjan voi valita aineistosta kerralla esimerkiksi <code>starts_with()</code>-komennolla:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"H"</span>)) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      H1a             H1b            H1c            H1d             H1e       
+ Min.   :1.000   Min.   :1.00   Min.   :1.00   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:2.000   1st Qu.:4.00   1st Qu.:1.00   1st Qu.:3.000   1st Qu.:2.000  
+ Median :2.000   Median :5.00   Median :2.00   Median :4.000   Median :2.000  
+ Mean   :2.611   Mean   :4.55   Mean   :1.91   Mean   :3.875   Mean   :2.464  
+ 3rd Qu.:3.000   3rd Qu.:5.00   3rd Qu.:2.00   3rd Qu.:5.000   3rd Qu.:3.000  
+ Max.   :6.000   Max.   :6.00   Max.   :6.00   Max.   :6.000   Max.   :6.000  
+ NA's   :36      NA's   :31     NA's   :34     NA's   :35      NA's   :36     
+      H1f             H1g             H1h             H1i       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:2.000   1st Qu.:2.000   1st Qu.:1.000   1st Qu.:2.000  
+ Median :3.000   Median :3.000   Median :2.000   Median :3.000  
+ Mean   :2.905   Mean   :3.121   Mean   :2.069   Mean   :3.005  
+ 3rd Qu.:4.000   3rd Qu.:4.000   3rd Qu.:3.000   3rd Qu.:4.000  
+ Max.   :6.000   Max.   :6.000   Max.   :6.000   Max.   :6.000  
+ NA's   :33      NA's   :41      NA's   :36      NA's   :37     
+      H1j             H1k             H1l             H1m       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:2.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:3.000  
+ Median :3.000   Median :2.000   Median :2.000   Median :4.000  
+ Mean   :2.876   Mean   :2.105   Mean   :2.078   Mean   :3.658  
+ 3rd Qu.:4.000   3rd Qu.:3.000   3rd Qu.:3.000   3rd Qu.:5.000  
+ Max.   :6.000   Max.   :6.000   Max.   :6.000   Max.   :6.000  
+ NA's   :33      NA's   :34      NA's   :35      NA's   :35     
+      H1n             H1o             H1p             H1q             H1r      
+ Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.00  
+ 1st Qu.:1.000   1st Qu.:3.000   1st Qu.:2.000   1st Qu.:3.000   1st Qu.:1.00  
+ Median :2.000   Median :4.000   Median :3.000   Median :4.000   Median :2.00  
+ Mean   :2.385   Mean   :3.889   Mean   :2.833   Mean   :3.975   Mean   :1.78  
+ 3rd Qu.:3.000   3rd Qu.:5.000   3rd Qu.:4.000   3rd Qu.:5.000   3rd Qu.:2.00  
+ Max.   :6.000   Max.   :6.000   Max.   :6.000   Max.   :6.000   Max.   :6.00  
+ NA's   :50      NA's   :37      NA's   :45      NA's   :42      NA's   :36    
+      H1s             H1t             H1u       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:1.000   1st Qu.:2.000   1st Qu.:2.000  
+ Median :2.000   Median :3.000   Median :2.000  
+ Mean   :1.923   Mean   :3.276   Mean   :2.566  
+ 3rd Qu.:2.000   3rd Qu.:4.000   3rd Qu.:3.000  
+ Max.   :6.000   Max.   :6.000   Max.   :6.000  
+ NA's   :38      NA's   :41      NA's   :36     </code></pre>
+</div>
+</div>
+<p>Muitakin tapoja valita monta muuttujaa kerralla on - esimerkiksi <code>num_range()</code>, jos muuttujat on nimetty juoksevasti numeroin (<code>B6</code>-<code>B12</code>), tai suora listaus <code>select(B6, B7, B8)</code>. Muuttujien välisiä korrelaatioita kannattaa tarkastella jo ennen faktorianalyysia - ks. luku <a href="08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html#sec-korrelaatio" class="quarto-xref"><span>Korrelaatio</span></a>.</p>
 </section>
 <section id="faktorianalyysin-tarkoitus" class="level2">
 <h2 class="anchored" data-anchor-id="faktorianalyysin-tarkoitus">Faktorianalyysin tarkoitus</h2>
+<p>Faktorianalyysi etsii aineistosta ulottuvuuksia eli faktoreita, jotka selittävät muuttujien välistä vaihtelua ja yhteisvaihtelua. Käytännössä tämä tarkoittaa sen selvittämistä, mitkä muuttujat “kulkevat yhdessä” - eli korreloivat keskenään - ja muodostavat näin oman sisällöllisen kokonaisuutensa.</p>
+<p>Ulottuvuus ei tarkoita sitä, että vastaajat olisivat keskimäärin jollain tavalla, vaan sitä, että aineistossa on tällainen jatkumo olemassa: osa vastaajista sijoittuu ulottuvuudella korkealle, osa matalalle, ja tämä vaihtelu on yhteydessä siihen, miten he ovat vastanneet ulottuvuudelle latautuviin kysymyksiin.</p>
 </section>
 <section id="faktoriluku-ja-rotatointi" class="level2">
 <h2 class="anchored" data-anchor-id="faktoriluku-ja-rotatointi">Faktoriluku ja rotatointi</h2>
+<p>Faktorianalyysi tehdään <code>psych</code>-paketin <code>fa()</code>-komennolla. Ekstrahointimenetelmäksi valitaan yleensä suurimman uskottavuuden menetelmä (<code>fm = "ml"</code>) ja rotaatioksi varimax (<code>rotate = "varimax"</code>), joka pyrkii tuottamaan mahdollisimman selkeän eli tulkittavan faktorirakenteen. Käytetyt menetelmät on hyvä mainita raportissa, vaikka niiden vertailuun ei tässä syvennytä tarkemmin.</p>
+<p>Tärkein valinta on faktorien lukumäärä (<code>nfactors</code>). Faktoreita voi olla mikä tahansa määrä yhdestä muuttujien lukumäärä miinus yhteen - faktorien määrä ei siis ole sama kuin muuttujien määrä. Valinta on ennen kaikkea sisällöllinen: kokeile muutamaa eri lukumäärää ja katso, minkä kohdalla ratkaisu on selkeimmin tulkittavissa.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="ot">&lt;-</span> <span class="fu">fa</span>(ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"H"</span>)),</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">nfactors =</span> <span class="dv">4</span>, <span class="at">fm =</span> <span class="st">"ml"</span>, <span class="at">rotate =</span> <span class="st">"varimax"</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="tulosten-tulkinta" class="level2">
 <h2 class="anchored" data-anchor-id="tulosten-tulkinta">Tulosten tulkinta</h2>
+<section id="faktorilataukset-ja-kommunaliteetit" class="level3">
+<h3 class="anchored" data-anchor-id="faktorilataukset-ja-kommunaliteetit">Faktorilataukset ja kommunaliteetit</h3>
+<p>Tulosta kannattaa tarkastella tulostamalla vain riittävän suuret faktorilataukset ja järjestämällä ne faktoreittain <code>fa.sort()</code>-komennolla. Raja-arvona käytetään yleensä 0.3 - tätä pienemmät lataukset eivät yleensä ole sisällöllisesti tulkittavia.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="sc">|&gt;</span> <span class="fu">fa.sort</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">cut =</span> <span class="fl">0.3</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Factor Analysis using method =  ml
+Call: fa(r = select(ESS2023, starts_with("H")), nfactors = 4, rotate = "varimax", 
+    fm = "ml")
+Standardized loadings (pattern matrix) based upon correlation matrix
+      ML3   ML2   ML1   ML4   h2   u2 com
+H1m  0.74                   0.62 0.38 1.2
+H1d  0.67                   0.47 0.53 1.1
+H1q  0.55                   0.40 0.60 1.6
+H1b  0.54                   0.36 0.64 1.4
+H1p        0.68             0.47 0.53 1.0
+H1g        0.56             0.33 0.67 1.1
+H1e        0.52             0.27 0.73 1.1
+H1n        0.43             0.25 0.75 1.6
+H1i        0.38             0.17 0.83 1.3
+H1t        0.36             0.16 0.84 1.5
+H1u              0.73       0.58 0.42 1.2
+H1j              0.71       0.55 0.45 1.2
+H1o  0.37        0.48       0.46 0.54 2.7
+H1f              0.42  0.37 0.43 0.57 3.2
+H1k                         0.11 0.89 1.9
+H1h                    0.60 0.37 0.63 1.1
+H1c                    0.54 0.31 0.69 1.1
+H1l                    0.52 0.37 0.63 1.7
+H1s                    0.48 0.25 0.75 1.2
+H1r        0.30        0.38 0.30 0.70 2.7
+H1a                    0.36 0.26 0.74 2.6
+
+                       ML3  ML2  ML1  ML4
+SS loadings           2.04 1.91 1.79 1.75
+Proportion Var        0.10 0.09 0.09 0.08
+Cumulative Var        0.10 0.19 0.27 0.36
+Proportion Explained  0.27 0.25 0.24 0.23
+Cumulative Proportion 0.27 0.53 0.77 1.00
+
+Mean item complexity =  1.6
+Test of the hypothesis that 4 factors are sufficient.
+
+df null model =  210  with the objective function =  4.77 with Chi Square =  7406.61
+df of  the model are 132  and the objective function was  0.49 
+
+The root mean square of the residuals (RMSR) is  0.03 
+The df corrected root mean square of the residuals is  0.04 
+
+The harmonic n.obs is  1519 with the empirical chi square  336.91  with prob &lt;  7.2e-20 
+The total n.obs was  1563  with Likelihood Chi Square =  756.25  with prob &lt;  3.1e-88 
+
+Tucker Lewis Index of factoring reliability =  0.862
+RMSEA index =  0.055  and the 90 % confidence intervals are  0.051 0.059
+BIC =  -214.52
+Fit based upon off diagonal values = 0.97
+Measures of factor score adequacy             
+                                                   ML3  ML2  ML1  ML4
+Correlation of (regression) scores with factors   0.87 0.86 0.85 0.83
+Multiple R square of scores with factors          0.76 0.74 0.71 0.68
+Minimum correlation of possible factor scores     0.52 0.47 0.43 0.37</code></pre>
+</div>
+</div>
+<p><code>h2</code>-sarake kertoo kommunaliteetin eli sen, kuinka suuri osuus kunkin muuttujan vaihtelusta tuli selitettyä faktoreilla yhteensä. <code>u2</code> ja <code>com</code> eivät yleensä ole raportoinnin kannalta tarpeellisia.</p>
+<p>Faktoreiden selittämä kokonaisvaihtelu löytyy <code>Vaccounted</code>-taulukosta:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>faktorianalyysi<span class="sc">$</span>Vaccounted <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"Tunnusluku"</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 5
+  Tunnusluku               ML3    ML2    ML1    ML4
+  &lt;chr&gt;                  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1 SS loadings           2.04   1.91   1.79   1.75  
+2 Proportion Var        0.0969 0.0909 0.0855 0.0835
+3 Cumulative Var        0.0969 0.188  0.273  0.357 
+4 Proportion Explained  0.272  0.255  0.240  0.234 
+5 Cumulative Proportion 0.272  0.526  0.766  1     </code></pre>
+</div>
+</div>
+<p>Tulkinta tarkoittaa ulottuvuuden nimeämisen prosessia: mikä yhdistää kullekin faktorille latautuvia kysymyksiä, ja miten tämän voisi otsikoida?</p>
+</section>
+<section id="julkaisukelpoinen-taulukko" class="level3">
+<h3 class="anchored" data-anchor-id="julkaisukelpoinen-taulukko">Julkaisukelpoinen taulukko</h3>
+<p>Tulostetusta ratkaisusta voi rakentaa siistin, tidyverse-tyylisen taulukon poimimalla lataukset ja kommunaliteetit omaksi tibblekseen. Tässä hyödynnetään samaa <code>across(where(is.numeric), ...)</code>-logiikkaa kuin muissakin oppaan taulukoissa: pienet, alle 0.3:n lataukset piilotetaan ja loput pyöristetään.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sorted <span class="ot">&lt;-</span> faktorianalyysi <span class="sc">|&gt;</span> <span class="fu">fa.sort</span>()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>lataukset <span class="ot">&lt;-</span> sorted<span class="sc">$</span>loadings <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unclass</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"Muuttuja"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">if_else</span>(<span class="fu">abs</span>(.x) <span class="sc">&lt;</span> <span class="fl">0.3</span>, <span class="cn">NA_real_</span>, <span class="fu">round</span>(.x, <span class="dv">2</span>))))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>kommunaliteetit <span class="ot">&lt;-</span> sorted<span class="sc">$</span>communality <span class="sc">|&gt;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enframe</span>(<span class="at">name =</span> <span class="st">"Muuttuja"</span>, <span class="at">value =</span> <span class="st">"h2"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">h2 =</span> <span class="fu">round</span>(h2, <span class="dv">2</span>))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>taulukko1 <span class="ot">&lt;-</span> lataukset <span class="sc">|&gt;</span> <span class="fu">left_join</span>(kommunaliteetit, <span class="at">by =</span> <span class="st">"Muuttuja"</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>taulukko1</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 21 × 6
+   Muuttuja   ML3   ML2   ML1   ML4    h2
+   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 H1m       0.74 NA       NA    NA  0.62
+ 2 H1d       0.67 NA       NA    NA  0.47
+ 3 H1q       0.55 NA       NA    NA  0.4 
+ 4 H1b       0.54 NA       NA    NA  0.36
+ 5 H1p      NA     0.68    NA    NA  0.47
+ 6 H1g      NA     0.56    NA    NA  0.33
+ 7 H1e      NA     0.52    NA    NA  0.27
+ 8 H1n      NA     0.43    NA    NA  0.25
+ 9 H1i      NA     0.38    NA    NA  0.17
+10 H1t      NA     0.36    NA    NA  0.16
+# ℹ 11 more rows</code></pre>
+</div>
+</div>
+<p>Nimeä faktorit sisällöllisen tulkinnan mukaan <code>rename()</code>-komennolla - esimerkiksi jos kolmas faktori (<code>ML3</code>) kuvaa menestyksen arvostamista:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>taulukko1 <span class="ot">&lt;-</span> taulukko1 <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">Menestys =</span> ML3)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>taulukko1</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 21 × 6
+   Muuttuja Menestys   ML2   ML1   ML4    h2
+   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 H1m          0.74 NA       NA    NA  0.62
+ 2 H1d          0.67 NA       NA    NA  0.47
+ 3 H1q          0.55 NA       NA    NA  0.4 
+ 4 H1b          0.54 NA       NA    NA  0.36
+ 5 H1p         NA     0.68    NA    NA  0.47
+ 6 H1g         NA     0.56    NA    NA  0.33
+ 7 H1e         NA     0.52    NA    NA  0.27
+ 8 H1n         NA     0.43    NA    NA  0.25
+ 9 H1i         NA     0.38    NA    NA  0.17
+10 H1t         NA     0.36    NA    NA  0.16
+# ℹ 11 more rows</code></pre>
+</div>
+</div>
+<p>Taulukon voi tallentaa Excel-muotoon raporttia tai tehtävää varten tuttuun tapaan:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(taulukko1, <span class="st">"faktoritaulukko.xlsx"</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="faktoripistemuuttujat" class="level2">
+<h2 class="anchored" data-anchor-id="faktoripistemuuttujat">Faktoripistemuuttujat</h2>
+<p>Faktorianalyysin tärkein anti jatkoanalyysien kannalta on usein faktoripistemuuttuja: kullekin vastaajalle laskettu arvo kullakin ulottuvuudella. Pisteet ovat standardoituja - keskiarvo on lähellä nollaa ja keskihajonta yhtä - riippumatta siitä, minkälaisia alkuperäiset muuttujat olivat.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>faktoripisteet <span class="ot">&lt;-</span> faktorianalyysi<span class="sc">$</span>scores <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Menestys =</span> ML3)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">any_of</span>(<span class="fu">names</span>(faktoripisteet))) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(faktoripisteet)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>select(-any_of(...))</code> ennen <code>bind_cols()</code>-komentoa varmistaa, ettei aineistoon jää vanhaa samannimistä muuttujaa, jos faktoripisteet lasketaan ja liitetään aineistoon useaan kertaan esimerkiksi eri istunnoissa.</p>
+<p>Tarkastetaan lopuksi, että faktoripistemuuttuja näyttää järkevältä:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(Menestys) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Menestys        
+ Min.   :-2.632264  
+ 1st Qu.:-0.586240  
+ Median : 0.009639  
+ Mean   :-0.003947  
+ 3rd Qu.: 0.608379  
+ Max.   : 2.497042  
+ NA's   :92         </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ESS2023, <span class="fu">aes</span>(<span class="at">x =</span> Menestys)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="22-faktorianalyysi_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Jos alkuperäinen asteikko oli suunnattu vastakkaisesti kuin faktoripisteen haluttu tulkinta (esim. pieni arvo tarkoitti “enemmän”), suunnan voi kääntää kertomalla muuttuja -1:llä - ks. luku <a href="./07-muuttujamuunnokset.html">Muuttujamuunnokset</a>.</p>
 
 
 <!-- -->
@@ -830,24 +1072,128 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Lähdekoodi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Faktorianalyysi"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>*Tämä luku on valmisteilla.*</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Käytetty aineisto</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Faktorianalyysin tarkoitus</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Faktoriluku ja rotatointi</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tulosten tulkinta</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Faktorianalyysi"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>Faktorianalyysi on menetelmä, jolla suuri joukko muuttujia tiivistetään pienemmäksi joukoksi ulottuvuuksia eli faktoreita. Sitä käytetään erityisesti silloin, kun aineistossa on paljon samaa ilmiötä eri näkökulmista mittaavia kysymyksiä, ja niistä halutaan muodostaa harvempia, sisällöllisesti tulkittavia summamuuttujia jatkoanalyyseja varten.</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Käytetty aineisto</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>Esimerkkinä käytetään ESS 2023 -aineiston Schwartzin perusarvoteoriaan pohjautuvia arvokysymyksiä, jotka on nimetty juoksevasti kirjaimella H alkaen (esim. <span class="in">`H1a`</span>, <span class="in">`H1b`</span>, ...). Kysymykset on tallennettu jatkuvina muuttujina, vaikka kyse on Likert-tyyppisistä väittämistä - faktorianalyysissä tämä on tavanomaista, sillä menetelmä olettaa muuttujien olevan vähintään järjestysasteikollisia ja riittävän monta luokkaa sisältäviä, jotta niitä on mielekästä käsitellä jatkuvina.</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>Kysymyssarjan voi valita aineistosta kerralla esimerkiksi <span class="in">`starts_with()`</span>-komennolla:</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"H"</span>)) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>Muitakin tapoja valita monta muuttujaa kerralla on - esimerkiksi <span class="in">`num_range()`</span>, jos muuttujat on nimetty juoksevasti numeroin (<span class="in">`B6`</span>-<span class="in">`B12`</span>), tai suora listaus <span class="in">`select(B6, B7, B8)`</span>. Muuttujien välisiä korrelaatioita kannattaa tarkastella jo ennen faktorianalyysia - ks. luku @sec-korrelaatio.</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## Faktorianalyysin tarkoitus</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>Faktorianalyysi etsii aineistosta ulottuvuuksia eli faktoreita, jotka selittävät muuttujien välistä vaihtelua ja yhteisvaihtelua. Käytännössä tämä tarkoittaa sen selvittämistä, mitkä muuttujat "kulkevat yhdessä" - eli korreloivat keskenään - ja muodostavat näin oman sisällöllisen kokonaisuutensa.</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>Ulottuvuus ei tarkoita sitä, että vastaajat olisivat keskimäärin jollain tavalla, vaan sitä, että aineistossa on tällainen jatkumo olemassa: osa vastaajista sijoittuu ulottuvuudella korkealle, osa matalalle, ja tämä vaihtelu on yhteydessä siihen, miten he ovat vastanneet ulottuvuudelle latautuviin kysymyksiin.</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## Faktoriluku ja rotatointi</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>Faktorianalyysi tehdään <span class="in">`psych`</span>-paketin <span class="in">`fa()`</span>-komennolla. Ekstrahointimenetelmäksi valitaan yleensä suurimman uskottavuuden menetelmä (<span class="in">`fm = "ml"`</span>) ja rotaatioksi varimax (<span class="in">`rotate = "varimax"`</span>), joka pyrkii tuottamaan mahdollisimman selkeän eli tulkittavan faktorirakenteen. Käytetyt menetelmät on hyvä mainita raportissa, vaikka niiden vertailuun ei tässä syvennytä tarkemmin.</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>Tärkein valinta on faktorien lukumäärä (<span class="in">`nfactors`</span>). Faktoreita voi olla mikä tahansa määrä yhdestä muuttujien lukumäärä miinus yhteen - faktorien määrä ei siis ole sama kuin muuttujien määrä. Valinta on ennen kaikkea sisällöllinen: kokeile muutamaa eri lukumäärää ja katso, minkä kohdalla ratkaisu on selkeimmin tulkittavissa.</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="ot">&lt;-</span> <span class="fu">fa</span>(ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"H"</span>)),</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>                       <span class="at">nfactors =</span> <span class="dv">4</span>, <span class="at">fm =</span> <span class="st">"ml"</span>, <span class="at">rotate =</span> <span class="st">"varimax"</span>)</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tulosten tulkinta</span></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a><span class="fu">### Faktorilataukset ja kommunaliteetit</span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>Tulosta kannattaa tarkastella tulostamalla vain riittävän suuret faktorilataukset ja järjestämällä ne faktoreittain <span class="in">`fa.sort()`</span>-komennolla. Raja-arvona käytetään yleensä 0.3 - tätä pienemmät lataukset eivät yleensä ole sisällöllisesti tulkittavia.</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="sc">|&gt;</span> <span class="fu">fa.sort</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">cut =</span> <span class="fl">0.3</span>)</span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a><span class="in">`h2`</span>-sarake kertoo kommunaliteetin eli sen, kuinka suuri osuus kunkin muuttujan vaihtelusta tuli selitettyä faktoreilla yhteensä. <span class="in">`u2`</span> ja <span class="in">`com`</span> eivät yleensä ole raportoinnin kannalta tarpeellisia.</span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>Faktoreiden selittämä kokonaisvaihtelu löytyy <span class="in">`Vaccounted`</span>-taulukosta:</span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>faktorianalyysi<span class="sc">$</span>Vaccounted <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"Tunnusluku"</span>)</span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>Tulkinta tarkoittaa ulottuvuuden nimeämisen prosessia: mikä yhdistää kullekin faktorille latautuvia kysymyksiä, ja miten tämän voisi otsikoida?</span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a><span class="fu">### Julkaisukelpoinen taulukko</span></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a>Tulostetusta ratkaisusta voi rakentaa siistin, tidyverse-tyylisen taulukon poimimalla lataukset ja kommunaliteetit omaksi tibblekseen. Tässä hyödynnetään samaa <span class="in">`across(where(is.numeric), ...)`</span>-logiikkaa kuin muissakin oppaan taulukoissa: pienet, alle 0.3:n lataukset piilotetaan ja loput pyöristetään.</span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>sorted <span class="ot">&lt;-</span> faktorianalyysi <span class="sc">|&gt;</span> <span class="fu">fa.sort</span>()</span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>lataukset <span class="ot">&lt;-</span> sorted<span class="sc">$</span>loadings <span class="sc">|&gt;</span></span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unclass</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"Muuttuja"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span> <span class="fu">if_else</span>(<span class="fu">abs</span>(.x) <span class="sc">&lt;</span> <span class="fl">0.3</span>, <span class="cn">NA_real_</span>, <span class="fu">round</span>(.x, <span class="dv">2</span>))))</span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a>kommunaliteetit <span class="ot">&lt;-</span> sorted<span class="sc">$</span>communality <span class="sc">|&gt;</span></span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">enframe</span>(<span class="at">name =</span> <span class="st">"Muuttuja"</span>, <span class="at">value =</span> <span class="st">"h2"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">h2 =</span> <span class="fu">round</span>(h2, <span class="dv">2</span>))</span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>taulukko1 <span class="ot">&lt;-</span> lataukset <span class="sc">|&gt;</span> <span class="fu">left_join</span>(kommunaliteetit, <span class="at">by =</span> <span class="st">"Muuttuja"</span>)</span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a>taulukko1</span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>Nimeä faktorit sisällöllisen tulkinnan mukaan <span class="in">`rename()`</span>-komennolla - esimerkiksi jos kolmas faktori (<span class="in">`ML3`</span>) kuvaa menestyksen arvostamista:</span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>taulukko1 <span class="ot">&lt;-</span> taulukko1 <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">Menestys =</span> ML3)</span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a>taulukko1</span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>Taulukon voi tallentaa Excel-muotoon raporttia tai tehtävää varten tuttuun tapaan:</span>
+<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(taulukko1, <span class="st">"faktoritaulukko.xlsx"</span>)</span>
+<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a><span class="fu">## Faktoripistemuuttujat</span></span>
+<span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a>Faktorianalyysin tärkein anti jatkoanalyysien kannalta on usein faktoripistemuuttuja: kullekin vastaajalle laskettu arvo kullakin ulottuvuudella. Pisteet ovat standardoituja - keskiarvo on lähellä nollaa ja keskihajonta yhtä - riippumatta siitä, minkälaisia alkuperäiset muuttujat olivat.</span>
+<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a>faktoripisteet <span class="ot">&lt;-</span> faktorianalyysi<span class="sc">$</span>scores <span class="sc">|&gt;</span></span>
+<span id="cb17-120"><a href="#cb17-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-121"><a href="#cb17-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Menestys =</span> ML3)</span>
+<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-123"><a href="#cb17-123" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb17-124"><a href="#cb17-124" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">any_of</span>(<span class="fu">names</span>(faktoripisteet))) <span class="sc">|&gt;</span></span>
+<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(faktoripisteet)</span>
+<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a><span class="in">`select(-any_of(...))`</span> ennen <span class="in">`bind_cols()`</span>-komentoa varmistaa, ettei aineistoon jää vanhaa samannimistä muuttujaa, jos faktoripisteet lasketaan ja liitetään aineistoon useaan kertaan esimerkiksi eri istunnoissa.</span>
+<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a>Tarkastetaan lopuksi, että faktoripistemuuttuja näyttää järkevältä:</span>
+<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(Menestys) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span>
+<span id="cb17-136"><a href="#cb17-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-137"><a href="#cb17-137" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ESS2023, <span class="fu">aes</span>(<span class="at">x =</span> Menestys)) <span class="sc">+</span></span>
+<span id="cb17-138"><a href="#cb17-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb17-139"><a href="#cb17-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb17-140"><a href="#cb17-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-141"><a href="#cb17-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-142"><a href="#cb17-142" aria-hidden="true" tabindex="-1"></a>Jos alkuperäinen asteikko oli suunnattu vastakkaisesti kuin faktoripisteen haluttu tulkinta (esim. pieni arvo tarkoitti "enemmän"), suunnan voi kääntää kertomalla muuttuja -1:llä - ks. luku <span class="co">[</span><span class="ot">Muuttujamuunnokset</span><span class="co">](07-muuttujamuunnokset.qmd)</span>.</span>
 </code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

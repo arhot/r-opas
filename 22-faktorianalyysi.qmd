@@ -7,12 +7,116 @@ title: "Faktorianalyysi"
 source("_common.R")
 ```
 
-*Tämä luku on valmisteilla.*
+Faktorianalyysi on menetelmä, jolla suuri joukko muuttujia tiivistetään pienemmäksi joukoksi ulottuvuuksia eli faktoreita. Sitä käytetään erityisesti silloin, kun aineistossa on paljon samaa ilmiötä eri näkökulmista mittaavia kysymyksiä, ja niistä halutaan muodostaa harvempia, sisällöllisesti tulkittavia summamuuttujia jatkoanalyyseja varten.
 
 ## Käytetty aineisto
 
+Esimerkkinä käytetään ESS 2023 -aineiston Schwartzin perusarvoteoriaan pohjautuvia arvokysymyksiä, jotka on nimetty juoksevasti kirjaimella H alkaen (esim. `H1a`, `H1b`, ...). Kysymykset on tallennettu jatkuvina muuttujina, vaikka kyse on Likert-tyyppisistä väittämistä - faktorianalyysissä tämä on tavanomaista, sillä menetelmä olettaa muuttujien olevan vähintään järjestysasteikollisia ja riittävän monta luokkaa sisältäviä, jotta niitä on mielekästä käsitellä jatkuvina.
+
+Kysymyssarjan voi valita aineistosta kerralla esimerkiksi `starts_with()`-komennolla:
+
+```{r}
+ESS2023 |> select(starts_with("H")) |> summary()
+```
+
+Muitakin tapoja valita monta muuttujaa kerralla on - esimerkiksi `num_range()`, jos muuttujat on nimetty juoksevasti numeroin (`B6`-`B12`), tai suora listaus `select(B6, B7, B8)`. Muuttujien välisiä korrelaatioita kannattaa tarkastella jo ennen faktorianalyysia - ks. luku @sec-korrelaatio.
+
 ## Faktorianalyysin tarkoitus
+
+Faktorianalyysi etsii aineistosta ulottuvuuksia eli faktoreita, jotka selittävät muuttujien välistä vaihtelua ja yhteisvaihtelua. Käytännössä tämä tarkoittaa sen selvittämistä, mitkä muuttujat "kulkevat yhdessä" - eli korreloivat keskenään - ja muodostavat näin oman sisällöllisen kokonaisuutensa.
+
+Ulottuvuus ei tarkoita sitä, että vastaajat olisivat keskimäärin jollain tavalla, vaan sitä, että aineistossa on tällainen jatkumo olemassa: osa vastaajista sijoittuu ulottuvuudella korkealle, osa matalalle, ja tämä vaihtelu on yhteydessä siihen, miten he ovat vastanneet ulottuvuudelle latautuviin kysymyksiin.
 
 ## Faktoriluku ja rotatointi
 
+Faktorianalyysi tehdään `psych`-paketin `fa()`-komennolla. Ekstrahointimenetelmäksi valitaan yleensä suurimman uskottavuuden menetelmä (`fm = "ml"`) ja rotaatioksi varimax (`rotate = "varimax"`), joka pyrkii tuottamaan mahdollisimman selkeän eli tulkittavan faktorirakenteen. Käytetyt menetelmät on hyvä mainita raportissa, vaikka niiden vertailuun ei tässä syvennytä tarkemmin.
+
+Tärkein valinta on faktorien lukumäärä (`nfactors`). Faktoreita voi olla mikä tahansa määrä yhdestä muuttujien lukumäärä miinus yhteen - faktorien määrä ei siis ole sama kuin muuttujien määrä. Valinta on ennen kaikkea sisällöllinen: kokeile muutamaa eri lukumäärää ja katso, minkä kohdalla ratkaisu on selkeimmin tulkittavissa.
+
+```{r}
+faktorianalyysi <- fa(ESS2023 |> select(starts_with("H")),
+                       nfactors = 4, fm = "ml", rotate = "varimax")
+```
+
 ## Tulosten tulkinta
+
+### Faktorilataukset ja kommunaliteetit
+
+Tulosta kannattaa tarkastella tulostamalla vain riittävän suuret faktorilataukset ja järjestämällä ne faktoreittain `fa.sort()`-komennolla. Raja-arvona käytetään yleensä 0.3 - tätä pienemmät lataukset eivät yleensä ole sisällöllisesti tulkittavia.
+
+```{r}
+faktorianalyysi |> fa.sort() |> print(cut = 0.3)
+```
+
+`h2`-sarake kertoo kommunaliteetin eli sen, kuinka suuri osuus kunkin muuttujan vaihtelusta tuli selitettyä faktoreilla yhteensä. `u2` ja `com` eivät yleensä ole raportoinnin kannalta tarpeellisia.
+
+Faktoreiden selittämä kokonaisvaihtelu löytyy `Vaccounted`-taulukosta:
+
+```{r}
+faktorianalyysi$Vaccounted |> as_tibble(rownames = "Tunnusluku")
+```
+
+Tulkinta tarkoittaa ulottuvuuden nimeämisen prosessia: mikä yhdistää kullekin faktorille latautuvia kysymyksiä, ja miten tämän voisi otsikoida?
+
+### Julkaisukelpoinen taulukko
+
+Tulostetusta ratkaisusta voi rakentaa siistin, tidyverse-tyylisen taulukon poimimalla lataukset ja kommunaliteetit omaksi tibblekseen. Tässä hyödynnetään samaa `across(where(is.numeric), ...)`-logiikkaa kuin muissakin oppaan taulukoissa: pienet, alle 0.3:n lataukset piilotetaan ja loput pyöristetään.
+
+```{r}
+sorted <- faktorianalyysi |> fa.sort()
+
+lataukset <- sorted$loadings |>
+  unclass() |>
+  as_tibble(rownames = "Muuttuja") |>
+  mutate(across(where(is.numeric), ~ if_else(abs(.x) < 0.3, NA_real_, round(.x, 2))))
+
+kommunaliteetit <- sorted$communality |>
+  enframe(name = "Muuttuja", value = "h2") |>
+  mutate(h2 = round(h2, 2))
+
+taulukko1 <- lataukset |> left_join(kommunaliteetit, by = "Muuttuja")
+
+taulukko1
+```
+
+Nimeä faktorit sisällöllisen tulkinnan mukaan `rename()`-komennolla - esimerkiksi jos kolmas faktori (`ML3`) kuvaa menestyksen arvostamista:
+
+```{r}
+taulukko1 <- taulukko1 |> rename(Menestys = ML3)
+
+taulukko1
+```
+
+Taulukon voi tallentaa Excel-muotoon raporttia tai tehtävää varten tuttuun tapaan:
+
+```{r}
+write_xlsx(taulukko1, "faktoritaulukko.xlsx")
+```
+
+## Faktoripistemuuttujat
+
+Faktorianalyysin tärkein anti jatkoanalyysien kannalta on usein faktoripistemuuttuja: kullekin vastaajalle laskettu arvo kullakin ulottuvuudella. Pisteet ovat standardoituja - keskiarvo on lähellä nollaa ja keskihajonta yhtä - riippumatta siitä, minkälaisia alkuperäiset muuttujat olivat.
+
+```{r}
+faktoripisteet <- faktorianalyysi$scores |>
+  as_tibble() |>
+  rename(Menestys = ML3)
+
+ESS2023 <- ESS2023 |>
+  select(-any_of(names(faktoripisteet))) |>
+  bind_cols(faktoripisteet)
+```
+
+`select(-any_of(...))` ennen `bind_cols()`-komentoa varmistaa, ettei aineistoon jää vanhaa samannimistä muuttujaa, jos faktoripisteet lasketaan ja liitetään aineistoon useaan kertaan esimerkiksi eri istunnoissa.
+
+Tarkastetaan lopuksi, että faktoripistemuuttuja näyttää järkevältä:
+
+```{r}
+ESS2023 |> select(Menestys) |> summary()
+
+ggplot(ESS2023, aes(x = Menestys)) +
+  geom_histogram() +
+  theme_minimal()
+```
+
+Jos alkuperäinen asteikko oli suunnattu vastakkaisesti kuin faktoripisteen haluttu tulkinta (esim. pieni arvo tarkoitti "enemmän"), suunnan voi kääntää kertomalla muuttuja -1:llä - ks. luku [Muuttujamuunnokset](07-muuttujamuunnokset.qmd).

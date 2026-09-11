@@ -319,9 +319,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Sisällysluettelo</h2>
    
   <ul>
-  <li><a href="#otsikot-ja-akselien-nimet" id="toc-otsikot-ja-akselien-nimet" class="nav-link active" data-scroll-target="#otsikot-ja-akselien-nimet">Otsikot ja akselien nimet</a></li>
+  <li><a href="#ggplot2-ja-kuvion-muokkaus" id="toc-ggplot2-ja-kuvion-muokkaus" class="nav-link active" data-scroll-target="#ggplot2-ja-kuvion-muokkaus">Ggplot2 ja kuvion muokkaus</a>
+  <ul class="collapse">
+  <li><a href="#tekstit-otsikot-ja-akselien-nimet" id="toc-tekstit-otsikot-ja-akselien-nimet" class="nav-link" data-scroll-target="#tekstit-otsikot-ja-akselien-nimet">Tekstit: Otsikot ja akselien nimet</a></li>
+  <li><a href="#akselin-rajaus" id="toc-akselin-rajaus" class="nav-link" data-scroll-target="#akselin-rajaus">Akselin rajaus</a></li>
+  <li><a href="#kuvion-koon-muuttaminen" id="toc-kuvion-koon-muuttaminen" class="nav-link" data-scroll-target="#kuvion-koon-muuttaminen">Kuvion koon muuttaminen</a></li>
   <li><a href="#teemat" id="toc-teemat" class="nav-link" data-scroll-target="#teemat">Teemat</a></li>
-  <li><a href="#värit" id="toc-värit" class="nav-link" data-scroll-target="#värit">Värit</a></li>
+  <li><a href="#värit-ja-väriskeemat" id="toc-värit-ja-väriskeemat" class="nav-link" data-scroll-target="#värit-ja-väriskeemat">Värit ja väriskeemat</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -347,18 +352,90 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="otsikot-ja-akselien-nimet" class="level2">
-<h2 class="anchored" data-anchor-id="otsikot-ja-akselien-nimet">Otsikot ja akselien nimet</h2>
+<section id="ggplot2-ja-kuvion-muokkaus" class="level1">
+<h1>Ggplot2 ja kuvion muokkaus</h1>
+<p>Koska kaikki kuviot rakennetaan samoista elementeistä, kaikkiin kuvioihin voidaan tehdä muokkaukset samoilla komennoilla. Niin yksittäisiä elementtejä kuin kokonaisia kuviotyylejä voidaan lisätä kuvioon samalla tavalla kuin peruselementtejäkin eli liittämällä ne kuvion komentoihin +-merkillä. Voit tehdä yhden pitkän komennon tai tallentaa kuvion peruselementit ensin ja lisätä muokkaukset myöhemmin esimerkiksi tällaisella logiikalla:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> C1, <span class="at">fill =</span> Sukupuoli)) <span class="sc">+</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="co"># + muokkaukset()</span></span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-kuvion-muokkaaminen_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="tekstit-otsikot-ja-akselien-nimet" class="level2">
+<h2 class="anchored" data-anchor-id="tekstit-otsikot-ja-akselien-nimet">Tekstit: Otsikot ja akselien nimet</h2>
+<p>Yleisin muokkaus on otsikoiden ja akselien nimeäminen. Tämä onnistuu <code>labs()</code>-komennolla, jolla voi määritellä erilaisia otsakkeita kuvioon</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">labs</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Onnellisuus sukupuolittain"</span>,  <span class="co"># Otsikko </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Aineisto: ESS2023"</span>, <span class="co"># Alaotsikko</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Koettu onnellisuus"</span>, <span class="co"># Vaaka-akselin otsikko</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Havaintojen määrä"</span>, <span class="co"># Pysty-akselin otsikko</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Sukupuoli"</span>, <span class="co"># Kuvion selitteen otsikko - jos kuviossa color(), shape(), niin niille sama logiikka</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">alt =</span> <span class="st">"Kuvio, jossa on pylväät, jotka kuvaavat onnellisuuden jakaumaa sukupuolittain. Naiset ovat keskimäärin hieman onnellisempia kuin miehet "</span>) <span class="co"># Vaihtoehtoinen teksti kuvion sisällöstä, joka on tärkeä saavutettavuuden kannalta</span></span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="akselin-rajaus" class="level2">
+<h2 class="anchored" data-anchor-id="akselin-rajaus">Akselin rajaus</h2>
+<p>Oletuksena GGplot asettaa akselien rajat automaattisesti aineistossa havaittujen mukaisesti, mutta ne voi muuttaa:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="dv">10</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">1000</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="kuvion-koon-muuttaminen" class="level2">
+<h2 class="anchored" data-anchor-id="kuvion-koon-muuttaminen">Kuvion koon muuttaminen</h2>
+<p>Varsinainen valmiin kuvion koko kannattaa määrittää tallennusvaiheessa: esikatselussa Rstudio pyrkii hyödyntämään koko käytettävissä olevan tilan. Tallennettavan kuvan koko määritellään oletuksena tuumina, mutta argumentilla <code>units = "cm"</code> voi käyttää senttejä. Dots per inch eli dpi määrittää tallenettavan kuvan tarkkuuden.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"kuvio.png"</span>, <span class="at">width =</span> <span class="dv">16</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">units =</span> <span class="st">"cm"</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="teemat" class="level2">
 <h2 class="anchored" data-anchor-id="teemat">Teemat</h2>
+<p>Yksittäisten elementtien muokkaamisen lisäksi voidaan muokata koko kuvion ulkoasun määrittävää teemaa, tai valita kokonaan uusi teema. Itse paketissa on mukana joukko simppelejä teemoja ja teemoja voi myös ladata lisää esimerkiksi ggthemes-paketista, https://jrnold.github.io/ggthemes/. Esimerkiksi tällaisia vaihtoehtoja on käytettävissä:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">theme_grey</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Ladattavia teemoja</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">theme_economist</span>() </span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
-<section id="värit" class="level2">
-<h2 class="anchored" data-anchor-id="värit">Värit</h2>
+<section id="värit-ja-väriskeemat" class="level2">
+<h2 class="anchored" data-anchor-id="värit-ja-väriskeemat">Värit ja väriskeemat</h2>
+<p>Yksittäisten kuvioelementtien värin voi määritellä suoraan komennossa. Color määrittää elementin reunuksen värin ja fill täyttövärin. Yleensä helpointa on käyttää värien englanninkielisiä nimiä, mutta myös heksakoodit toimivat.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> C1, <span class="at">fill =</span> Sukupuoli)) <span class="sc">+</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightblue"</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="15-kuvion-muokkaaminen_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Kokonaisia väripaletteja voidaan määritellä <code>scale_*()</code>-komennoilla. Paletteja on ggplot2-paketissa valmiina, mutta niitä voi ladata lisää esimerkiksi RColorBrewer-paketista. Viridis-nimiset väripaletit taas on suunniteltu erityisesti saavutettavuuden ja värisokeiden huomioimisen kannalta. Esimerkiksi tällaisia vaihtoehtoja on käytettävissä:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="co"># RColorBrewer-paketin paletti</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">scale_fill_viridis_d</span>() <span class="co"># Luokiteltu väriasteikko</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">scale_fill_viridis_c</span>() <span class="co"># Jatkuva väriasteikko</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"lightpink"</span>)) <span class="co"># Väripaletin voi toki määritellä itsekin</span></span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 
 
 <!-- -->
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -825,20 +902,92 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Lähdekoodi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Kuvioiden muokkaaminen"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Otsikot ja akselien nimet</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Teemat</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Värit</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Kuvioiden muokkaaminen"</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu"># Ggplot2 ja kuvion muokkaus</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>Koska kaikki kuviot rakennetaan samoista elementeistä, kaikkiin kuvioihin voidaan tehdä muokkaukset samoilla komennoilla. Niin yksittäisiä elementtejä kuin kokonaisia kuviotyylejä voidaan lisätä kuvioon samalla tavalla kuin peruselementtejäkin eli liittämällä ne kuvion komentoihin +-merkillä. Voit tehdä yhden pitkän komennon tai tallentaa kuvion peruselementit ensin ja lisätä muokkaukset myöhemmin esimerkiksi tällaisella logiikalla:</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> C1, <span class="at">fill =</span> Sukupuoli)) <span class="sc">+</span> </span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="co"># + muokkaukset()</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tekstit: Otsikot ja akselien nimet</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>Yleisin muokkaus on otsikoiden ja akselien nimeäminen. Tämä onnistuu <span class="in">`labs()`</span>-komennolla, jolla voi määritellä erilaisia otsakkeita kuvioon </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">labs</span>(</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Onnellisuus sukupuolittain"</span>,  <span class="co"># Otsikko </span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Aineisto: ESS2023"</span>, <span class="co"># Alaotsikko</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Koettu onnellisuus"</span>, <span class="co"># Vaaka-akselin otsikko</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Havaintojen määrä"</span>, <span class="co"># Pysty-akselin otsikko</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Sukupuoli"</span>, <span class="co"># Kuvion selitteen otsikko - jos kuviossa color(), shape(), niin niille sama logiikka</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">alt =</span> <span class="st">"Kuvio, jossa on pylväät, jotka kuvaavat onnellisuuden jakaumaa sukupuolittain. Naiset ovat keskimäärin hieman onnellisempia kuin miehet "</span>) <span class="co"># Vaihtoehtoinen teksti kuvion sisällöstä, joka on tärkeä saavutettavuuden kannalta</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## Akselin rajaus </span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>Oletuksena GGplot asettaa akselien rajat automaattisesti aineistossa havaittujen mukaisesti, mutta ne voi muuttaa:</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="dv">10</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">1000</span>)</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Kuvion koon muuttaminen</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>Varsinainen valmiin kuvion koko kannattaa määrittää tallennusvaiheessa: esikatselussa Rstudio pyrkii hyödyntämään koko käytettävissä olevan tilan. Tallennettavan kuvan koko määritellään oletuksena tuumina, mutta argumentilla <span class="in">`units = "cm"`</span> voi käyttää senttejä. Dots per inch eli dpi määrittää tallenettavan kuvan tarkkuuden.</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"kuvio.png"</span>, <span class="at">width =</span> <span class="dv">16</span>, <span class="at">height =</span> <span class="dv">10</span>, <span class="at">units =</span> <span class="st">"cm"</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a><span class="fu">## Teemat</span></span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>Yksittäisten elementtien muokkaamisen lisäksi voidaan muokata koko kuvion ulkoasun määrittävää teemaa, tai valita kokonaan uusi teema. Itse paketissa on mukana joukko simppelejä teemoja ja teemoja voi myös ladata lisää esimerkiksi ggthemes-paketista, https://jrnold.github.io/ggthemes/. Esimerkiksi tällaisia vaihtoehtoja on käytettävissä:</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">theme_grey</span>()</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a><span class="do">## Ladattavia teemoja</span></span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">theme_economist</span>() </span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a><span class="fu">## Värit ja väriskeemat</span></span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>Yksittäisten kuvioelementtien värin voi määritellä suoraan komennossa. Color määrittää elementin reunuksen värin ja fill täyttövärin. Yleensä helpointa on käyttää värien englanninkielisiä nimiä, mutta myös heksakoodit toimivat.</span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> C1, <span class="at">fill =</span> Sukupuoli)) <span class="sc">+</span> </span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"lightblue"</span>)</span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>Kokonaisia väripaletteja voidaan määritellä <span class="in">`scale_*()`</span>-komennoilla. Paletteja on ggplot2-paketissa valmiina, mutta niitä voi ladata lisää esimerkiksi RColorBrewer-paketista. Viridis-nimiset väripaletit taas on suunniteltu erityisesti saavutettavuuden ja värisokeiden huomioimisen kannalta. Esimerkiksi tällaisia vaihtoehtoja on käytettävissä:</span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="co"># RColorBrewer-paketin paletti</span></span>
+<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">scale_fill_viridis_d</span>() <span class="co"># Luokiteltu väriasteikko</span></span>
+<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">scale_fill_viridis_c</span>() <span class="co"># Jatkuva väriasteikko</span></span>
+<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> kuvio1 <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"lightpink"</span>)) <span class="co"># Väripaletin voi toki määritellä itsekin</span></span>
+<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

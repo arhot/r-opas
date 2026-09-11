@@ -186,7 +186,7 @@
     "href": "04-oppaan_kayttajalle.html",
     "title": "Opiskeluohjeita ja lisäresursseja",
     "section": "",
-    "text": "Yleistä oppaan käytöstä\nTämä luku on valmisteilla.",
+    "text": "Yleistä oppaan käytöstä",
     "crumbs": [
       "Osa 1: R- ja RStudio-perusteet",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Opiskeluohjeita ja lisäresursseja</span>"
@@ -681,7 +681,40 @@
     "href": "15-kuvion-muokkaaminen.html",
     "title": "Kuvioiden muokkaaminen",
     "section": "",
-    "text": "Otsikot ja akselien nimet",
+    "text": "Ggplot2 ja kuvion muokkaus\nKoska kaikki kuviot rakennetaan samoista elementeistä, kaikkiin kuvioihin voidaan tehdä muokkaukset samoilla komennoilla. Niin yksittäisiä elementtejä kuin kokonaisia kuviotyylejä voidaan lisätä kuvioon samalla tavalla kuin peruselementtejäkin eli liittämällä ne kuvion komentoihin +-merkillä. Voit tehdä yhden pitkän komennon tai tallentaa kuvion peruselementit ensin ja lisätä muokkaukset myöhemmin esimerkiksi tällaisella logiikalla:\nkuvio1 &lt;- ESS2023 |&gt; ggplot(aes(x = C1, fill = Sukupuoli)) + \n    geom_bar(position = \"dodge\")\n\nkuvio1 # + muokkaukset()",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Kuvioiden muokkaaminen</span>"
+    ]
+  },
+  {
+    "objectID": "15-kuvion-muokkaaminen.html#tekstit-otsikot-ja-akselien-nimet",
+    "href": "15-kuvion-muokkaaminen.html#tekstit-otsikot-ja-akselien-nimet",
+    "title": "Kuvioiden muokkaaminen",
+    "section": "Tekstit: Otsikot ja akselien nimet",
+    "text": "Tekstit: Otsikot ja akselien nimet\nYleisin muokkaus on otsikoiden ja akselien nimeäminen. Tämä onnistuu labs()-komennolla, jolla voi määritellä erilaisia otsakkeita kuvioon\n\nkuvio1 &lt;- kuvio1 + labs(\n    title = \"Onnellisuus sukupuolittain\",  # Otsikko \n    subtitle = \"Aineisto: ESS2023\", # Alaotsikko\n    x = \"Koettu onnellisuus\", # Vaaka-akselin otsikko\n    y = \"Havaintojen määrä\", # Pysty-akselin otsikko\n    fill = \"Sukupuoli\", # Kuvion selitteen otsikko - jos kuviossa color(), shape(), niin niille sama logiikka\n    alt = \"Kuvio, jossa on pylväät, jotka kuvaavat onnellisuuden jakaumaa sukupuolittain. Naiset ovat keskimäärin hieman onnellisempia kuin miehet \") # Vaihtoehtoinen teksti kuvion sisällöstä, joka on tärkeä saavutettavuuden kannalta",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Kuvioiden muokkaaminen</span>"
+    ]
+  },
+  {
+    "objectID": "15-kuvion-muokkaaminen.html#akselin-rajaus",
+    "href": "15-kuvion-muokkaaminen.html#akselin-rajaus",
+    "title": "Kuvioiden muokkaaminen",
+    "section": "Akselin rajaus",
+    "text": "Akselin rajaus\nOletuksena GGplot asettaa akselien rajat automaattisesti aineistossa havaittujen mukaisesti, mutta ne voi muuttaa:\n\nkuvio1 &lt;- kuvio1 + xlim(0, 10) + ylim(0, 1000)",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Kuvioiden muokkaaminen</span>"
+    ]
+  },
+  {
+    "objectID": "15-kuvion-muokkaaminen.html#kuvion-koon-muuttaminen",
+    "href": "15-kuvion-muokkaaminen.html#kuvion-koon-muuttaminen",
+    "title": "Kuvioiden muokkaaminen",
+    "section": "Kuvion koon muuttaminen",
+    "text": "Kuvion koon muuttaminen\nVarsinainen valmiin kuvion koko kannattaa määrittää tallennusvaiheessa: esikatselussa Rstudio pyrkii hyödyntämään koko käytettävissä olevan tilan. Tallennettavan kuvan koko määritellään oletuksena tuumina, mutta argumentilla units = \"cm\" voi käyttää senttejä. Dots per inch eli dpi määrittää tallenettavan kuvan tarkkuuden.\n\nggsave(\"kuvio.png\", width = 16, height = 10, units = \"cm\", dpi = 300)",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>17</span>  <span class='chapter-title'>Kuvioiden muokkaaminen</span>"
@@ -692,18 +725,18 @@
     "href": "15-kuvion-muokkaaminen.html#teemat",
     "title": "Kuvioiden muokkaaminen",
     "section": "Teemat",
-    "text": "Teemat",
+    "text": "Teemat\nYksittäisten elementtien muokkaamisen lisäksi voidaan muokata koko kuvion ulkoasun määrittävää teemaa, tai valita kokonaan uusi teema. Itse paketissa on mukana joukko simppelejä teemoja ja teemoja voi myös ladata lisää esimerkiksi ggthemes-paketista, https://jrnold.github.io/ggthemes/. Esimerkiksi tällaisia vaihtoehtoja on käytettävissä:\n\nkuvio1 &lt;- kuvio1 + theme_grey()\nkuvio1 &lt;- kuvio1 + theme_minimal()\n\n## Ladattavia teemoja\nlibrary(ggthemes)\nkuvio1 &lt;- kuvio1 + theme_economist()",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>17</span>  <span class='chapter-title'>Kuvioiden muokkaaminen</span>"
     ]
   },
   {
-    "objectID": "15-kuvion-muokkaaminen.html#värit",
-    "href": "15-kuvion-muokkaaminen.html#värit",
+    "objectID": "15-kuvion-muokkaaminen.html#värit-ja-väriskeemat",
+    "href": "15-kuvion-muokkaaminen.html#värit-ja-väriskeemat",
     "title": "Kuvioiden muokkaaminen",
-    "section": "Värit",
-    "text": "Värit",
+    "section": "Värit ja väriskeemat",
+    "text": "Värit ja väriskeemat\nYksittäisten kuvioelementtien värin voi määritellä suoraan komennossa. Color määrittää elementin reunuksen värin ja fill täyttövärin. Yleensä helpointa on käyttää värien englanninkielisiä nimiä, mutta myös heksakoodit toimivat.\n\nESS2023 |&gt; ggplot(aes(x = C1, fill = Sukupuoli)) + \n    geom_bar(position = \"dodge\", color = \"black\", fill = \"lightblue\")\n\n\n\n\n\n\n\n\nKokonaisia väripaletteja voidaan määritellä scale_*()-komennoilla. Paletteja on ggplot2-paketissa valmiina, mutta niitä voi ladata lisää esimerkiksi RColorBrewer-paketista. Viridis-nimiset väripaletit taas on suunniteltu erityisesti saavutettavuuden ja värisokeiden huomioimisen kannalta. Esimerkiksi tällaisia vaihtoehtoja on käytettävissä:\n\nkuvio1 &lt;- kuvio1 + scale_fill_brewer(palette = \"Set2\") # RColorBrewer-paketin paletti\n\nkuvio1 &lt;- kuvio1 + scale_fill_viridis_d() # Luokiteltu väriasteikko\n\nkuvio1 &lt;- kuvio1 + scale_fill_viridis_c() # Jatkuva väriasteikko\n\nkuvio1 &lt;- kuvio1 + scale_fill_manual(values = c(\"lightblue\", \"lightpink\")) # Väripaletin voi toki määritellä itsekin",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>17</span>  <span class='chapter-title'>Kuvioiden muokkaaminen</span>"
@@ -879,7 +912,7 @@
     "href": "22-faktorianalyysi.html",
     "title": "Faktorianalyysi",
     "section": "",
-    "text": "Käytetty aineisto\nTämä luku on valmisteilla.",
+    "text": "Käytetty aineisto\nFaktorianalyysi on menetelmä, jolla suuri joukko muuttujia tiivistetään pienemmäksi joukoksi ulottuvuuksia eli faktoreita. Sitä käytetään erityisesti silloin, kun aineistossa on paljon samaa ilmiötä eri näkökulmista mittaavia kysymyksiä, ja niistä halutaan muodostaa harvempia, sisällöllisesti tulkittavia summamuuttujia jatkoanalyyseja varten.\nEsimerkkinä käytetään ESS 2023 -aineiston Schwartzin perusarvoteoriaan pohjautuvia arvokysymyksiä, jotka on nimetty juoksevasti kirjaimella H alkaen (esim. H1a, H1b, …). Kysymykset on tallennettu jatkuvina muuttujina, vaikka kyse on Likert-tyyppisistä väittämistä - faktorianalyysissä tämä on tavanomaista, sillä menetelmä olettaa muuttujien olevan vähintään järjestysasteikollisia ja riittävän monta luokkaa sisältäviä, jotta niitä on mielekästä käsitellä jatkuvina.\nKysymyssarjan voi valita aineistosta kerralla esimerkiksi starts_with()-komennolla:\nESS2023 |&gt; select(starts_with(\"H\")) |&gt; summary()\n\n      H1a             H1b            H1c            H1d             H1e       \n Min.   :1.000   Min.   :1.00   Min.   :1.00   Min.   :1.000   Min.   :1.000  \n 1st Qu.:2.000   1st Qu.:4.00   1st Qu.:1.00   1st Qu.:3.000   1st Qu.:2.000  \n Median :2.000   Median :5.00   Median :2.00   Median :4.000   Median :2.000  \n Mean   :2.611   Mean   :4.55   Mean   :1.91   Mean   :3.875   Mean   :2.464  \n 3rd Qu.:3.000   3rd Qu.:5.00   3rd Qu.:2.00   3rd Qu.:5.000   3rd Qu.:3.000  \n Max.   :6.000   Max.   :6.00   Max.   :6.00   Max.   :6.000   Max.   :6.000  \n NA's   :36      NA's   :31     NA's   :34     NA's   :35      NA's   :36     \n      H1f             H1g             H1h             H1i       \n Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  \n 1st Qu.:2.000   1st Qu.:2.000   1st Qu.:1.000   1st Qu.:2.000  \n Median :3.000   Median :3.000   Median :2.000   Median :3.000  \n Mean   :2.905   Mean   :3.121   Mean   :2.069   Mean   :3.005  \n 3rd Qu.:4.000   3rd Qu.:4.000   3rd Qu.:3.000   3rd Qu.:4.000  \n Max.   :6.000   Max.   :6.000   Max.   :6.000   Max.   :6.000  \n NA's   :33      NA's   :41      NA's   :36      NA's   :37     \n      H1j             H1k             H1l             H1m       \n Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  \n 1st Qu.:2.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:3.000  \n Median :3.000   Median :2.000   Median :2.000   Median :4.000  \n Mean   :2.876   Mean   :2.105   Mean   :2.078   Mean   :3.658  \n 3rd Qu.:4.000   3rd Qu.:3.000   3rd Qu.:3.000   3rd Qu.:5.000  \n Max.   :6.000   Max.   :6.000   Max.   :6.000   Max.   :6.000  \n NA's   :33      NA's   :34      NA's   :35      NA's   :35     \n      H1n             H1o             H1p             H1q             H1r      \n Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.00  \n 1st Qu.:1.000   1st Qu.:3.000   1st Qu.:2.000   1st Qu.:3.000   1st Qu.:1.00  \n Median :2.000   Median :4.000   Median :3.000   Median :4.000   Median :2.00  \n Mean   :2.385   Mean   :3.889   Mean   :2.833   Mean   :3.975   Mean   :1.78  \n 3rd Qu.:3.000   3rd Qu.:5.000   3rd Qu.:4.000   3rd Qu.:5.000   3rd Qu.:2.00  \n Max.   :6.000   Max.   :6.000   Max.   :6.000   Max.   :6.000   Max.   :6.00  \n NA's   :50      NA's   :37      NA's   :45      NA's   :42      NA's   :36    \n      H1s             H1t             H1u       \n Min.   :1.000   Min.   :1.000   Min.   :1.000  \n 1st Qu.:1.000   1st Qu.:2.000   1st Qu.:2.000  \n Median :2.000   Median :3.000   Median :2.000  \n Mean   :1.923   Mean   :3.276   Mean   :2.566  \n 3rd Qu.:2.000   3rd Qu.:4.000   3rd Qu.:3.000  \n Max.   :6.000   Max.   :6.000   Max.   :6.000  \n NA's   :38      NA's   :41      NA's   :36\nMuitakin tapoja valita monta muuttujaa kerralla on - esimerkiksi num_range(), jos muuttujat on nimetty juoksevasti numeroin (B6-B12), tai suora listaus select(B6, B7, B8). Muuttujien välisiä korrelaatioita kannattaa tarkastella jo ennen faktorianalyysia - ks. luku Korrelaatio.",
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>22</span>  <span class='chapter-title'>Faktorianalyysi</span>"
@@ -890,7 +923,7 @@
     "href": "22-faktorianalyysi.html#faktorianalyysin-tarkoitus",
     "title": "Faktorianalyysi",
     "section": "Faktorianalyysin tarkoitus",
-    "text": "Faktorianalyysin tarkoitus",
+    "text": "Faktorianalyysin tarkoitus\nFaktorianalyysi etsii aineistosta ulottuvuuksia eli faktoreita, jotka selittävät muuttujien välistä vaihtelua ja yhteisvaihtelua. Käytännössä tämä tarkoittaa sen selvittämistä, mitkä muuttujat “kulkevat yhdessä” - eli korreloivat keskenään - ja muodostavat näin oman sisällöllisen kokonaisuutensa.\nUlottuvuus ei tarkoita sitä, että vastaajat olisivat keskimäärin jollain tavalla, vaan sitä, että aineistossa on tällainen jatkumo olemassa: osa vastaajista sijoittuu ulottuvuudella korkealle, osa matalalle, ja tämä vaihtelu on yhteydessä siihen, miten he ovat vastanneet ulottuvuudelle latautuviin kysymyksiin.",
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>22</span>  <span class='chapter-title'>Faktorianalyysi</span>"
@@ -901,7 +934,7 @@
     "href": "22-faktorianalyysi.html#faktoriluku-ja-rotatointi",
     "title": "Faktorianalyysi",
     "section": "Faktoriluku ja rotatointi",
-    "text": "Faktoriluku ja rotatointi",
+    "text": "Faktoriluku ja rotatointi\nFaktorianalyysi tehdään psych-paketin fa()-komennolla. Ekstrahointimenetelmäksi valitaan yleensä suurimman uskottavuuden menetelmä (fm = \"ml\") ja rotaatioksi varimax (rotate = \"varimax\"), joka pyrkii tuottamaan mahdollisimman selkeän eli tulkittavan faktorirakenteen. Käytetyt menetelmät on hyvä mainita raportissa, vaikka niiden vertailuun ei tässä syvennytä tarkemmin.\nTärkein valinta on faktorien lukumäärä (nfactors). Faktoreita voi olla mikä tahansa määrä yhdestä muuttujien lukumäärä miinus yhteen - faktorien määrä ei siis ole sama kuin muuttujien määrä. Valinta on ennen kaikkea sisällöllinen: kokeile muutamaa eri lukumäärää ja katso, minkä kohdalla ratkaisu on selkeimmin tulkittavissa.\n\nfaktorianalyysi &lt;- fa(ESS2023 |&gt; select(starts_with(\"H\")),\n                       nfactors = 4, fm = \"ml\", rotate = \"varimax\")",
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>22</span>  <span class='chapter-title'>Faktorianalyysi</span>"
@@ -912,7 +945,18 @@
     "href": "22-faktorianalyysi.html#tulosten-tulkinta",
     "title": "Faktorianalyysi",
     "section": "Tulosten tulkinta",
-    "text": "Tulosten tulkinta",
+    "text": "Tulosten tulkinta\n\nFaktorilataukset ja kommunaliteetit\nTulosta kannattaa tarkastella tulostamalla vain riittävän suuret faktorilataukset ja järjestämällä ne faktoreittain fa.sort()-komennolla. Raja-arvona käytetään yleensä 0.3 - tätä pienemmät lataukset eivät yleensä ole sisällöllisesti tulkittavia.\n\nfaktorianalyysi |&gt; fa.sort() |&gt; print(cut = 0.3)\n\nFactor Analysis using method =  ml\nCall: fa(r = select(ESS2023, starts_with(\"H\")), nfactors = 4, rotate = \"varimax\", \n    fm = \"ml\")\nStandardized loadings (pattern matrix) based upon correlation matrix\n      ML3   ML2   ML1   ML4   h2   u2 com\nH1m  0.74                   0.62 0.38 1.2\nH1d  0.67                   0.47 0.53 1.1\nH1q  0.55                   0.40 0.60 1.6\nH1b  0.54                   0.36 0.64 1.4\nH1p        0.68             0.47 0.53 1.0\nH1g        0.56             0.33 0.67 1.1\nH1e        0.52             0.27 0.73 1.1\nH1n        0.43             0.25 0.75 1.6\nH1i        0.38             0.17 0.83 1.3\nH1t        0.36             0.16 0.84 1.5\nH1u              0.73       0.58 0.42 1.2\nH1j              0.71       0.55 0.45 1.2\nH1o  0.37        0.48       0.46 0.54 2.7\nH1f              0.42  0.37 0.43 0.57 3.2\nH1k                         0.11 0.89 1.9\nH1h                    0.60 0.37 0.63 1.1\nH1c                    0.54 0.31 0.69 1.1\nH1l                    0.52 0.37 0.63 1.7\nH1s                    0.48 0.25 0.75 1.2\nH1r        0.30        0.38 0.30 0.70 2.7\nH1a                    0.36 0.26 0.74 2.6\n\n                       ML3  ML2  ML1  ML4\nSS loadings           2.04 1.91 1.79 1.75\nProportion Var        0.10 0.09 0.09 0.08\nCumulative Var        0.10 0.19 0.27 0.36\nProportion Explained  0.27 0.25 0.24 0.23\nCumulative Proportion 0.27 0.53 0.77 1.00\n\nMean item complexity =  1.6\nTest of the hypothesis that 4 factors are sufficient.\n\ndf null model =  210  with the objective function =  4.77 with Chi Square =  7406.61\ndf of  the model are 132  and the objective function was  0.49 \n\nThe root mean square of the residuals (RMSR) is  0.03 \nThe df corrected root mean square of the residuals is  0.04 \n\nThe harmonic n.obs is  1519 with the empirical chi square  336.91  with prob &lt;  7.2e-20 \nThe total n.obs was  1563  with Likelihood Chi Square =  756.25  with prob &lt;  3.1e-88 \n\nTucker Lewis Index of factoring reliability =  0.862\nRMSEA index =  0.055  and the 90 % confidence intervals are  0.051 0.059\nBIC =  -214.52\nFit based upon off diagonal values = 0.97\nMeasures of factor score adequacy             \n                                                   ML3  ML2  ML1  ML4\nCorrelation of (regression) scores with factors   0.87 0.86 0.85 0.83\nMultiple R square of scores with factors          0.76 0.74 0.71 0.68\nMinimum correlation of possible factor scores     0.52 0.47 0.43 0.37\n\n\nh2-sarake kertoo kommunaliteetin eli sen, kuinka suuri osuus kunkin muuttujan vaihtelusta tuli selitettyä faktoreilla yhteensä. u2 ja com eivät yleensä ole raportoinnin kannalta tarpeellisia.\nFaktoreiden selittämä kokonaisvaihtelu löytyy Vaccounted-taulukosta:\n\nfaktorianalyysi$Vaccounted |&gt; as_tibble(rownames = \"Tunnusluku\")\n\n# A tibble: 5 × 5\n  Tunnusluku               ML3    ML2    ML1    ML4\n  &lt;chr&gt;                  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;\n1 SS loadings           2.04   1.91   1.79   1.75  \n2 Proportion Var        0.0969 0.0909 0.0855 0.0835\n3 Cumulative Var        0.0969 0.188  0.273  0.357 \n4 Proportion Explained  0.272  0.255  0.240  0.234 \n5 Cumulative Proportion 0.272  0.526  0.766  1     \n\n\nTulkinta tarkoittaa ulottuvuuden nimeämisen prosessia: mikä yhdistää kullekin faktorille latautuvia kysymyksiä, ja miten tämän voisi otsikoida?\n\n\nJulkaisukelpoinen taulukko\nTulostetusta ratkaisusta voi rakentaa siistin, tidyverse-tyylisen taulukon poimimalla lataukset ja kommunaliteetit omaksi tibblekseen. Tässä hyödynnetään samaa across(where(is.numeric), ...)-logiikkaa kuin muissakin oppaan taulukoissa: pienet, alle 0.3:n lataukset piilotetaan ja loput pyöristetään.\n\nsorted &lt;- faktorianalyysi |&gt; fa.sort()\n\nlataukset &lt;- sorted$loadings |&gt;\n  unclass() |&gt;\n  as_tibble(rownames = \"Muuttuja\") |&gt;\n  mutate(across(where(is.numeric), ~ if_else(abs(.x) &lt; 0.3, NA_real_, round(.x, 2))))\n\nkommunaliteetit &lt;- sorted$communality |&gt;\n  enframe(name = \"Muuttuja\", value = \"h2\") |&gt;\n  mutate(h2 = round(h2, 2))\n\ntaulukko1 &lt;- lataukset |&gt; left_join(kommunaliteetit, by = \"Muuttuja\")\n\ntaulukko1\n\n# A tibble: 21 × 6\n   Muuttuja   ML3   ML2   ML1   ML4    h2\n   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n 1 H1m       0.74 NA       NA    NA  0.62\n 2 H1d       0.67 NA       NA    NA  0.47\n 3 H1q       0.55 NA       NA    NA  0.4 \n 4 H1b       0.54 NA       NA    NA  0.36\n 5 H1p      NA     0.68    NA    NA  0.47\n 6 H1g      NA     0.56    NA    NA  0.33\n 7 H1e      NA     0.52    NA    NA  0.27\n 8 H1n      NA     0.43    NA    NA  0.25\n 9 H1i      NA     0.38    NA    NA  0.17\n10 H1t      NA     0.36    NA    NA  0.16\n# ℹ 11 more rows\n\n\nNimeä faktorit sisällöllisen tulkinnan mukaan rename()-komennolla - esimerkiksi jos kolmas faktori (ML3) kuvaa menestyksen arvostamista:\n\ntaulukko1 &lt;- taulukko1 |&gt; rename(Menestys = ML3)\n\ntaulukko1\n\n# A tibble: 21 × 6\n   Muuttuja Menestys   ML2   ML1   ML4    h2\n   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n 1 H1m          0.74 NA       NA    NA  0.62\n 2 H1d          0.67 NA       NA    NA  0.47\n 3 H1q          0.55 NA       NA    NA  0.4 \n 4 H1b          0.54 NA       NA    NA  0.36\n 5 H1p         NA     0.68    NA    NA  0.47\n 6 H1g         NA     0.56    NA    NA  0.33\n 7 H1e         NA     0.52    NA    NA  0.27\n 8 H1n         NA     0.43    NA    NA  0.25\n 9 H1i         NA     0.38    NA    NA  0.17\n10 H1t         NA     0.36    NA    NA  0.16\n# ℹ 11 more rows\n\n\nTaulukon voi tallentaa Excel-muotoon raporttia tai tehtävää varten tuttuun tapaan:\n\nwrite_xlsx(taulukko1, \"faktoritaulukko.xlsx\")",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>Faktorianalyysi</span>"
+    ]
+  },
+  {
+    "objectID": "22-faktorianalyysi.html#faktoripistemuuttujat",
+    "href": "22-faktorianalyysi.html#faktoripistemuuttujat",
+    "title": "Faktorianalyysi",
+    "section": "Faktoripistemuuttujat",
+    "text": "Faktoripistemuuttujat\nFaktorianalyysin tärkein anti jatkoanalyysien kannalta on usein faktoripistemuuttuja: kullekin vastaajalle laskettu arvo kullakin ulottuvuudella. Pisteet ovat standardoituja - keskiarvo on lähellä nollaa ja keskihajonta yhtä - riippumatta siitä, minkälaisia alkuperäiset muuttujat olivat.\n\nfaktoripisteet &lt;- faktorianalyysi$scores |&gt;\n  as_tibble() |&gt;\n  rename(Menestys = ML3)\n\nESS2023 &lt;- ESS2023 |&gt;\n  select(-any_of(names(faktoripisteet))) |&gt;\n  bind_cols(faktoripisteet)\n\nselect(-any_of(...)) ennen bind_cols()-komentoa varmistaa, ettei aineistoon jää vanhaa samannimistä muuttujaa, jos faktoripisteet lasketaan ja liitetään aineistoon useaan kertaan esimerkiksi eri istunnoissa.\nTarkastetaan lopuksi, että faktoripistemuuttuja näyttää järkevältä:\n\nESS2023 |&gt; select(Menestys) |&gt; summary()\n\n    Menestys        \n Min.   :-2.632264  \n 1st Qu.:-0.586240  \n Median : 0.009639  \n Mean   :-0.003947  \n 3rd Qu.: 0.608379  \n Max.   : 2.497042  \n NA's   :92         \n\nggplot(ESS2023, aes(x = Menestys)) +\n  geom_histogram() +\n  theme_minimal()\n\n\n\n\n\n\n\n\nJos alkuperäinen asteikko oli suunnattu vastakkaisesti kuin faktoripisteen haluttu tulkinta (esim. pieni arvo tarkoitti “enemmän”), suunnan voi kääntää kertomalla muuttuja -1:llä - ks. luku Muuttujamuunnokset.",
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>22</span>  <span class='chapter-title'>Faktorianalyysi</span>"
@@ -924,17 +968,6 @@
     "title": "Logistinen regressioanalyysi",
     "section": "",
     "text": "Milloin logistinen regressio sopii?\nTämä luku on valmisteilla.",
-    "crumbs": [
-      "Osa 4: Analyysimenetelmät",
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Logistinen regressioanalyysi</span>"
-    ]
-  },
-  {
-    "objectID": "24-logistinen-regressio.html#milloin-logistinen-regressio-sopii",
-    "href": "24-logistinen-regressio.html#milloin-logistinen-regressio-sopii",
-    "title": "Logistinen regressioanalyysi",
-    "section": "Milloin logistinen regressio sopii?",
-    "text": "Milloin logistinen regressio sopii?",
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>Logistinen regressioanalyysi</span>"
