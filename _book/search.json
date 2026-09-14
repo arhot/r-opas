@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "R-opas",
     "section": "",
-    "text": "Esimerkkien ja harjoitusten aineisto\nTämä opas neuvoo, kuinka toteutat tilastollisia analyysejä R-ympäristössä. R on ilmainen, avoimen lähdekoodin ohjelmointikieli, jota käytetään laajalti yhteiskuntatieteellissä tilastollisessa analyysissä.\nTämä opas on saanut inspiraationsa Tietoarkiston ylläpitämästä SPSS-oppimisympäristöstä: se kattaa samat aihepiirit samassa järjestyksessä, mutta SPSS-valikkotoimintojen sijasta käytetään R:ää ja erityisesti tidyverse-pakettiperhettä. Rakenne ei ole täsmälleen sama, mutta lähtökohtaisesti opas kattaa samat toiminnot.\nEsimerkkiaineistona ja harjoituksissa käytetään European Social Survey 2023 -tutkimuksen Suomen aineistoa (ESS 2023, Suomi). Aineistossa on 1 563 vastaajaa ja 354 muuttujaa. Muuttujat käsittelevät mm. poliittista osallistumista, hyvinvointia, sosiaalisia suhteita ja taustamuuttujia.\nAineisto on tallennettu SPSS-muotoon (.sav) ja luetaan R:ään haven-paketilla. Muuttujat on tallennettu numeerisina, ja muuttuja-arvot saa käännettyä teksteiksi as_factor()-funktiolla.",
+    "text": "Aineisto\nTämä opas neuvoo, kuinka toteutat tilastollisia analyysejä R-ympäristössä. R on ilmainen, avoimen lähdekoodin ohjelmointikieli, jota käytetään laajalti yhteiskuntatieteellissä tilastollisessa analyysissä.\nTämä opas on saanut inspiraationsa Tietoarkiston ylläpitämästä SPSS-oppimisympäristöstä: se kattaa samat aihepiirit samassa järjestyksessä, mutta SPSS-valikkotoimintojen sijasta käytetään R:ää ja erityisesti tidyverse-pakettiperhettä. Rakenne ei ole täsmälleen sama, mutta lähtökohtaisesti opas kattaa samat toiminnot.\nTässä oppaassa käytetty aineisto on muokattu versio ESS 2023 -aineiston Suomen osuudesta: alkuperäiset ESS-muuttujakoodit on korvattu suomenkielisen lomakkeen kysymysnumeroilla, jotta muuttujiin on helpompi viitata oppaan esimerkeissä ja muuttujien selitteet on korvattu suomenkielisen kyselylomakkeen teksteillä. Aineisto sisältyy tähän repositorioon data-kansiossa.\nMuuttujien kuvaukset löytyvät koodikirjasta, joka niin ikään sisältyy tähän oppaaseen: ESS2023 Suomi -koodikirja.\nJos tarvitset aineiston alkuperäisillä ESS-muuttujakoodeilla (esim. kansainvälistä vertailua varten), sen saa ESS Data Portaalista: https://ess.sikt.no/en/ (vaatii rekisteröitymisen).",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Lukijalle</span>"
     ]
@@ -1081,6 +1081,16 @@
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>24</span>  <span class='chapter-title'>Osa 4: Harjoitustehtävät</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#aineisto",
+    "href": "index.html#aineisto",
+    "title": "R-opas",
+    "section": "",
+    "text": "ESS2023 &lt;- read_sav(\"data/ESS2023_Suomi.sav\")\n\n\n\nLisenssi ja käyttöehdot\nAlkuperäinen European Social Survey -aineisto on lisensoitu CC BY-NC-SA 4.0 -lisenssillä, ja siihen liittyvä dokumentaatio (mm. koodikirjat) CC BY-SA 4.0 -lisenssillä. Koska tämän oppaan aineisto ja koodikirja ovat muokattuja/käännettyjä versioita alkuperäisestä, ne jaetaan tässä samalla lisenssillä (CC BY-NC-SA 4.0) - eli myös näitä versioita saa vapaasti käyttää, muokata ja jakaa edelleen ei-kaupallisiin tarkoituksiin, kunhan alkuperäiseen viitataan ja oma versio pysyy samalla lisenssillä.\nAlkuperäiseen aineistoon viitataan seuraavasti (ESS:n oman ohjeistuksen mukaisesti muokatuille/käännetyille aineistoille):\n\nAdapted from: European Social Survey European Research Infrastructure (ESS ERIC) (2024) ESS11 - integrated file, edition 1.0 [Data set]. Sikt - Norwegian Agency for Shared Services in Education and Research.\n\nLisätietoa käyttöehdoista: https://www.europeansocialsurvey.org/data/conditions-of-use",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Lukijalle</span>"
     ]
   }
 ]

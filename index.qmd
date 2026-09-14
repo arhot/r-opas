@@ -9,15 +9,42 @@ Tämä opas on saanut inspiraationsa Tietoarkiston ylläpitämästä
 [SPSS-oppimisympäristöstä](https://www.fsd.tuni.fi/fi/palvelut/menetelmaopetus/kvanti/spss/): se kattaa samat aihepiirit samassa järjestyksessä, mutta SPSS-valikkotoimintojen
 sijasta käytetään R:ää ja erityisesti **tidyverse**-pakettiperhettä. Rakenne ei ole täsmälleen sama, mutta lähtökohtaisesti opas kattaa samat toiminnot.
 
-## Esimerkkien ja harjoitusten aineisto
+## Aineisto
 
-Esimerkkiaineistona ja harjoituksissa käytetään **European Social Survey 2023 -tutkimuksen Suomen aineistoa**
-(ESS 2023, Suomi). Aineistossa on 1 563 vastaajaa ja 354 muuttujaa. Muuttujat käsittelevät
-mm. poliittista osallistumista, hyvinvointia, sosiaalisia suhteita ja taustamuuttujia.
+Tässä oppaassa käytetty aineisto on **muokattu versio** ESS 2023 -aineiston
+Suomen osuudesta: alkuperäiset ESS-muuttujakoodit on korvattu suomenkielisen
+lomakkeen kysymysnumeroilla, jotta muuttujiin on helpompi viitata oppaan
+esimerkeissä ja muuttujien selitteet on korvattu suomenkielisen kyselylomakkeen teksteillä.  Aineisto sisältyy tähän repositorioon `data`-kansiossa.
 
-Aineisto on tallennettu SPSS-muotoon (`.sav`) ja luetaan R:ään `haven`-paketilla.
-Muuttujat on tallennettu **numeerisina**, ja muuttuja-arvot saa käännettyä teksteiksi
-`as_factor()`-funktiolla.
+```r
+ESS2023 <- read_sav("data/ESS2023_Suomi.sav")
+```
+
+Muuttujien kuvaukset löytyvät koodikirjasta, joka niin ikään
+sisältyy tähän oppaaseen: [ESS2023 Suomi -koodikirja](data/ESS2023_suomi_koodikirja_html_versio.html).
+
+Jos tarvitset aineiston alkuperäisillä ESS-muuttujakoodeilla (esim. kansainvälistä
+vertailua varten), sen saa ESS Data Portaalista: <https://ess.sikt.no/en/>
+(vaatii rekisteröitymisen).
+
+### Lisenssi ja käyttöehdot
+
+Alkuperäinen European Social Survey -aineisto on lisensoitu **CC BY-NC-SA 4.0**
+-lisenssillä, ja siihen liittyvä dokumentaatio (mm. koodikirjat) **CC BY-SA 4.0**
+-lisenssillä. Koska tämän oppaan aineisto ja koodikirja ovat muokattuja/käännettyjä
+versioita alkuperäisestä, ne jaetaan tässä samalla lisenssillä (CC BY-NC-SA 4.0)
+- eli myös näitä versioita saa vapaasti käyttää, muokata ja jakaa edelleen
+ei-kaupallisiin tarkoituksiin, kunhan alkuperäiseen viitataan ja oma versio pysyy
+samalla lisenssillä.
+
+Alkuperäiseen aineistoon viitataan seuraavasti (ESS:n oman ohjeistuksen mukaisesti
+muokatuille/käännetyille aineistoille):
+
+> Adapted from: European Social Survey European Research Infrastructure (ESS ERIC)
+> (2024) ESS11 - integrated file, edition 1.0 [Data set]. Sikt - Norwegian Agency
+> for Shared Services in Education and Research.
+
+Lisätietoa käyttöehdoista: <https://www.europeansocialsurvey.org/data/conditions-of-use>
 
 ## Tarvittavat ohjelmat
 
