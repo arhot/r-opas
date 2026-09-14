@@ -61,7 +61,7 @@ m1 |> tidy(exponentiate = TRUE, conf.int = TRUE) |>
   mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))
 ```
 
-Vetosuhde alle yhden tarkoittaa, että veto pienenee selittäjän kasvaessa (tai verrattuna vertailuryhmään), ja yli yhden, että veto kasvaa. Esimerkiksi jos iän vetosuhde on 1.02, ikävuoden lisäys kasvattaa vetoa 2 %:lla.
+Vetosuhde alle yhden tarkoittaa, että veto pienenee selittäjän kasvaessa (tai verrattuna vertailuryhmään), ja yli yhden, että veto kasvaa. Esimerkiksi jos iän vetosuhde on 1.01, ikävuoden lisäys kasvattaa vetoa 2 %:lla.
 
 ## Useamman mallin taulukko
 

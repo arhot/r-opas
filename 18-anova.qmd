@@ -92,7 +92,7 @@ malli2 |> emmeans::joint_tests() |>
   rename(term = 1) |>
   mutate(eta2_partial = (F.ratio * df1) / (F.ratio * df1 + df2)) |>
   select(term, df1, df2, F.ratio, p.value, eta2_partial) |>
-  mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))
+  mutate(across(where(is.numeric), ~ round_half_up(.x, 3)))
 ```
 
 Osittainen eta neliö lasketaan tässä suoraan F-testisuureesta ja vapausasteista: $\eta^2_{\text{osittainen}} = (F \cdot df_1) / (F \cdot df_1 + df_2)$.

@@ -13,18 +13,23 @@ Regressioanalyysi on keskeisin tilastollisen tutkimuksen menetelmä. Lineaarinen
 
 Yksinkertaisin tapaus on yhden selittäjän regressio, joka ennustaa yhden selitettävän tekijän ehdollisia keskiarvoja. Koska ennustetaan keskiarvoja, selitettävän tekijän tulee olla jatkuva. Selittävät tekijät voivat olla mitä tahansa ja R osaa huomioida muuttujien oikean käytön, kunhan olet määritellyt muuttujat aineistossa oikein.
 
-Jatkuvalla selittäjällä regression tulos eli regressiokerroin kertoo mitä tapahtuu selitettävän keskiarvolle, kun selittäjä kasvaa yhdellä yksiköllä. 
+Jatkuvalla selittäjällä regression tulos eli regressiokerroin kertoo mitä tapahtuu selitettävän keskiarvolle, kun selittäjä kasvaa yhdellä yksiköllä.
 
 Luokitellulla selittäjällä regressiokerroin kertoo mitä tapahtuu selitettävän keskiarvolle, kun verrataan muita ryhmiä vuorollaan ns. vertailuryhmään. R käyttää vertailuryhmänä automaattisesti luokiteltujen selittäjien joukossa ensimmäistä ryhmää, mutta vertailuryhmän voi määritellä itse `relevel()`-komennolla. R tulostaa taulukkoon aina sen ryhmän, jota nyt verrataan, ja vertailuryhmä on se muuttujan ryhmä, joka ei näy taulukossa (kyseistä ryhmää ei tietenkään tarvitse itseensä verrata).
+
+Luokiteltu selittäjä kannattaa merkitä luokitelluksi `as_factor()`-komennolla jo ennen mallia (kuten luvussa [Muuttujamuunnokset](07-muuttujamuunnokset.qmd)) - näin tulostaulukon termien nimet pysyvät siisteinä, esimerkiksi `SukupuoliNainen` eikä `as_factor(Sukupuoli)Nainen`.
 
 Regressio suoritetaan komennolla `lm()`, joka tarkoittaa "linear model". Komennolle annetaan kaava, jossa selitettävä tekijä tulee ensin, seuraavaksi tilde ~ ja sitten selittäjä. Kaavan jälkeen määritellään aineisto, josta malli lasketaan. Tuloksia voi tarkastella pikaisesti komennolla `summary()`, joka antaa mallin tilastolliset tunnusluvut, kuten regressiokertoimet, niiden tilastollisen merkitsevyyden ja mallin selitysasteen R²:n.
 
 ```{r}
-malli1 <- lm(C1 ~ Syntymävuosi, data = ESS2023)
+ESS2023 <- ESS2023 |>
+  mutate(Sukupuoli = as_factor(Sukupuoli))
+
+malli1 <- ESS2023 |> lm(C1 ~ Syntymävuosi, data = _)
 
 summary(malli1)
 
-malli2 <- lm(C1 ~ as_factor(Sukupuoli), data = ESS2023)
+malli2 <- ESS2023 |> lm(C1 ~ Sukupuoli, data = _)
 
 summary(malli2)
 ```
@@ -34,14 +39,14 @@ summary(malli2)
 Useamman selittävän tekijän regressio tehdään samalla `lm()`-komennolla, mutta kaavaan määritellään useampi selittäjä. Regressiokertoimet kertovat, mitä tapahtuu selitettävän keskiarvolle, kun kukin selittäjä kasvaa yhdellä yksiköllä, mutta kaikki muut selittäjät pidetään vakioina.
 
 ```{r}
-malli3 <- lm(C1 ~ Syntymävuosi + as_factor(Sukupuoli), data = ESS2023)
+malli3 <- ESS2023 |> lm(C1 ~ Syntymävuosi + Sukupuoli, data = _)
 
 summary(malli3)
 ```
 
 ## Regressiomallin visualisointi
 
-Regressiomallin voi visualisoida helposti hajontakuviolla, kun siinä on yksi jatkuva selittäjä (ja mahdollisesti yksi luokiteltu selittäjä). 
+Regressiomallin voi visualisoida helposti hajontakuviolla, kun siinä on yksi jatkuva selittäjä (ja mahdollisesti yksi luokiteltu selittäjä).
 
 ```{r}
 ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +
@@ -53,7 +58,7 @@ ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +
 
 ## Tulosten raportointi
 
-Tulostaulukoita voi rakentaa komennolla tidy(). Tiedot mallista saa taulukkomuodossa, jossa on regressiokertoimet, niiden tilastollinen merkitsevyys ja luottamusvälit. `conf.int=TRUE`-argumentti lisää taulukkoon luottamusvälit. Taulukko on R:n data frame -muodossa, joten sitä voi muokata haluamakseen `mutate()`-komennolla, ja esimerkiksi pyöristää numeeriset sarakkeet halutun tarkkuisiksi `mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))`-komennolla. Voit myös nimetä sarakkeet suomenkielisiksi `rename()`-komennolla, ja järjestää sarakkeet haluamaasi järjestykseen `select()`-komennolla. 
+Tulostaulukoita voi rakentaa komennolla tidy(). Tiedot mallista saa taulukkomuodossa, jossa on regressiokertoimet, niiden tilastollinen merkitsevyys ja luottamusvälit. `conf.int=TRUE`-argumentti lisää taulukkoon luottamusvälit. Taulukko on R:n data frame -muodossa, joten sitä voi muokata haluamakseen `mutate()`-komennolla, ja esimerkiksi pyöristää numeeriset sarakkeet halutun tarkkuisiksi `mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))`-komennolla. Voit myös nimetä sarakkeet suomenkielisiksi `rename()`-komennolla, ja järjestää sarakkeet haluamaasi järjestykseen `select()`-komennolla.
 
 ```{r}
 taulukko1 <- malli1 |> tidy(conf.int=TRUE)
@@ -65,7 +70,7 @@ taulukko_mallit <- bind_rows(
   "Malli 2" = tidy(malli2, conf.int = TRUE),
   "Malli 3" = tidy(malli3, conf.int = TRUE),
   .id = "malli"
-) 
+)
 ```
 
 
@@ -73,7 +78,7 @@ taulukko_mallit <- bind_rows(
 
 Regressioanalyysiin liittyy tiettyjä oletuksia, jotka rajoittavat mallin käyttökelpoisuutta ja yleisetettävyyttä. Ne on hyvä tarkastaa, mutta vain harvoin niiden perusteella kannattaa mallia hylätä. Oletuksia on viisi, ja niistä kaksi ensimmäistä ja tärkeintä koskevat aineistoa ja yhteyttä yleensä, kolme viimeistä regression ns. virheitä. Regression tulosten perusteella voidaan siis laskea jokaiselle aineiston havainnolle mallin ennustama selitettävän tekijän arvo, ja mallin ennustama arvo ja havainnon todellinen arvo eivät yleensä ole täsmälleen samoja, vaan niissä on eroa. Tätä eroa kutsutaan virheeksi, ja mallin oletukset koskevat näitä virheitä. Oletukset ovat:
 
-1) Validiteetti 
+1) Validiteetti
 
 Mallin ja muuttujien teoreettista pohdintaa.
 
@@ -98,12 +103,30 @@ Lähtökohtaisesti poikkileikkausaineistossa virheet ovat riippumattomia toisist
 
 4) Virheiden varianssin yhtenäisyys selittäjien eri arvoilla
 
-Virheiden yhtäsuuruus
-```{r}
+Virheiden vaihtelun pitäisi pysyä suunnilleen samansuuruisena riippumatta siitä, mitä arvoa malli ennustaa - tätä kutsutaan homoskedastisuudeksi. Tämän näkee parhaiten kuviosta, jossa mallin ennustamat arvot ovat x-akselilla ja jäännökset (havaitun ja ennustetun arvon erotus) y-akselilla. `augment()`-komento lisää nämä valmiiksi malliin liittyvään tietokehikkoon. Kuvioon kannattaa lisätä myös tasoitettu käyrä (`geom_smooth(method = "loess")`), josta näkee helpommin, jos jäännöksissä on systemaattista kaarevuutta - se kertoisi paitsi epäyhtenäisestä varianssista, myös siitä, ettei yhteys olekaan aivan lineaarinen (ks. kohta 2).
 
+```{r}
+malli1 |> augment() |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  geom_hline(yintercept = 0, color = "red") +
+  labs(x = "Ennustettu arvo", y = "Jäännös") +
+  theme_minimal()
 ```
+
+Jos pisteiden hajonta pysyy suunnilleen samana koko x-akselin matkalta ja tasoitettu käyrä kulkee lähellä nollaa, oletus täyttyy. Jos hajonta kasvaa tai pienenee systemaattisesti (esim. suppilon muotoon) tai käyrä kaartuu selvästi pois nollasta, virheiden varianssi ei ole yhtenäinen (heteroskedastisuus), mikä voi vääristää regressiokertoimien merkitsevyystestejä.
 
 5) Virheiden normaalijakauma
 
+Regressiomalli olettaa, että virheet ovat normaalijakautuneita. Yksinkertaisin tapa tarkastella tätä on piirtää jäännöksistä histogrammi - jakauman pitäisi näyttää suunnilleen normaalijakauman muotoiselta.
 
+```{r}
+malli1 |> augment() |>
+  ggplot(aes(x = .resid)) +
+  geom_histogram() +
+  labs(x = "Jäännös", y = "Frekvenssi") +
+  theme_minimal()
+```
 
+Selvä vinous tai useampihuippuisuus kertoisi poikkeamasta normaalijakaumasta. Pienet poikkeamat eivät yleensä ole ongelma, koska regressioanalyysi kestää tätä oletuksen rikkomista suhteellisen hyvin - varsinkin, kun aineisto on riittävän suuri.
