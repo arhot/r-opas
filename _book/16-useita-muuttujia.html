@@ -319,17 +319,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Sisällysluettelo</h2>
    
   <ul>
-  <li><a href="#käytetty-aineisto" id="toc-käytetty-aineisto" class="nav-link active" data-scroll-target="#käytetty-aineisto">Käytetty aineisto</a></li>
-  <li><a href="#pitkä-muoto-pivot_longer" id="toc-pitkä-muoto-pivot_longer" class="nav-link" data-scroll-target="#pitkä-muoto-pivot_longer">Pitkä muoto: pivot_longer</a>
+  <li><a href="#pitkä-muoto-pivot_longer" id="toc-pitkä-muoto-pivot_longer" class="nav-link active" data-scroll-target="#pitkä-muoto-pivot_longer">Pitkä muoto: pivot_longer</a>
   <ul class="collapse">
   <li><a href="#useita-boxploteja" id="toc-useita-boxploteja" class="nav-link" data-scroll-target="#useita-boxploteja">Useita boxploteja</a></li>
-  <li><a href="#useita-pylväitä-100" id="toc-useita-pylväitä-100" class="nav-link" data-scroll-target="#useita-pylväitä-100">Useita pylväitä (100 %)</a></li>
-  <li><a href="#useita-viivoja" id="toc-useita-viivoja" class="nav-link" data-scroll-target="#useita-viivoja">Useita viivoja</a></li>
+  <li><a href="#useamman-muuttujan-jakauma-100-iin-summautuvilla-pylväillä" id="toc-useamman-muuttujan-jakauma-100-iin-summautuvilla-pylväillä" class="nav-link" data-scroll-target="#useamman-muuttujan-jakauma-100-iin-summautuvilla-pylväillä">Useamman muuttujan jakauma 100 %:iin summautuvilla pylväillä</a></li>
+  <li><a href="#diverging-bar-chart-likert-väitteille" id="toc-diverging-bar-chart-likert-väitteille" class="nav-link" data-scroll-target="#diverging-bar-chart-likert-väitteille">Diverging bar chart Likert-väitteille</a></li>
   </ul></li>
   <li><a href="#facetit" id="toc-facetit" class="nav-link" data-scroll-target="#facetit">Facetit</a></li>
-  <li><a href="#patchwork-kuvioiden-yhdistäminen" id="toc-patchwork-kuvioiden-yhdistäminen" class="nav-link" data-scroll-target="#patchwork-kuvioiden-yhdistäminen">Patchwork: kuvioiden yhdistäminen</a></li>
-  <li><a href="#sirontamatriisi-ggpairs-funktiolla" id="toc-sirontamatriisi-ggpairs-funktiolla" class="nav-link" data-scroll-target="#sirontamatriisi-ggpairs-funktiolla">Sirontamatriisi ggpairs-funktiolla</a></li>
+  <li><a href="#hajontamatriisi-ggpairs-funktiolla" id="toc-hajontamatriisi-ggpairs-funktiolla" class="nav-link" data-scroll-target="#hajontamatriisi-ggpairs-funktiolla">Hajontamatriisi ggpairs-funktiolla</a></li>
   <li><a href="#korrelaatioheatmap" id="toc-korrelaatioheatmap" class="nav-link" data-scroll-target="#korrelaatioheatmap">Korrelaatioheatmap</a></li>
+  <li><a href="#patchwork-kuvioiden-yhdistäminen" id="toc-patchwork-kuvioiden-yhdistäminen" class="nav-link" data-scroll-target="#patchwork-kuvioiden-yhdistäminen">Patchwork: kuvioiden yhdistäminen</a></li>
   </ul>
 </nav>
     </div>
@@ -355,33 +354,200 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><em>Tämä luku on valmisteilla.</em></p>
-<section id="käytetty-aineisto" class="level2">
-<h2 class="anchored" data-anchor-id="käytetty-aineisto">Käytetty aineisto</h2>
-</section>
+<p>Aiemmissa kuvioluvuissa jokainen kuvio on esittänyt yhtä tai kahta muuttujaa kerrallaan. Usein on kuitenkin hyödyllistä nähdä useamman muuttujan tieto samassa kuviossa - esimerkiksi kokonaisen väittämäpatterin vastausjakaumat rinnakkain, tai useamman muuttujan väliset korrelaatiot kerralla. Tämä vaatii yleensä aineiston muokkaamista ensin sopivaan muotoon.</p>
 <section id="pitkä-muoto-pivot_longer" class="level2">
 <h2 class="anchored" data-anchor-id="pitkä-muoto-pivot_longer">Pitkä muoto: pivot_longer</h2>
+<p>Aineisto on yleensä “leveässä” muodossa: yksi sarake per mitattu asia, yksi rivi per vastaaja. Yksi tapa tehdä useamman muuttujan vertailut mahdollistavia kuvioita on muuttaa aineisto “pitkään” muotoon <code>pivot_longer()</code>-komennolla, jolloin yksi rivi vastaa yhtä vastausta yhteen kysyttyyn asiaan, ja kysytyn asian tunniste on omana muuttujanaan.</p>
+<p>Esimerkkinä käytetään luottamus instituutioihin -patteria (asteikko 0-10: B6 eduskunta, B7 oikeusjärjestelmä, B8 poliisi, B9 poliitikot).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>luottamus_pitka <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Eduskunta =</span> B6, Oikeusjärjestelmä <span class="ot">=</span> B7, <span class="at">Poliisi =</span> B8, <span class="at">Poliitikot =</span> B9) <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Kohde"</span>, <span class="at">values_to =</span> <span class="st">"Luottamus"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>luottamus_pitka</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6,252 × 2
+   Kohde             Luottamus
+   &lt;chr&gt;             &lt;dbl+lbl&gt;
+ 1 Eduskunta         5 [5]    
+ 2 Oikeusjärjestelmä 5 [5]    
+ 3 Poliisi           6 [6]    
+ 4 Poliitikot        4 [4]    
+ 5 Eduskunta         7 [7]    
+ 6 Oikeusjärjestelmä 5 [5]    
+ 7 Poliisi           3 [3]    
+ 8 Poliitikot        5 [5]    
+ 9 Eduskunta         8 [8]    
+10 Oikeusjärjestelmä 8 [8]    
+# ℹ 6,242 more rows</code></pre>
+</div>
+</div>
+<p>Jokaisesta vastaajasta tulee nyt yksi rivi kutakin kysyttyä instituutiota kohden - aineisto on siis rivimäärältään moninkertaistunut, mutta sarakkeita on vähemmän.</p>
 <section id="useita-boxploteja" class="level3">
 <h3 class="anchored" data-anchor-id="useita-boxploteja">Useita boxploteja</h3>
+<p>Pitkässä muodossa useamman muuttujan jakaumat voi piirtää samaan kuvioon yhdellä <code>ggplot()</code>-kutsulla, kun kysytyn asian tunniste määrittää x-akselin ryhmittelyn.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(luottamus_pitka, <span class="fu">aes</span>(<span class="at">x =</span> Kohde, <span class="at">y =</span> Luottamus)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Luottamus (0-10)"</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-useita-muuttujia_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Boxplotit näyttävät kätevästi rinnakkain, mihin instituutioihin luotetaan keskimäärin eniten ja missä hajonta on suurin.</p>
 </section>
-<section id="useita-pylväitä-100" class="level3">
-<h3 class="anchored" data-anchor-id="useita-pylväitä-100">Useita pylväitä (100 %)</h3>
+<section id="useamman-muuttujan-jakauma-100-iin-summautuvilla-pylväillä" class="level3">
+<h3 class="anchored" data-anchor-id="useamman-muuttujan-jakauma-100-iin-summautuvilla-pylväillä">Useamman muuttujan jakauma 100 %:iin summautuvilla pylväillä</h3>
+<p>Luottamusta voi tarkastella myös luokiteltuna ja esittää jokaisen instituution vastausjakauma 100 %:iin summautuvana pylväänä.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>luottamus_luokiteltu <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Eduskunta =</span> B6, Oikeusjärjestelmä <span class="ot">=</span> B7, <span class="at">Poliisi =</span> B8, <span class="at">Poliitikot =</span> B9) <span class="sc">|&gt;</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Kohde"</span>, <span class="at">values_to =</span> <span class="st">"Luottamus"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(luottamus_luokiteltu, <span class="fu">aes</span>(<span class="at">x =</span> Kohde, <span class="at">fill =</span> Luottamus)) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Osuus"</span>, <span class="at">fill =</span> <span class="st">"Luottamus"</span>) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-useita-muuttujia_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>position = "fill"</code> venyttää jokaisen pylvään täyteen 100 %:iin, jolloin instituutioiden väliset osuuserot näkyvät suoraan vertailukelpoisina - toisin kuin tavallisessa pylväskuviossa, jossa myös vastaajamäärän erot (esim. puuttuvien tietojen määrä instituutioittain) vaikuttaisivat pylvään korkeuteen.</p>
 </section>
-<section id="useita-viivoja" class="level3">
-<h3 class="anchored" data-anchor-id="useita-viivoja">Useita viivoja</h3>
+<section id="diverging-bar-chart-likert-väitteille" class="level3">
+<h3 class="anchored" data-anchor-id="diverging-bar-chart-likert-väitteille">Diverging bar chart Likert-väitteille</h3>
+<p>Kun vastausvaihtoehdot ovat samaa/eri mieltä -asteikolla, vastausjakaumia on usein selkeintä verrata niin, että eri mieltä olevien osuudet näkyvät palkin vasemmalla puolella ja samaa mieltä olevien oikealla puolella, neutraali vastaus keskellä nollan kohdalla. Esimerkkinä kolme poliittisia arvoja koskevaa väittämää (B33 tuloerojen vähentäminen, B38 tottelevaisuus/auktoriteetti lasten kasvatusarvona, B39 uskollisuus päättäjiä kohtaan).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>vaitteet_pitka <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(B33, B38, B39), as_factor)) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Tuloerot =</span> B33, <span class="at">LastenKasvatusarvot =</span> B38, <span class="at">Uskollisuus =</span> B39) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Vaite"</span>, <span class="at">values_to =</span> <span class="st">"Vastaus"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Vastaus))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>vaitteet_osuudet <span class="ot">&lt;-</span> vaitteet_pitka <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Vaite, Vastaus) <span class="sc">|&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Vaite) <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Osuus =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n)) <span class="sc">|&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Osuus =</span> <span class="fu">if_else</span>(Vastaus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Eri mieltä"</span>, <span class="st">"Täysin eri mieltä"</span>),</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                          <span class="sc">-</span>Osuus, Osuus))</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(vaitteet_osuudet, <span class="fu">aes</span>(<span class="at">x =</span> Vaite, <span class="at">y =</span> Osuus, <span class="at">fill =</span> Vastaus)) <span class="sc">+</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="sc">~</span> scales<span class="sc">::</span><span class="fu">percent</span>(<span class="fu">abs</span>(.x))) <span class="sc">+</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Osuus"</span>, <span class="at">fill =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-useita-muuttujia_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Neutraali vastausluokka (“En samaa enkä eri mieltä”) jää tässä nollan kohdalle - se ei siis venytä palkkia kumpaankaan suuntaan. <code>scale_y_continuous()</code>:n <code>labels</code>-argumentissa itseisarvo (<code>abs()</code>) varmistaa, että y-akselin luvut näkyvät positiivisina prosentteina molemmin puolin nollaa, vaikka osa datasta on laskennallisesti negatiivista.</p>
 </section>
 </section>
 <section id="facetit" class="level2">
 <h2 class="anchored" data-anchor-id="facetit">Facetit</h2>
+<p>Facetit tarjoavat toisen tavan näyttää useamman muuttujan tietoa samassa kuvassa - nyt ei kuitenkaan yhdistetä useaa muuttujaa samaan paneeliin, vaan piirretään sama kuvio erikseen kunkin ryhmän kohdalle (esim. sukupuolen tai koulutusasteen mukaan).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ESS2023, <span class="fu">aes</span>(<span class="at">x =</span> Syntymävuosi, <span class="at">y =</span> C1)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Sukupuoli) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Syntymävuosi"</span>, <span class="at">y =</span> <span class="st">"Onnellisuus"</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-useita-muuttujia_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>facet_wrap()</code> toimii yhdelle ryhmittelevälle muuttujalle, <code>facet_grid()</code> kahdelle (rivit ja sarakkeet erikseen) - esimerkiksi <code>facet_grid(Sukupuoli ~ Koulutusaste)</code>.</p>
 </section>
-<section id="patchwork-kuvioiden-yhdistäminen" class="level2">
-<h2 class="anchored" data-anchor-id="patchwork-kuvioiden-yhdistäminen">Patchwork: kuvioiden yhdistäminen</h2>
-</section>
-<section id="sirontamatriisi-ggpairs-funktiolla" class="level2">
-<h2 class="anchored" data-anchor-id="sirontamatriisi-ggpairs-funktiolla">Sirontamatriisi ggpairs-funktiolla</h2>
+<section id="hajontamatriisi-ggpairs-funktiolla" class="level2">
+<h2 class="anchored" data-anchor-id="hajontamatriisi-ggpairs-funktiolla">Hajontamatriisi ggpairs-funktiolla</h2>
+<p>Kun halutaan tarkastella useamman muuttujan välisiä yhteyksiä kaikkina pareina kerralla, <code>GGally</code>-paketin <code>ggpairs()</code> on kätevä - se piirtää sirontakuviot muuttujaparien välille, jakaumat diagonaalille ja korrelaatiokertoimet yläkolmioon. Mukaan voi ottaa myös luokitellun muuttujan väripohjaiseksi ryhmittelyksi.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(C1, Syntymävuosi, Sukupuoli) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">as_factor</span>(Sukupuoli))) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-useita-muuttujia_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="korrelaatioheatmap" class="level2">
 <h2 class="anchored" data-anchor-id="korrelaatioheatmap">Korrelaatioheatmap</h2>
+<p>Korrelaatioheatmapin voi rakentaa samalla <code>pivot_longer()</code>-logiikalla kuin luvun muutkin kuviot, hyödyntäen luvusta <a href="./08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.html">Kuvailevat analyysit</a> tuttua <code>corrr::correlate()</code>-komentoa.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>luottamus_korrelaatiot <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Eduskunta =</span> B6, Oikeusjärjestelmä <span class="ot">=</span> B7, <span class="at">Poliisi =</span> B8, <span class="at">Poliitikot =</span> B9) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">correlate</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>term, <span class="at">names_to =</span> <span class="st">"Muuttuja2"</span>, <span class="at">values_to =</span> <span class="st">"Korrelaatio"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(luottamus_korrelaatiot, <span class="fu">aes</span>(<span class="at">x =</span> term, <span class="at">y =</span> Muuttuja2, <span class="at">fill =</span> Korrelaatio)) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint =</span> <span class="dv">0</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-useita-muuttujia_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>correlate()</code> palauttaa valmiiksi pitkän muodon lähelle olevan tietokehikon (yksi rivi per muuttuja, sarakkeet muille muuttujille) - <code>pivot_longer()</code> vie sen viimeisen matkan täysin pitkäksi, jotta <code>geom_tile()</code> osaa piirtää sen ruudukkona. <code>scale_fill_gradient2()</code> keskittää värit valkoiseksi nollan kohdalla, jolloin positiiviset ja negatiiviset korrelaatiot erottuvat selvästi toisistaan.</p>
+</section>
+<section id="patchwork-kuvioiden-yhdistäminen" class="level2">
+<h2 class="anchored" data-anchor-id="patchwork-kuvioiden-yhdistäminen">Patchwork: kuvioiden yhdistäminen</h2>
+<p>Toisin kuin edelliset tekniikat, <code>patchwork</code>-paketti ei yhdistä usean muuttujan tietoa samaan paneeliin, vaan liittää valmiiksi piirrettyjä, erillisiä kuvio-olioita yhdeksi kokonaisuudeksi. Tämä on kätevää esimerkiksi silloin, kun eri kuviot eivät sovi samaan <code>ggplot()</code>-kutsuun (esimerkiksi eri asteikot tai kuviotyypit).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ESS2023, <span class="fu">aes</span>(<span class="at">x =</span> Syntymävuosi, <span class="at">y =</span> C1)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>kuvio2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ESS2023, <span class="fu">aes</span>(<span class="at">x =</span> C1)) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(kuvio1, kuvio2)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="16-useita-muuttujia_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Kuviot asettuvat oletuksena vierekkäin - <code>kuvio1 / kuvio2</code> asettaisi ne päällekkäin, ja monimutkaisempia asetteluja saa <code>plot_layout()</code>-komennolla.</p>
 
 
 <!-- -->
@@ -852,34 +1018,161 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Lähdekoodi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Useita muuttujia samassa kuviossa"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>*Tämä luku on valmisteilla.*</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Käytetty aineisto</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pitkä muoto: pivot_longer</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">### Useita boxploteja</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">### Useita pylväitä (100 %)</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">### Useita viivoja</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Facetit</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## Patchwork: kuvioiden yhdistäminen</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## Sirontamatriisi ggpairs-funktiolla</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## Korrelaatioheatmap</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Useita muuttujia samassa kuviossa"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>Aiemmissa kuvioluvuissa jokainen kuvio on esittänyt yhtä tai kahta muuttujaa kerrallaan. Usein on kuitenkin hyödyllistä nähdä useamman muuttujan tieto samassa kuviossa - esimerkiksi kokonaisen väittämäpatterin vastausjakaumat rinnakkain, tai useamman muuttujan väliset korrelaatiot kerralla. Tämä vaatii yleensä aineiston muokkaamista ensin sopivaan muotoon.</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Pitkä muoto: pivot_longer</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>Aineisto on yleensä "leveässä" muodossa: yksi sarake per mitattu asia, yksi rivi per vastaaja. Yksi tapa tehdä useamman muuttujan vertailut mahdollistavia kuvioita on muuttaa aineisto "pitkään" muotoon <span class="in">`pivot_longer()`</span>-komennolla, jolloin yksi rivi vastaa yhtä vastausta yhteen kysyttyyn asiaan, ja kysytyn asian tunniste on omana muuttujanaan.</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>Esimerkkinä käytetään luottamus instituutioihin -patteria (asteikko 0-10: B6 eduskunta, B7 oikeusjärjestelmä, B8 poliisi, B9 poliitikot).</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>luottamus_pitka <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Eduskunta =</span> B6, Oikeusjärjestelmä <span class="ot">=</span> B7, <span class="at">Poliisi =</span> B8, <span class="at">Poliitikot =</span> B9) <span class="sc">|&gt;</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Kohde"</span>, <span class="at">values_to =</span> <span class="st">"Luottamus"</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>luottamus_pitka</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>Jokaisesta vastaajasta tulee nyt yksi rivi kutakin kysyttyä instituutiota kohden - aineisto on siis rivimäärältään moninkertaistunut, mutta sarakkeita on vähemmän.</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="fu">### Useita boxploteja</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>Pitkässä muodossa useamman muuttujan jakaumat voi piirtää samaan kuvioon yhdellä <span class="in">`ggplot()`</span>-kutsulla, kun kysytyn asian tunniste määrittää x-akselin ryhmittelyn.</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(luottamus_pitka, <span class="fu">aes</span>(<span class="at">x =</span> Kohde, <span class="at">y =</span> Luottamus)) <span class="sc">+</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Luottamus (0-10)"</span>) <span class="sc">+</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>Boxplotit näyttävät kätevästi rinnakkain, mihin instituutioihin luotetaan keskimäärin eniten ja missä hajonta on suurin.</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a><span class="fu">### Useamman muuttujan jakauma 100 %:iin summautuvilla pylväillä</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>Luottamusta voi tarkastella myös luokiteltuna ja esittää jokaisen instituution vastausjakauma 100 %:iin summautuvana pylväänä.</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>luottamus_luokiteltu <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Eduskunta =</span> B6, Oikeusjärjestelmä <span class="ot">=</span> B7, <span class="at">Poliisi =</span> B8, <span class="at">Poliitikot =</span> B9) <span class="sc">|&gt;</span> </span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Kohde"</span>, <span class="at">values_to =</span> <span class="st">"Luottamus"</span>)</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(luottamus_luokiteltu, <span class="fu">aes</span>(<span class="at">x =</span> Kohde, <span class="at">fill =</span> Luottamus)) <span class="sc">+</span></span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Osuus"</span>, <span class="at">fill =</span> <span class="st">"Luottamus"</span>) <span class="sc">+</span></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a><span class="in">`position = "fill"`</span> venyttää jokaisen pylvään täyteen 100 %:iin, jolloin instituutioiden väliset osuuserot näkyvät suoraan vertailukelpoisina - toisin kuin tavallisessa pylväskuviossa, jossa myös vastaajamäärän erot (esim. puuttuvien tietojen määrä instituutioittain) vaikuttaisivat pylvään korkeuteen.</span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a><span class="fu">### Diverging bar chart Likert-väitteille</span></span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>Kun vastausvaihtoehdot ovat samaa/eri mieltä -asteikolla, vastausjakaumia on usein selkeintä verrata niin, että eri mieltä olevien osuudet näkyvät palkin vasemmalla puolella ja samaa mieltä olevien oikealla puolella, neutraali vastaus keskellä nollan kohdalla. Esimerkkinä kolme poliittisia arvoja koskevaa väittämää (B33 tuloerojen vähentäminen, B38 tottelevaisuus/auktoriteetti lasten kasvatusarvona, B39 uskollisuus päättäjiä kohtaan).</span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>vaitteet_pitka <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(B33, B38, B39), as_factor)) <span class="sc">|&gt;</span></span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Tuloerot =</span> B33, <span class="at">LastenKasvatusarvot =</span> B38, <span class="at">Uskollisuus =</span> B39) <span class="sc">|&gt;</span></span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Vaite"</span>, <span class="at">values_to =</span> <span class="st">"Vastaus"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Vastaus))</span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>vaitteet_osuudet <span class="ot">&lt;-</span> vaitteet_pitka <span class="sc">|&gt;</span></span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Vaite, Vastaus) <span class="sc">|&gt;</span></span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Vaite) <span class="sc">|&gt;</span></span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Osuus =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n)) <span class="sc">|&gt;</span></span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Osuus =</span> <span class="fu">if_else</span>(Vastaus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Eri mieltä"</span>, <span class="st">"Täysin eri mieltä"</span>),</span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>                          <span class="sc">-</span>Osuus, Osuus))</span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(vaitteet_osuudet, <span class="fu">aes</span>(<span class="at">x =</span> Vaite, <span class="at">y =</span> Osuus, <span class="at">fill =</span> Vastaus)) <span class="sc">+</span></span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="sc">~</span> scales<span class="sc">::</span><span class="fu">percent</span>(<span class="fu">abs</span>(.x))) <span class="sc">+</span></span>
+<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Osuus"</span>, <span class="at">fill =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a>Neutraali vastausluokka ("En samaa enkä eri mieltä") jää tässä nollan kohdalle - se ei siis venytä palkkia kumpaankaan suuntaan. <span class="in">`scale_y_continuous()`</span>:n <span class="in">`labels`</span>-argumentissa itseisarvo (<span class="in">`abs()`</span>) varmistaa, että y-akselin luvut näkyvät positiivisina prosentteina molemmin puolin nollaa, vaikka osa datasta on laskennallisesti negatiivista.</span>
+<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a><span class="fu">## Facetit</span></span>
+<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a>Facetit tarjoavat toisen tavan näyttää useamman muuttujan tietoa samassa kuvassa - nyt ei kuitenkaan yhdistetä useaa muuttujaa samaan paneeliin, vaan piirretään sama kuvio erikseen kunkin ryhmän kohdalle (esim. sukupuolen tai koulutusasteen mukaan).</span>
+<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ESS2023, <span class="fu">aes</span>(<span class="at">x =</span> Syntymävuosi, <span class="at">y =</span> C1)) <span class="sc">+</span></span>
+<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Sukupuoli) <span class="sc">+</span></span>
+<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Syntymävuosi"</span>, <span class="at">y =</span> <span class="st">"Onnellisuus"</span>) <span class="sc">+</span></span>
+<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a><span class="in">`facet_wrap()`</span> toimii yhdelle ryhmittelevälle muuttujalle, <span class="in">`facet_grid()`</span> kahdelle (rivit ja sarakkeet erikseen) - esimerkiksi <span class="in">`facet_grid(Sukupuoli ~ Koulutusaste)`</span>.</span>
+<span id="cb10-116"><a href="#cb10-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-117"><a href="#cb10-117" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hajontamatriisi ggpairs-funktiolla</span></span>
+<span id="cb10-118"><a href="#cb10-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-119"><a href="#cb10-119" aria-hidden="true" tabindex="-1"></a>Kun halutaan tarkastella useamman muuttujan välisiä yhteyksiä kaikkina pareina kerralla, <span class="in">`GGally`</span>-paketin <span class="in">`ggpairs()`</span> on kätevä - se piirtää sirontakuviot muuttujaparien välille, jakaumat diagonaalille ja korrelaatiokertoimet yläkolmioon. Mukaan voi ottaa myös luokitellun muuttujan väripohjaiseksi ryhmittelyksi.</span>
+<span id="cb10-120"><a href="#cb10-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-123"><a href="#cb10-123" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-124"><a href="#cb10-124" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb10-125"><a href="#cb10-125" aria-hidden="true" tabindex="-1"></a>ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb10-126"><a href="#cb10-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(C1, Syntymävuosi, Sukupuoli) <span class="sc">|&gt;</span></span>
+<span id="cb10-127"><a href="#cb10-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">as_factor</span>(Sukupuoli))) <span class="sc">+</span></span>
+<span id="cb10-128"><a href="#cb10-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-129"><a href="#cb10-129" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-130"><a href="#cb10-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-131"><a href="#cb10-131" aria-hidden="true" tabindex="-1"></a><span class="fu">## Korrelaatioheatmap</span></span>
+<span id="cb10-132"><a href="#cb10-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-133"><a href="#cb10-133" aria-hidden="true" tabindex="-1"></a>Korrelaatioheatmapin voi rakentaa samalla <span class="in">`pivot_longer()`</span>-logiikalla kuin luvun muutkin kuviot, hyödyntäen luvusta <span class="co">[</span><span class="ot">Kuvailevat analyysit</span><span class="co">](08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.qmd)</span> tuttua <span class="in">`corrr::correlate()`</span>-komentoa.</span>
+<span id="cb10-134"><a href="#cb10-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-137"><a href="#cb10-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-138"><a href="#cb10-138" aria-hidden="true" tabindex="-1"></a>luottamus_korrelaatiot <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb10-139"><a href="#cb10-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Eduskunta =</span> B6, Oikeusjärjestelmä <span class="ot">=</span> B7, <span class="at">Poliisi =</span> B8, <span class="at">Poliitikot =</span> B9) <span class="sc">|&gt;</span></span>
+<span id="cb10-140"><a href="#cb10-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">correlate</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-141"><a href="#cb10-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span>term, <span class="at">names_to =</span> <span class="st">"Muuttuja2"</span>, <span class="at">values_to =</span> <span class="st">"Korrelaatio"</span>)</span>
+<span id="cb10-142"><a href="#cb10-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-143"><a href="#cb10-143" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(luottamus_korrelaatiot, <span class="fu">aes</span>(<span class="at">x =</span> term, <span class="at">y =</span> Muuttuja2, <span class="at">fill =</span> Korrelaatio)) <span class="sc">+</span></span>
+<span id="cb10-144"><a href="#cb10-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb10-145"><a href="#cb10-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb10-146"><a href="#cb10-146" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint =</span> <span class="dv">0</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb10-147"><a href="#cb10-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb10-148"><a href="#cb10-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-149"><a href="#cb10-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb10-150"><a href="#cb10-150" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-151"><a href="#cb10-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-152"><a href="#cb10-152" aria-hidden="true" tabindex="-1"></a><span class="in">`correlate()`</span> palauttaa valmiiksi pitkän muodon lähelle olevan tietokehikon (yksi rivi per muuttuja, sarakkeet muille muuttujille) - <span class="in">`pivot_longer()`</span> vie sen viimeisen matkan täysin pitkäksi, jotta <span class="in">`geom_tile()`</span> osaa piirtää sen ruudukkona. <span class="in">`scale_fill_gradient2()`</span> keskittää värit valkoiseksi nollan kohdalla, jolloin positiiviset ja negatiiviset korrelaatiot erottuvat selvästi toisistaan.</span>
+<span id="cb10-153"><a href="#cb10-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-154"><a href="#cb10-154" aria-hidden="true" tabindex="-1"></a><span class="fu">## Patchwork: kuvioiden yhdistäminen</span></span>
+<span id="cb10-155"><a href="#cb10-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-156"><a href="#cb10-156" aria-hidden="true" tabindex="-1"></a>Toisin kuin edelliset tekniikat, <span class="in">`patchwork`</span>-paketti ei yhdistä usean muuttujan tietoa samaan paneeliin, vaan liittää valmiiksi piirrettyjä, erillisiä kuvio-olioita yhdeksi kokonaisuudeksi. Tämä on kätevää esimerkiksi silloin, kun eri kuviot eivät sovi samaan <span class="in">`ggplot()`</span>-kutsuun (esimerkiksi eri asteikot tai kuviotyypit).</span>
+<span id="cb10-157"><a href="#cb10-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-160"><a href="#cb10-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-161"><a href="#cb10-161" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb10-162"><a href="#cb10-162" aria-hidden="true" tabindex="-1"></a>kuvio1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ESS2023, <span class="fu">aes</span>(<span class="at">x =</span> Syntymävuosi, <span class="at">y =</span> C1)) <span class="sc">+</span></span>
+<span id="cb10-163"><a href="#cb10-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb10-164"><a href="#cb10-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-165"><a href="#cb10-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-166"><a href="#cb10-166" aria-hidden="true" tabindex="-1"></a>kuvio2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ESS2023, <span class="fu">aes</span>(<span class="at">x =</span> C1)) <span class="sc">+</span></span>
+<span id="cb10-167"><a href="#cb10-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb10-168"><a href="#cb10-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-169"><a href="#cb10-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-170"><a href="#cb10-170" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(kuvio1, kuvio2)</span>
+<span id="cb10-171"><a href="#cb10-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-172"><a href="#cb10-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-173"><a href="#cb10-173" aria-hidden="true" tabindex="-1"></a>Kuviot asettuvat oletuksena vierekkäin - <span class="in">`kuvio1 / kuvio2`</span> asettaisi ne päällekkäin, ja monimutkaisempia asetteluja saa <span class="in">`plot_layout()`</span>-komennolla.</span>
 </code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -7,22 +7,149 @@ title: "Useita muuttujia samassa kuviossa"
 source("_common.R")
 ```
 
-*Tämä luku on valmisteilla.*
-
-## Käytetty aineisto
+Aiemmissa kuvioluvuissa jokainen kuvio on esittänyt yhtä tai kahta muuttujaa kerrallaan. Usein on kuitenkin hyödyllistä nähdä useamman muuttujan tieto samassa kuviossa - esimerkiksi kokonaisen väittämäpatterin vastausjakaumat rinnakkain, tai useamman muuttujan väliset korrelaatiot kerralla. Tämä vaatii yleensä aineiston muokkaamista ensin sopivaan muotoon.
 
 ## Pitkä muoto: pivot_longer
 
+Aineisto on yleensä "leveässä" muodossa: yksi sarake per mitattu asia, yksi rivi per vastaaja. Yksi tapa tehdä useamman muuttujan vertailut mahdollistavia kuvioita on muuttaa aineisto "pitkään" muotoon `pivot_longer()`-komennolla, jolloin yksi rivi vastaa yhtä vastausta yhteen kysyttyyn asiaan, ja kysytyn asian tunniste on omana muuttujanaan.
+
+Esimerkkinä käytetään luottamus instituutioihin -patteria (asteikko 0-10: B6 eduskunta, B7 oikeusjärjestelmä, B8 poliisi, B9 poliitikot).
+
+```{r}
+luottamus_pitka <- ESS2023 |>
+  select(Eduskunta = B6, Oikeusjärjestelmä = B7, Poliisi = B8, Poliitikot = B9) |>
+  pivot_longer(cols = everything(), names_to = "Kohde", values_to = "Luottamus")
+
+luottamus_pitka
+```
+
+Jokaisesta vastaajasta tulee nyt yksi rivi kutakin kysyttyä instituutiota kohden - aineisto on siis rivimäärältään moninkertaistunut, mutta sarakkeita on vähemmän.
+
 ### Useita boxploteja
 
-### Useita pylväitä (100 %)
+Pitkässä muodossa useamman muuttujan jakaumat voi piirtää samaan kuvioon yhdellä `ggplot()`-kutsulla, kun kysytyn asian tunniste määrittää x-akselin ryhmittelyn.
 
-### Useita viivoja
+```{r}
+ggplot(luottamus_pitka, aes(x = Kohde, y = Luottamus)) +
+  geom_boxplot() +
+  labs(x = NULL, y = "Luottamus (0-10)") +
+  theme_minimal()
+```
+
+Boxplotit näyttävät kätevästi rinnakkain, mihin instituutioihin luotetaan keskimäärin eniten ja missä hajonta on suurin.
+
+### Useamman muuttujan jakauma 100 %:iin summautuvilla pylväillä
+
+Luottamusta voi tarkastella myös luokiteltuna ja esittää jokaisen instituution vastausjakauma 100 %:iin summautuvana pylväänä.
+
+```{r}
+luottamus_luokiteltu <- ESS2023 |>
+  select(Eduskunta = B6, Oikeusjärjestelmä = B7, Poliisi = B8, Poliitikot = B9) |> 
+  pivot_longer(cols = everything(), names_to = "Kohde", values_to = "Luottamus")
+
+ggplot(luottamus_luokiteltu, aes(x = Kohde, fill = Luottamus)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  coord_flip() +
+  labs(x = NULL, y = "Osuus", fill = "Luottamus") +
+  theme_minimal()
+```
+
+`position = "fill"` venyttää jokaisen pylvään täyteen 100 %:iin, jolloin instituutioiden väliset osuuserot näkyvät suoraan vertailukelpoisina - toisin kuin tavallisessa pylväskuviossa, jossa myös vastaajamäärän erot (esim. puuttuvien tietojen määrä instituutioittain) vaikuttaisivat pylvään korkeuteen.
+
+### Diverging bar chart Likert-väitteille
+
+Kun vastausvaihtoehdot ovat samaa/eri mieltä -asteikolla, vastausjakaumia on usein selkeintä verrata niin, että eri mieltä olevien osuudet näkyvät palkin vasemmalla puolella ja samaa mieltä olevien oikealla puolella, neutraali vastaus keskellä nollan kohdalla. Esimerkkinä kolme poliittisia arvoja koskevaa väittämää (B33 tuloerojen vähentäminen, B38 tottelevaisuus/auktoriteetti lasten kasvatusarvona, B39 uskollisuus päättäjiä kohtaan).
+
+```{r}
+vaitteet_pitka <- ESS2023 |>
+  mutate(across(c(B33, B38, B39), as_factor)) |>
+  select(Tuloerot = B33, LastenKasvatusarvot = B38, Uskollisuus = B39) |>
+  pivot_longer(cols = everything(), names_to = "Vaite", values_to = "Vastaus") |>
+  filter(!is.na(Vastaus))
+
+vaitteet_osuudet <- vaitteet_pitka |>
+  count(Vaite, Vastaus) |>
+  group_by(Vaite) |>
+  mutate(Osuus = n / sum(n)) |>
+  ungroup() |>
+  mutate(Osuus = if_else(Vastaus %in% c("Eri mieltä", "Täysin eri mieltä"),
+                          -Osuus, Osuus))
+
+ggplot(vaitteet_osuudet, aes(x = Vaite, y = Osuus, fill = Vastaus)) +
+  geom_col() +
+  geom_hline(yintercept = 0) +
+  scale_y_continuous(labels = ~ scales::percent(abs(.x))) +
+  coord_flip() +
+  labs(x = NULL, y = "Osuus", fill = NULL) +
+  theme_minimal()
+```
+
+Neutraali vastausluokka ("En samaa enkä eri mieltä") jää tässä nollan kohdalle - se ei siis venytä palkkia kumpaankaan suuntaan. `scale_y_continuous()`:n `labels`-argumentissa itseisarvo (`abs()`) varmistaa, että y-akselin luvut näkyvät positiivisina prosentteina molemmin puolin nollaa, vaikka osa datasta on laskennallisesti negatiivista.
 
 ## Facetit
 
-## Patchwork: kuvioiden yhdistäminen
+Facetit tarjoavat toisen tavan näyttää useamman muuttujan tietoa samassa kuvassa - nyt ei kuitenkaan yhdistetä useaa muuttujaa samaan paneeliin, vaan piirretään sama kuvio erikseen kunkin ryhmän kohdalle (esim. sukupuolen tai koulutusasteen mukaan).
 
-## Sirontamatriisi ggpairs-funktiolla
+```{r}
+ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ Sukupuoli) +
+  labs(x = "Syntymävuosi", y = "Onnellisuus") +
+  theme_minimal()
+```
+
+`facet_wrap()` toimii yhdelle ryhmittelevälle muuttujalle, `facet_grid()` kahdelle (rivit ja sarakkeet erikseen) - esimerkiksi `facet_grid(Sukupuoli ~ Koulutusaste)`.
+
+## Hajontamatriisi ggpairs-funktiolla
+
+Kun halutaan tarkastella useamman muuttujan välisiä yhteyksiä kaikkina pareina kerralla, `GGally`-paketin `ggpairs()` on kätevä - se piirtää sirontakuviot muuttujaparien välille, jakaumat diagonaalille ja korrelaatiokertoimet yläkolmioon. Mukaan voi ottaa myös luokitellun muuttujan väripohjaiseksi ryhmittelyksi.
+
+```{r}
+library(GGally)
+ESS2023 |>
+  select(C1, Syntymävuosi, Sukupuoli) |>
+  ggpairs(mapping = aes(color = as_factor(Sukupuoli))) +
+  theme_minimal()
+```
 
 ## Korrelaatioheatmap
+
+Korrelaatioheatmapin voi rakentaa samalla `pivot_longer()`-logiikalla kuin luvun muutkin kuviot, hyödyntäen luvusta [Kuvailevat analyysit](08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.qmd) tuttua `corrr::correlate()`-komentoa.
+
+```{r}
+luottamus_korrelaatiot <- ESS2023 |>
+  select(Eduskunta = B6, Oikeusjärjestelmä = B7, Poliisi = B8, Poliitikot = B9) |>
+  correlate() |>
+  pivot_longer(cols = -term, names_to = "Muuttuja2", values_to = "Korrelaatio")
+
+ggplot(luottamus_korrelaatiot, aes(x = term, y = Muuttuja2, fill = Korrelaatio)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white",
+                       midpoint = 0, limits = c(-1, 1)) +
+  labs(x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+`correlate()` palauttaa valmiiksi pitkän muodon lähelle olevan tietokehikon (yksi rivi per muuttuja, sarakkeet muille muuttujille) - `pivot_longer()` vie sen viimeisen matkan täysin pitkäksi, jotta `geom_tile()` osaa piirtää sen ruudukkona. `scale_fill_gradient2()` keskittää värit valkoiseksi nollan kohdalla, jolloin positiiviset ja negatiiviset korrelaatiot erottuvat selvästi toisistaan.
+
+## Patchwork: kuvioiden yhdistäminen
+
+Toisin kuin edelliset tekniikat, `patchwork`-paketti ei yhdistä usean muuttujan tietoa samaan paneeliin, vaan liittää valmiiksi piirrettyjä, erillisiä kuvio-olioita yhdeksi kokonaisuudeksi. Tämä on kätevää esimerkiksi silloin, kun eri kuviot eivät sovi samaan `ggplot()`-kutsuun (esimerkiksi eri asteikot tai kuviotyypit).
+
+```{r}
+library(patchwork)
+kuvio1 <- ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +
+  geom_point() +
+  theme_minimal()
+
+kuvio2 <- ggplot(ESS2023, aes(x = C1)) +
+  geom_histogram() +
+  theme_minimal()
+
+wrap_plots(kuvio1, kuvio2)
+```
+
+Kuviot asettuvat oletuksena vierekkäin - `kuvio1 / kuvio2` asettaisi ne päällekkäin, ja monimutkaisempia asetteluja saa `plot_layout()`-komennolla.

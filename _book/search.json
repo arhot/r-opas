@@ -747,7 +747,7 @@
     "href": "16-useita-muuttujia.html",
     "title": "Useita muuttujia samassa kuviossa",
     "section": "",
-    "text": "Käytetty aineisto\nTämä luku on valmisteilla.",
+    "text": "Pitkä muoto: pivot_longer\nAiemmissa kuvioluvuissa jokainen kuvio on esittänyt yhtä tai kahta muuttujaa kerrallaan. Usein on kuitenkin hyödyllistä nähdä useamman muuttujan tieto samassa kuviossa - esimerkiksi kokonaisen väittämäpatterin vastausjakaumat rinnakkain, tai useamman muuttujan väliset korrelaatiot kerralla. Tämä vaatii yleensä aineiston muokkaamista ensin sopivaan muotoon.\nAineisto on yleensä “leveässä” muodossa: yksi sarake per mitattu asia, yksi rivi per vastaaja. Yksi tapa tehdä useamman muuttujan vertailut mahdollistavia kuvioita on muuttaa aineisto “pitkään” muotoon pivot_longer()-komennolla, jolloin yksi rivi vastaa yhtä vastausta yhteen kysyttyyn asiaan, ja kysytyn asian tunniste on omana muuttujanaan.\nEsimerkkinä käytetään luottamus instituutioihin -patteria (asteikko 0-10: B6 eduskunta, B7 oikeusjärjestelmä, B8 poliisi, B9 poliitikot).\nluottamus_pitka &lt;- ESS2023 |&gt;\n  select(Eduskunta = B6, Oikeusjärjestelmä = B7, Poliisi = B8, Poliitikot = B9) |&gt;\n  pivot_longer(cols = everything(), names_to = \"Kohde\", values_to = \"Luottamus\")\n\nluottamus_pitka\n\n# A tibble: 6,252 × 2\n   Kohde             Luottamus\n   &lt;chr&gt;             &lt;dbl+lbl&gt;\n 1 Eduskunta         5 [5]    \n 2 Oikeusjärjestelmä 5 [5]    \n 3 Poliisi           6 [6]    \n 4 Poliitikot        4 [4]    \n 5 Eduskunta         7 [7]    \n 6 Oikeusjärjestelmä 5 [5]    \n 7 Poliisi           3 [3]    \n 8 Poliitikot        5 [5]    \n 9 Eduskunta         8 [8]    \n10 Oikeusjärjestelmä 8 [8]    \n# ℹ 6,242 more rows\nJokaisesta vastaajasta tulee nyt yksi rivi kutakin kysyttyä instituutiota kohden - aineisto on siis rivimäärältään moninkertaistunut, mutta sarakkeita on vähemmän.",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
@@ -757,8 +757,8 @@
     "objectID": "16-useita-muuttujia.html#pitkä-muoto-pivot_longer",
     "href": "16-useita-muuttujia.html#pitkä-muoto-pivot_longer",
     "title": "Useita muuttujia samassa kuviossa",
-    "section": "Pitkä muoto: pivot_longer",
-    "text": "Pitkä muoto: pivot_longer\n\nUseita boxploteja\n\n\nUseita pylväitä (100 %)\n\n\nUseita viivoja",
+    "section": "",
+    "text": "Useita boxploteja\nPitkässä muodossa useamman muuttujan jakaumat voi piirtää samaan kuvioon yhdellä ggplot()-kutsulla, kun kysytyn asian tunniste määrittää x-akselin ryhmittelyn.\n\nggplot(luottamus_pitka, aes(x = Kohde, y = Luottamus)) +\n  geom_boxplot() +\n  labs(x = NULL, y = \"Luottamus (0-10)\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\nBoxplotit näyttävät kätevästi rinnakkain, mihin instituutioihin luotetaan keskimäärin eniten ja missä hajonta on suurin.\n\n\nUseamman muuttujan jakauma 100 %:iin summautuvilla pylväillä\nLuottamusta voi tarkastella myös luokiteltuna ja esittää jokaisen instituution vastausjakauma 100 %:iin summautuvana pylväänä.\n\nluottamus_luokiteltu &lt;- ESS2023 |&gt;\n  select(Eduskunta = B6, Oikeusjärjestelmä = B7, Poliisi = B8, Poliitikot = B9) |&gt; \n  pivot_longer(cols = everything(), names_to = \"Kohde\", values_to = \"Luottamus\")\n\nggplot(luottamus_luokiteltu, aes(x = Kohde, fill = Luottamus)) +\n  geom_bar(position = \"fill\") +\n  scale_y_continuous(labels = scales::percent) +\n  coord_flip() +\n  labs(x = NULL, y = \"Osuus\", fill = \"Luottamus\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\nposition = \"fill\" venyttää jokaisen pylvään täyteen 100 %:iin, jolloin instituutioiden väliset osuuserot näkyvät suoraan vertailukelpoisina - toisin kuin tavallisessa pylväskuviossa, jossa myös vastaajamäärän erot (esim. puuttuvien tietojen määrä instituutioittain) vaikuttaisivat pylvään korkeuteen.\n\n\nDiverging bar chart Likert-väitteille\nKun vastausvaihtoehdot ovat samaa/eri mieltä -asteikolla, vastausjakaumia on usein selkeintä verrata niin, että eri mieltä olevien osuudet näkyvät palkin vasemmalla puolella ja samaa mieltä olevien oikealla puolella, neutraali vastaus keskellä nollan kohdalla. Esimerkkinä kolme poliittisia arvoja koskevaa väittämää (B33 tuloerojen vähentäminen, B38 tottelevaisuus/auktoriteetti lasten kasvatusarvona, B39 uskollisuus päättäjiä kohtaan).\n\nvaitteet_pitka &lt;- ESS2023 |&gt;\n  mutate(across(c(B33, B38, B39), as_factor)) |&gt;\n  select(Tuloerot = B33, LastenKasvatusarvot = B38, Uskollisuus = B39) |&gt;\n  pivot_longer(cols = everything(), names_to = \"Vaite\", values_to = \"Vastaus\") |&gt;\n  filter(!is.na(Vastaus))\n\nvaitteet_osuudet &lt;- vaitteet_pitka |&gt;\n  count(Vaite, Vastaus) |&gt;\n  group_by(Vaite) |&gt;\n  mutate(Osuus = n / sum(n)) |&gt;\n  ungroup() |&gt;\n  mutate(Osuus = if_else(Vastaus %in% c(\"Eri mieltä\", \"Täysin eri mieltä\"),\n                          -Osuus, Osuus))\n\nggplot(vaitteet_osuudet, aes(x = Vaite, y = Osuus, fill = Vastaus)) +\n  geom_col() +\n  geom_hline(yintercept = 0) +\n  scale_y_continuous(labels = ~ scales::percent(abs(.x))) +\n  coord_flip() +\n  labs(x = NULL, y = \"Osuus\", fill = NULL) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nNeutraali vastausluokka (“En samaa enkä eri mieltä”) jää tässä nollan kohdalle - se ei siis venytä palkkia kumpaankaan suuntaan. scale_y_continuous():n labels-argumentissa itseisarvo (abs()) varmistaa, että y-akselin luvut näkyvät positiivisina prosentteina molemmin puolin nollaa, vaikka osa datasta on laskennallisesti negatiivista.",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
@@ -769,7 +769,7 @@
     "href": "16-useita-muuttujia.html#facetit",
     "title": "Useita muuttujia samassa kuviossa",
     "section": "Facetit",
-    "text": "Facetit",
+    "text": "Facetit\nFacetit tarjoavat toisen tavan näyttää useamman muuttujan tietoa samassa kuvassa - nyt ei kuitenkaan yhdistetä useaa muuttujaa samaan paneeliin, vaan piirretään sama kuvio erikseen kunkin ryhmän kohdalle (esim. sukupuolen tai koulutusasteen mukaan).\n\nggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", se = FALSE) +\n  facet_wrap(~ Sukupuoli) +\n  labs(x = \"Syntymävuosi\", y = \"Onnellisuus\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\nfacet_wrap() toimii yhdelle ryhmittelevälle muuttujalle, facet_grid() kahdelle (rivit ja sarakkeet erikseen) - esimerkiksi facet_grid(Sukupuoli ~ Koulutusaste).",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
@@ -780,7 +780,7 @@
     "href": "16-useita-muuttujia.html#patchwork-kuvioiden-yhdistäminen",
     "title": "Useita muuttujia samassa kuviossa",
     "section": "Patchwork: kuvioiden yhdistäminen",
-    "text": "Patchwork: kuvioiden yhdistäminen",
+    "text": "Patchwork: kuvioiden yhdistäminen\nToisin kuin edelliset tekniikat, patchwork-paketti ei yhdistä usean muuttujan tietoa samaan paneeliin, vaan liittää valmiiksi piirrettyjä, erillisiä kuvio-olioita yhdeksi kokonaisuudeksi. Tämä on kätevää esimerkiksi silloin, kun eri kuviot eivät sovi samaan ggplot()-kutsuun (esimerkiksi eri asteikot tai kuviotyypit).\n\nlibrary(patchwork)\nkuvio1 &lt;- ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +\n  geom_point() +\n  theme_minimal()\n\nkuvio2 &lt;- ggplot(ESS2023, aes(x = C1)) +\n  geom_histogram() +\n  theme_minimal()\n\nwrap_plots(kuvio1, kuvio2)\n\n\n\n\n\n\n\n\nKuviot asettuvat oletuksena vierekkäin - kuvio1 / kuvio2 asettaisi ne päällekkäin, ja monimutkaisempia asetteluja saa plot_layout()-komennolla.",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
@@ -802,7 +802,7 @@
     "href": "16-useita-muuttujia.html#korrelaatioheatmap",
     "title": "Useita muuttujia samassa kuviossa",
     "section": "Korrelaatioheatmap",
-    "text": "Korrelaatioheatmap",
+    "text": "Korrelaatioheatmap\nKorrelaatioheatmapin voi rakentaa samalla pivot_longer()-logiikalla kuin luvun muutkin kuviot, hyödyntäen luvusta Kuvailevat analyysit tuttua corrr::correlate()-komentoa.\n\nluottamus_korrelaatiot &lt;- ESS2023 |&gt;\n  select(Eduskunta = B6, Oikeusjärjestelmä = B7, Poliisi = B8, Poliitikot = B9) |&gt;\n  correlate() |&gt;\n  pivot_longer(cols = -term, names_to = \"Muuttuja2\", values_to = \"Korrelaatio\")\n\nggplot(luottamus_korrelaatiot, aes(x = term, y = Muuttuja2, fill = Korrelaatio)) +\n  geom_tile() +\n  scale_fill_gradient2(low = \"blue\", high = \"red\", mid = \"white\",\n                       midpoint = 0, limits = c(-1, 1)) +\n  labs(x = NULL, y = NULL) +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\n\ncorrelate() palauttaa valmiiksi pitkän muodon lähelle olevan tietokehikon (yksi rivi per muuttuja, sarakkeet muille muuttujille) - pivot_longer() vie sen viimeisen matkan täysin pitkäksi, jotta geom_tile() osaa piirtää sen ruudukkona. scale_fill_gradient2() keskittää värit valkoiseksi nollan kohdalla, jolloin positiiviset ja negatiiviset korrelaatiot erottuvat selvästi toisistaan.",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
@@ -1091,6 +1091,17 @@
     "text": "ESS2023 &lt;- read_sav(\"data/ESS2023_Suomi.sav\")\n\n\n\nLisenssi ja käyttöehdot\nAlkuperäinen European Social Survey -aineisto on lisensoitu CC BY-NC-SA 4.0 -lisenssillä, ja siihen liittyvä dokumentaatio (mm. koodikirjat) CC BY-SA 4.0 -lisenssillä. Koska tämän oppaan aineisto ja koodikirja ovat muokattuja/käännettyjä versioita alkuperäisestä, ne jaetaan tässä samalla lisenssillä (CC BY-NC-SA 4.0) - eli myös näitä versioita saa vapaasti käyttää, muokata ja jakaa edelleen ei-kaupallisiin tarkoituksiin, kunhan alkuperäiseen viitataan ja oma versio pysyy samalla lisenssillä.\nAlkuperäiseen aineistoon viitataan seuraavasti (ESS:n oman ohjeistuksen mukaisesti muokatuille/käännetyille aineistoille):\n\nAdapted from: European Social Survey European Research Infrastructure (ESS ERIC) (2024) ESS11 - integrated file, edition 1.0 [Data set]. Sikt - Norwegian Agency for Shared Services in Education and Research.\n\nLisätietoa käyttöehdoista: https://www.europeansocialsurvey.org/data/conditions-of-use",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Lukijalle</span>"
+    ]
+  },
+  {
+    "objectID": "16-useita-muuttujia.html#hajontamatriisi-ggpairs-funktiolla",
+    "href": "16-useita-muuttujia.html#hajontamatriisi-ggpairs-funktiolla",
+    "title": "Useita muuttujia samassa kuviossa",
+    "section": "Hajontamatriisi ggpairs-funktiolla",
+    "text": "Hajontamatriisi ggpairs-funktiolla\nKun halutaan tarkastella useamman muuttujan välisiä yhteyksiä kaikkina pareina kerralla, GGally-paketin ggpairs() on kätevä - se piirtää sirontakuviot muuttujaparien välille, jakaumat diagonaalille ja korrelaatiokertoimet yläkolmioon. Mukaan voi ottaa myös luokitellun muuttujan väripohjaiseksi ryhmittelyksi.\n\nlibrary(GGally)\nESS2023 |&gt;\n  select(C1, Syntymävuosi, Sukupuoli) |&gt;\n  ggpairs(mapping = aes(color = as_factor(Sukupuoli))) +\n  theme_minimal()",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
     ]
   }
 ]
