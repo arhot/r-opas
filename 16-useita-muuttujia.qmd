@@ -44,12 +44,14 @@ Luottamusta voi tarkastella myös luokiteltuna ja esittää jokaisen instituutio
 
 ```{r}
 luottamus_luokiteltu <- ESS2023 |>
-  select(Eduskunta = B6, Oikeusjärjestelmä = B7, Poliisi = B8, Poliitikot = B9) |> 
+  select(Eduskunta = B6, Oikeusjärjestelmä = B7, Poliisi = B8, Poliitikot = B9) |>
+  mutate(across(everything(), as_factor)) |>
   pivot_longer(cols = everything(), names_to = "Kohde", values_to = "Luottamus")
 
 ggplot(luottamus_luokiteltu, aes(x = Kohde, fill = Luottamus)) +
   geom_bar(position = "fill") +
   scale_y_continuous(labels = scales::percent) +
+  scale_fill_viridis_d() +
   coord_flip() +
   labs(x = NULL, y = "Osuus", fill = "Luottamus") +
   theme_minimal()
