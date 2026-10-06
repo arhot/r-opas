@@ -7,4 +7,128 @@ title: "Osa 2: Harjoitustehtävät"
 source("_common.R")
 ```
 
-*Tämä luku on valmisteilla.*
+## Muuttujien muuntaminen ja tarkistaminen
+
+Seuraavissa tehtävissä käytetään oppaan yhteistä ESS 2023 -aineistoa. Tehtävät kertaavat [muuttujamuunnoksia](07-muuttujamuunnokset.qmd) ja [kuvailevia analyysejä](08-kuvailevat_analyysit_muuttujien_jakaumat_tunnusluvut_ristiintaulukko_korrelaatio.qmd).
+
+### Koulutusluokkien ryhmittely
+
+Muodosta muuttujasta `F15` kolmiluokkainen `Koulutusaste` yhdistämällä alkuperäiset luokat 1–3, 4–8 ja 9–14. Tarkista luokkien vastaajamäärät. Aineistossa arvo 5555 tarkoittaa vastausta "Jokin muu", joten jätä se luokittelun ulkopuolelle.
+
+```{r}
+#| eval: false
+ESS2023 <- ESS2023 |>
+	mutate(Koulutusaste = ...)
+
+ESS2023 |> count(Koulutusaste)
+```
+
+::: {.callout-note collapse="true"}
+## Malliratkaisu
+
+```{r}
+ESS2023 <- ESS2023 |>
+	mutate(
+		F15_luokka = na_if(as.numeric(F15), 5555),
+		Koulutusaste = cut(
+			F15_luokka,
+			breaks = c(0, 3, 8, Inf),
+			labels = c("Peruskoulu tai alempi", "Keskiaste", "Korkea-aste")
+		)
+	)
+
+ESS2023 |> count(Koulutusaste)
+```
+
+Tarkistuksessa pitäisi näkyä kolme koottua koulutusastetta sekä puuttuvien määrä. "Jokin muu" jää luokittelun ulkopuolelle, koska se ei kuulu alkuperäiseen järjestykseen 1–14.
+:::
+
+### Puolueen kannatus ja pienet ryhmät
+
+Muuta `B14` luokitelluksi muuttujaksi, kokoa harvinaisimmat vastaukset yhteen ja järjestä luokat yleisimmästä harvinaisimpaan. Kuinka monta vastausta jää "Muu puolue" -luokkaan?
+
+```{r}
+#| eval: false
+ESS2023 <- ESS2023 |>
+	mutate(Puolue = ...)
+
+ESS2023 |> count(Puolue, sort = TRUE)
+```
+
+::: {.callout-note collapse="true"}
+## Malliratkaisu
+
+```{r}
+ESS2023 <- ESS2023 |>
+	mutate(
+		Puolue = B14 |>
+			as_factor() |>
+			fct_lump(n = 8, other_level = "Muu puolue") |>
+			fct_infreq()
+	)
+
+ESS2023 |> count(Puolue, sort = TRUE)
+```
+
+Ratkaisu säilyttää kahdeksan yleisintä puoluetta ja kokoaa loput yhteen. Puuttuvat vastaukset pysyvät puuttuvina.
+:::
+
+### Ristiintaulukko
+
+Tee koulutusasteen ja sukupuolen ristiintaulukko. Laske osuudet sukupuoliryhmien sisällä: kuinka koulutusasteet jakautuvat kussakin ryhmässä?
+
+```{r}
+#| eval: false
+ESS2023 |>
+	tabyl(Koulutusaste, Sukupuoli, show_na = FALSE) |>
+	adorn_percentages("col") |>
+	adorn_pct_formatting(digits = 1) |>
+	as_tibble()
+```
+
+::: {.callout-note collapse="true"}
+## Malliratkaisu
+
+Koulutusaste muodostettiin ensimmäisessä tehtävässä. Muunna sukupuoli luokitelluksi ennen taulukointia:
+
+```{r}
+ESS2023 <- ESS2023 |>
+	mutate(Sukupuoli = as_factor(Sukupuoli))
+
+ESS2023 |>
+	tabyl(Koulutusaste, Sukupuoli, show_na = FALSE) |>
+	adorn_percentages("col") |>
+	adorn_pct_formatting(digits = 1) |>
+	as_tibble()
+```
+
+Jokaisen sukupuolisarakkeen prosenttien summa on 100 % lukuun ottamatta pyöristyseroa. Sarakeprosentit vastaavat kysymykseen koulutusasteiden jakaumasta sukupuoliryhmittäin.
+:::
+
+## Painotettu keskiarvo
+
+ESS-aineiston `analyysipaino_suomi` korjaa aineiston painotusta. Laske onnellisuuden (`C1`) painottamaton ja analyysipainolla painotettu keskiarvo. Vertaa lukuja ja pohdi, muuttaako painotus arviota paljon.
+
+```{r}
+#| eval: false
+ESS2023 |>
+	summarise(
+		Painottamaton = ...,
+		Painotettu = ...
+	)
+```
+
+::: {.callout-note collapse="true"}
+## Malliratkaisu
+
+```{r}
+ESS2023 |>
+	summarise(
+		Painottamaton = mean(C1, na.rm = TRUE),
+		Painotettu = weighted.mean(C1, analyysipaino_suomi, na.rm = TRUE)
+	) |>
+	mutate(across(where(is.numeric), ~ round(.x, 2)))
+```
+
+Tässä aineistossa painottamaton keskiarvo on noin 8,07 ja painotettu noin 8,04. Yksinkertainen painotus näyttää piste-estimaatin eron, mutta tämä lasku ei yksin huomioi monimutkaisen otanta-asetelman vaikutusta keskivirheisiin. Lue lisää [painottamisesta](09-painottaminen.qmd).
+:::

@@ -7,4 +7,186 @@ title: "Osa 4: Harjoitustehtävät"
 source("_common.R")
 ```
 
-*Tämä luku on valmisteilla.*
+Tehtävissä käytetään [regressioanalyysin](17-regressio.qmd), [varianssianalyysin](18-anova.qmd), [faktorianalyysin](19-faktorianalyysi.qmd) ja [logistisen regression](20-logistinen-regressio.qmd) menetelmiä. Jokainen malliratkaisu toimii itsenäisesti tämän sivun alussa ladatulla ESS-aineistolla.
+
+## Faktorianalyysi
+
+ESS-aineiston H-alkuiset muuttujat mittaavat Schwartzin perusarvoja. Tee niille neljän faktorin suurimman uskottavuuden faktorianalyysi varimax-rotaatiolla. Tulosta vähintään 0,30:n lataukset ja nimeä faktorit niiden latautuvien väittämien sisällön perusteella.
+
+```{r}
+#| eval: false
+faktorianalyysi <- fa(
+	ESS2023 |> select(starts_with("H")),
+	nfactors = 4,
+	fm = "ml",
+	rotate = "varimax"
+)
+
+faktorianalyysi |> fa.sort() |> print(cut = 0.3)
+```
+
+::: {.callout-note collapse="true"}
+## Malliratkaisu
+
+```{r}
+faktorianalyysi <- fa(
+	ESS2023 |> select(starts_with("H")),
+	nfactors = 4,
+	fm = "ml",
+	rotate = "varimax"
+)
+
+faktorianalyysi |> fa.sort() |> print(cut = 0.3)
+```
+
+Ratkaisu näyttää H-muuttujien lataukset faktoreittain. Faktorien nimet eivät seuraa suoraan analyysistä, vaan ne perustellaan latautuvien väittämien yhteisellä sisällöllä. Latausten merkit voivat vaihtua faktoriratkaisujen välillä; tulkitse niiden suuruutta ja keskinäistä rakennetta.
+:::
+
+## Lineaarinen regressio
+
+Tarkastele, miten koulutusaste ja sukupuoli liittyvät onnellisuuteen (`C1`). Muodosta malli, jossa molemmat ovat selittäjinä. Muodosta koulutusaste ryhmittelemällä `F15`-muuttujan luokat 1–3, 4–8 ja 9–14. Arvo 5555 tarkoittaa "Jokin muu" -vastausta, joten jätä se pois. Tulosta kertoimet luottamusväleineen ja tulkitse koulutusryhmien kertoimet vertailuryhmään nähden.
+
+```{r}
+#| eval: false
+malliaineisto <- ESS2023 |>
+	mutate(
+		Koulutusaste = ...,
+		Sukupuoli = as_factor(Sukupuoli)
+	)
+
+malli <- lm(C1 ~ Koulutusaste + Sukupuoli, data = malliaineisto)
+tidy(malli, conf.int = TRUE)
+```
+
+::: {.callout-note collapse="true"}
+## Malliratkaisu
+
+```{r}
+malliaineisto <- ESS2023 |>
+	mutate(
+		Sukupuoli = as_factor(Sukupuoli)
+	)
+
+malliaineisto <- malliaineisto |>
+	mutate(
+		Koulutusaste = cut(
+			na_if(as.numeric(F15), 5555),
+			breaks = c(0, 3, 8, Inf),
+			labels = c("Peruskoulu tai alempi", "Keskiaste", "Korkea-aste")
+		)
+	)
+
+malli <- lm(C1 ~ Koulutusaste + Sukupuoli, data = malliaineisto)
+tidy(malli, conf.int = TRUE)
+```
+
+Koulutusasteen kertoimet kuvaavat onnellisuuden keskiarvoeroja mallin vertailuryhmään nähden, kun sukupuoli vakioidaan. Vertailuryhmän nimi selviää muuttujan faktoritasojen järjestyksestä.
+:::
+
+## Ryhmäkeskiarvot ja yhdysvaikutus
+
+Muodosta koulutusvuosista samat kolme koulutusastetta kuin osan 2 harjoituksessa ja tarkastele onnellisuuden keskiarvoja sukupuolen ja koulutusasteen mukaan. Sovita tämän jälkeen malli, jossa on myös sukupuolen ja koulutusasteen yhdysvaikutus. Vertaa tuloksia [ANOVA-luvun](18-anova.qmd) tapaan.
+
+```{r}
+#| eval: false
+malliaineisto <- ESS2023 |>
+	mutate(
+		Sukupuoli = as_factor(Sukupuoli),
+		Koulutusaste = ...
+	)
+
+malliaineisto |>
+	group_by(Sukupuoli, Koulutusaste) |>
+	summarise(n = n(), Keskiarvo = mean(C1, na.rm = TRUE))
+
+malli <- lm(C1 ~ Sukupuoli * Koulutusaste, data = malliaineisto)
+emmeans::joint_tests(malli)
+emmeans::emmeans(malli, ~ Sukupuoli | Koulutusaste) |>
+	emmeans::contrast(method = "pairwise")
+```
+
+::: {.callout-note collapse="true"}
+## Malliratkaisu
+
+```{r}
+malliaineisto <- ESS2023 |>
+	mutate(
+		Sukupuoli = as_factor(Sukupuoli),
+		F15_luokka = na_if(as.numeric(F15), 5555),
+		Koulutusaste = cut(
+			F15_luokka,
+			breaks = c(0, 3, 8, Inf),
+			labels = c("Peruskoulu tai alempi", "Keskiaste", "Korkea-aste")
+		)
+	)
+
+malliaineisto |>
+	group_by(Sukupuoli, Koulutusaste) |>
+	summarise(
+		n = n(),
+		Keskiarvo = mean(C1, na.rm = TRUE),
+		.groups = "drop"
+	)
+
+malli <- lm(C1 ~ Sukupuoli * Koulutusaste, data = malliaineisto)
+emmeans::joint_tests(malli)
+emmeans::emmeans(malli, ~ Sukupuoli | Koulutusaste) |>
+	emmeans::contrast(method = "pairwise")
+```
+
+Keskiarvotaulukko kuvaa ryhmien havaittuja eroja. Yhdysvaikutustermi testaa, vaihteleeko sukupuolten välinen ero koulutusasteen mukaan. Parivertailujen tulkinnassa huomioi, että testejä tehdään useita.
+:::
+
+## Logistinen regressio
+
+Muodosta muuttujasta `C1` kaksiluokkainen onnellisuusmuuttuja: arvot 0–8 ovat "Ei kovin onnellinen" ja 9–10 "Onnellinen". Sovita logistinen regressiomalli sukupuolen ja koulutusasteen avulla. Tulosta kertoimet vetosuhteina luottamusväleineen ja tulkitse, mitä vetosuhde yli yhden tarkoittaa.
+
+```{r}
+#| eval: false
+malliaineisto <- ESS2023 |>
+	mutate(
+		Onnellinen = ...,
+		Sukupuoli = as_factor(Sukupuoli),
+		Koulutusaste = ...
+	)
+
+malli <- glm(
+	Onnellinen ~ Sukupuoli + Koulutusaste,
+	data = malliaineisto,
+	family = binomial(link = "logit")
+)
+
+tidy(malli, exponentiate = TRUE, conf.int = TRUE)
+```
+
+::: {.callout-note collapse="true"}
+## Malliratkaisu
+
+```{r}
+malliaineisto <- ESS2023 |>
+	mutate(
+		Onnellinen = cut(
+			C1,
+			breaks = c(-Inf, 8, Inf),
+			labels = c("Ei kovin onnellinen", "Onnellinen")
+		),
+		Sukupuoli = as_factor(Sukupuoli),
+		F15_luokka = na_if(as.numeric(F15), 5555),
+		Koulutusaste = cut(
+			F15_luokka,
+			breaks = c(0, 3, 8, Inf),
+			labels = c("Peruskoulu tai alempi", "Keskiaste", "Korkea-aste")
+		)
+	)
+
+malli <- glm(
+	Onnellinen ~ Sukupuoli + Koulutusaste,
+	data = malliaineisto,
+	family = binomial(link = "logit")
+)
+
+tidy(malli, exponentiate = TRUE, conf.int = TRUE)
+```
+
+Varmista ensin, että selitettävässä muuttujassa on kaksi luokkaa. Vetosuhde yli yhden tarkoittaa suurempaa onnellisuuden vetoa vertailuryhmään nähden; vetosuhde alle yhden tarkoittaa pienempää vetoa. Vetosuhde ei ole suoraan todennäköisyyden muutos.
+:::

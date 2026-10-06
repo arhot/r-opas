@@ -313,8 +313,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sisällysluettelo</h2>
+   
+  <ul>
+  <li><a href="#faktorianalyysi" id="toc-faktorianalyysi" class="nav-link active" data-scroll-target="#faktorianalyysi">Faktorianalyysi</a></li>
+  <li><a href="#lineaarinen-regressio" id="toc-lineaarinen-regressio" class="nav-link" data-scroll-target="#lineaarinen-regressio">Lineaarinen regressio</a></li>
+  <li><a href="#ryhmäkeskiarvot-ja-yhdysvaikutus" id="toc-ryhmäkeskiarvot-ja-yhdysvaikutus" class="nav-link" data-scroll-target="#ryhmäkeskiarvot-ja-yhdysvaikutus">Ryhmäkeskiarvot ja yhdysvaikutus</a></li>
+  <li><a href="#logistinen-regressio" id="toc-logistinen-regressio" class="nav-link" data-scroll-target="#logistinen-regressio">Logistinen regressio</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -338,11 +347,327 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><em>Tämä luku on valmisteilla.</em></p>
+<p>Tehtävissä käytetään <a href="./17-regressio.html">regressioanalyysin</a>, <a href="./18-anova.html">varianssianalyysin</a>, <a href="./19-faktorianalyysi.html">faktorianalyysin</a> ja <a href="./20-logistinen-regressio.html">logistisen regression</a> menetelmiä. Jokainen malliratkaisu toimii itsenäisesti tämän sivun alussa ladatulla ESS-aineistolla.</p>
+<section id="faktorianalyysi" class="level2">
+<h2 class="anchored" data-anchor-id="faktorianalyysi">Faktorianalyysi</h2>
+<p>ESS-aineiston H-alkuiset muuttujat mittaavat Schwartzin perusarvoja. Tee niille neljän faktorin suurimman uskottavuuden faktorianalyysi varimax-rotaatiolla. Tulosta vähintään 0,30:n lataukset ja nimeä faktorit niiden latautuvien väittämien sisällön perusteella.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="ot">&lt;-</span> <span class="fu">fa</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"H"</span>)),</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">nfactors =</span> <span class="dv">4</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fm =</span> <span class="st">"ml"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">rotate =</span> <span class="st">"varimax"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="sc">|&gt;</span> <span class="fu">fa.sort</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">cut =</span> <span class="fl">0.3</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Huomautus</span>Malliratkaisu
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="ot">&lt;-</span> <span class="fu">fa</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"H"</span>)),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">nfactors =</span> <span class="dv">4</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fm =</span> <span class="st">"ml"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">rotate =</span> <span class="st">"varimax"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="sc">|&gt;</span> <span class="fu">fa.sort</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">cut =</span> <span class="fl">0.3</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Factor Analysis using method =  ml
+Call: fa(r = select(ESS2023, starts_with("H")), nfactors = 4, rotate = "varimax", 
+    fm = "ml")
+Standardized loadings (pattern matrix) based upon correlation matrix
+      ML3   ML2   ML1   ML4   h2   u2 com
+H1m  0.74                   0.62 0.38 1.2
+H1d  0.67                   0.47 0.53 1.1
+H1q  0.55                   0.40 0.60 1.6
+H1b  0.54                   0.36 0.64 1.4
+H1p        0.68             0.47 0.53 1.0
+H1g        0.56             0.33 0.67 1.1
+H1e        0.52             0.27 0.73 1.1
+H1n        0.43             0.25 0.75 1.6
+H1i        0.38             0.17 0.83 1.3
+H1t        0.36             0.16 0.84 1.5
+H1u              0.73       0.58 0.42 1.2
+H1j              0.71       0.55 0.45 1.2
+H1o  0.37        0.48       0.46 0.54 2.7
+H1f              0.42  0.37 0.43 0.57 3.2
+H1k                         0.11 0.89 1.9
+H1h                    0.60 0.37 0.63 1.1
+H1c                    0.54 0.31 0.69 1.1
+H1l                    0.52 0.37 0.63 1.7
+H1s                    0.48 0.25 0.75 1.2
+H1r        0.30        0.38 0.30 0.70 2.7
+H1a                    0.36 0.26 0.74 2.6
+
+                       ML3  ML2  ML1  ML4
+SS loadings           2.04 1.91 1.79 1.75
+Proportion Var        0.10 0.09 0.09 0.08
+Cumulative Var        0.10 0.19 0.27 0.36
+Proportion Explained  0.27 0.25 0.24 0.23
+Cumulative Proportion 0.27 0.53 0.77 1.00
+
+Mean item complexity =  1.6
+Test of the hypothesis that 4 factors are sufficient.
+
+df null model =  210  with the objective function =  4.77 with Chi Square =  7406.61
+df of  the model are 132  and the objective function was  0.49 
+
+The root mean square of the residuals (RMSR) is  0.03 
+The df corrected root mean square of the residuals is  0.04 
+
+The harmonic n.obs is  1519 with the empirical chi square  336.91  with prob &lt;  7.2e-20 
+The total n.obs was  1563  with Likelihood Chi Square =  756.25  with prob &lt;  3.1e-88 
+
+Tucker Lewis Index of factoring reliability =  0.862
+RMSEA index =  0.055  and the 90 % confidence intervals are  0.051 0.059
+BIC =  -214.52
+Fit based upon off diagonal values = 0.97
+Measures of factor score adequacy             
+                                                   ML3  ML2  ML1  ML4
+Correlation of (regression) scores with factors   0.87 0.86 0.85 0.83
+Multiple R square of scores with factors          0.76 0.74 0.71 0.68
+Minimum correlation of possible factor scores     0.52 0.47 0.43 0.37</code></pre>
+</div>
+</div>
+<p>Ratkaisu näyttää H-muuttujien lataukset faktoreittain. Faktorien nimet eivät seuraa suoraan analyysistä, vaan ne perustellaan latautuvien väittämien yhteisellä sisällöllä. Latausten merkit voivat vaihtua faktoriratkaisujen välillä; tulkitse niiden suuruutta ja keskinäistä rakennetta.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="lineaarinen-regressio" class="level2">
+<h2 class="anchored" data-anchor-id="lineaarinen-regressio">Lineaarinen regressio</h2>
+<p>Tarkastele, miten koulutusaste ja sukupuoli liittyvät onnellisuuteen (<code>C1</code>). Muodosta malli, jossa molemmat ovat selittäjinä. Muodosta koulutusaste ryhmittelemällä <code>F15</code>-muuttujan luokat 1–3, 4–8 ja 9–14. Arvo 5555 tarkoittaa “Jokin muu” -vastausta, joten jätä se pois. Tulosta kertoimet luottamusväleineen ja tulkitse koulutusryhmien kertoimet vertailuryhmään nähden.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> ...,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Koulutusaste <span class="sc">+</span> Sukupuoli, <span class="at">data =</span> malliaineisto)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(malli, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Huomautus</span>Malliratkaisu
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> malliaineisto <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> <span class="fu">cut</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">na_if</span>(<span class="fu">as.numeric</span>(F15), <span class="dv">5555</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="cn">Inf</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Peruskoulu tai alempi"</span>, <span class="st">"Keskiaste"</span>, <span class="st">"Korkea-aste"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Koulutusaste <span class="sc">+</span> Sukupuoli, <span class="at">data =</span> malliaineisto)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(malli, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 7
+  term                   estimate std.error statistic p.value conf.low conf.high
+  &lt;chr&gt;                     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)               7.85     0.1000    78.5   0         7.65       8.04 
+2 KoulutusasteKeskiaste     0.102    0.108      0.950 0.342    -0.109      0.314
+3 KoulutusasteKorkea-as…    0.319    0.111      2.88  0.00403   0.102      0.536
+4 SukupuoliNainen           0.114    0.0748     1.53  0.127    -0.0325     0.261</code></pre>
+</div>
+</div>
+<p>Koulutusasteen kertoimet kuvaavat onnellisuuden keskiarvoeroja mallin vertailuryhmään nähden, kun sukupuoli vakioidaan. Vertailuryhmän nimi selviää muuttujan faktoritasojen järjestyksestä.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="ryhmäkeskiarvot-ja-yhdysvaikutus" class="level2">
+<h2 class="anchored" data-anchor-id="ryhmäkeskiarvot-ja-yhdysvaikutus">Ryhmäkeskiarvot ja yhdysvaikutus</h2>
+<p>Muodosta koulutusvuosista samat kolme koulutusastetta kuin osan 2 harjoituksessa ja tarkastele onnellisuuden keskiarvoja sukupuolen ja koulutusasteen mukaan. Sovita tämän jälkeen malli, jossa on myös sukupuolen ja koulutusasteen yhdysvaikutus. Vertaa tuloksia <a href="./18-anova.html">ANOVA-luvun</a> tapaan.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> ...</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="sc">|&gt;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Sukupuoli, Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">Keskiarvo =</span> <span class="fu">mean</span>(C1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Sukupuoli <span class="sc">*</span> Koulutusaste, <span class="at">data =</span> malliaineisto)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">joint_tests</span>(malli)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(malli, <span class="sc">~</span> Sukupuoli <span class="sc">|</span> Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    emmeans<span class="sc">::</span><span class="fu">contrast</span>(<span class="at">method =</span> <span class="st">"pairwise"</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Huomautus</span>Malliratkaisu
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">F15_luokka =</span> <span class="fu">na_if</span>(<span class="fu">as.numeric</span>(F15), <span class="dv">5555</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> <span class="fu">cut</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            F15_luokka,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="cn">Inf</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Peruskoulu tai alempi"</span>, <span class="st">"Keskiaste"</span>, <span class="st">"Korkea-aste"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="sc">|&gt;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Sukupuoli, Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">Keskiarvo =</span> <span class="fu">mean</span>(C1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 4
+  Sukupuoli Koulutusaste              n Keskiarvo
+  &lt;fct&gt;     &lt;fct&gt;                 &lt;int&gt;     &lt;dbl&gt;
+1 Mies      Peruskoulu tai alempi   126      7.8 
+2 Mies      Keskiaste               382      7.96
+3 Mies      Korkea-aste             261      8.18
+4 Mies      &lt;NA&gt;                      1      7   
+5 Nainen    Peruskoulu tai alempi   127      8.01
+6 Nainen    Keskiaste               333      8.06
+7 Nainen    Korkea-aste             332      8.27
+8 Nainen    &lt;NA&gt;                      1     10   </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Sukupuoli <span class="sc">*</span> Koulutusaste, <span class="at">data =</span> malliaineisto)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">joint_tests</span>(malli)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> model term             df1  df2 F.ratio p.value
+ Sukupuoli                1 1552   2.588  0.1079
+ Koulutusaste             2 1552   5.494  0.0042
+ Sukupuoli:Koulutusaste   2 1552   0.156  0.8556</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(malli, <span class="sc">~</span> Sukupuoli <span class="sc">|</span> Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    emmeans<span class="sc">::</span><span class="fu">contrast</span>(<span class="at">method =</span> <span class="st">"pairwise"</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Koulutusaste = Peruskoulu tai alempi:
+ contrast      estimate    SE   df t.ratio p.value
+ Mies - Nainen  -0.2079 0.185 1552  -1.122  0.2621
+
+Koulutusaste = Keskiaste:
+ contrast      estimate    SE   df t.ratio p.value
+ Mies - Nainen  -0.1017 0.110 1552  -0.922  0.3569
+
+Koulutusaste = Korkea-aste:
+ contrast      estimate    SE   df t.ratio p.value
+ Mies - Nainen  -0.0888 0.122 1552  -0.729  0.4658</code></pre>
+</div>
+</div>
+<p>Keskiarvotaulukko kuvaa ryhmien havaittuja eroja. Yhdysvaikutustermi testaa, vaihteleeko sukupuolten välinen ero koulutusasteen mukaan. Parivertailujen tulkinnassa huomioi, että testejä tehdään useita.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="logistinen-regressio" class="level2">
+<h2 class="anchored" data-anchor-id="logistinen-regressio">Logistinen regressio</h2>
+<p>Muodosta muuttujasta <code>C1</code> kaksiluokkainen onnellisuusmuuttuja: arvot 0–8 ovat “Ei kovin onnellinen” ja 9–10 “Onnellinen”. Sovita logistinen regressiomalli sukupuolen ja koulutusasteen avulla. Tulosta kertoimet vetosuhteina luottamusväleineen ja tulkitse, mitä vetosuhde yli yhden tarkoittaa.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">Onnellinen =</span> ...,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> ...</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    Onnellinen <span class="sc">~</span> Sukupuoli <span class="sc">+</span> Koulutusaste,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> malliaineisto,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(malli, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Huomautus</span>Malliratkaisu
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">Onnellinen =</span> <span class="fu">cut</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>            C1,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">8</span>, <span class="cn">Inf</span>),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Ei kovin onnellinen"</span>, <span class="st">"Onnellinen"</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">F15_luokka =</span> <span class="fu">na_if</span>(<span class="fu">as.numeric</span>(F15), <span class="dv">5555</span>),</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> <span class="fu">cut</span>(</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>            F15_luokka,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="cn">Inf</span>),</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Peruskoulu tai alempi"</span>, <span class="st">"Keskiaste"</span>, <span class="st">"Korkea-aste"</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    Onnellinen <span class="sc">~</span> Sukupuoli <span class="sc">+</span> Koulutusaste,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> malliaineisto,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(malli, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 7
+  term                   estimate std.error statistic p.value conf.low conf.high
+  &lt;chr&gt;                     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 (Intercept)               0.574     0.140    -3.97  7.06e-5    0.436     0.753
+2 SukupuoliNainen           1.31      0.103     2.59  9.68e-3    1.07      1.60 
+3 KoulutusasteKeskiaste     1.15      0.150     0.908 3.64e-1    0.855     1.54 
+4 KoulutusasteKorkea-as…    1.21      0.153     1.27  2.05e-1    0.900     1.64 </code></pre>
+</div>
+</div>
+<p>Varmista ensin, että selitettävässä muuttujassa on kaksi luokkaa. Vetosuhde yli yhden tarkoittaa suurempaa onnellisuuden vetoa vertailuryhmään nähden; vetosuhde alle yhden tarkoittaa pienempää vetoa. Vetosuhde ei ole suoraan todennäköisyyden muutos.</p>
+</div>
+</div>
+</div>
 
 
 <!-- -->
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -805,16 +1130,198 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="nav-page nav-page-next">
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Lähdekoodi</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Osa 4: Harjoitustehtävät"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>*Tämä luku on valmisteilla.*</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Osa 4: Harjoitustehtävät"</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"_common.R"</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>Tehtävissä käytetään <span class="co">[</span><span class="ot">regressioanalyysin</span><span class="co">](17-regressio.qmd)</span>, <span class="co">[</span><span class="ot">varianssianalyysin</span><span class="co">](18-anova.qmd)</span>, <span class="co">[</span><span class="ot">faktorianalyysin</span><span class="co">](19-faktorianalyysi.qmd)</span> ja <span class="co">[</span><span class="ot">logistisen regression</span><span class="co">](20-logistinen-regressio.qmd)</span> menetelmiä. Jokainen malliratkaisu toimii itsenäisesti tämän sivun alussa ladatulla ESS-aineistolla.</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Faktorianalyysi</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>ESS-aineiston H-alkuiset muuttujat mittaavat Schwartzin perusarvoja. Tee niille neljän faktorin suurimman uskottavuuden faktorianalyysi varimax-rotaatiolla. Tulosta vähintään 0,30:n lataukset ja nimeä faktorit niiden latautuvien väittämien sisällön perusteella.</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="ot">&lt;-</span> <span class="fu">fa</span>(</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"H"</span>)),</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">nfactors =</span> <span class="dv">4</span>,</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">fm =</span> <span class="st">"ml"</span>,</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">rotate =</span> <span class="st">"varimax"</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="sc">|&gt;</span> <span class="fu">fa.sort</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">cut =</span> <span class="fl">0.3</span>)</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## Malliratkaisu</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="ot">&lt;-</span> <span class="fu">fa</span>(</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>    ESS2023 <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"H"</span>)),</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">nfactors =</span> <span class="dv">4</span>,</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">fm =</span> <span class="st">"ml"</span>,</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">rotate =</span> <span class="st">"varimax"</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>faktorianalyysi <span class="sc">|&gt;</span> <span class="fu">fa.sort</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">cut =</span> <span class="fl">0.3</span>)</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>Ratkaisu näyttää H-muuttujien lataukset faktoreittain. Faktorien nimet eivät seuraa suoraan analyysistä, vaan ne perustellaan latautuvien väittämien yhteisellä sisällöllä. Latausten merkit voivat vaihtua faktoriratkaisujen välillä; tulkitse niiden suuruutta ja keskinäistä rakennetta.</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Lineaarinen regressio</span></span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>Tarkastele, miten koulutusaste ja sukupuoli liittyvät onnellisuuteen (<span class="in">`C1`</span>). Muodosta malli, jossa molemmat ovat selittäjinä. Muodosta koulutusaste ryhmittelemällä <span class="in">`F15`</span>-muuttujan luokat 1–3, 4–8 ja 9–14. Arvo 5555 tarkoittaa "Jokin muu" -vastausta, joten jätä se pois. Tulosta kertoimet luottamusväleineen ja tulkitse koulutusryhmien kertoimet vertailuryhmään nähden.</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> ...,</span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli)</span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Koulutusaste <span class="sc">+</span> Sukupuoli, <span class="at">data =</span> malliaineisto)</span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(malli, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## Malliratkaisu</span></span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli)</span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> malliaineisto <span class="sc">|&gt;</span></span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> <span class="fu">cut</span>(</span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>            <span class="fu">na_if</span>(<span class="fu">as.numeric</span>(F15), <span class="dv">5555</span>),</span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a>            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="cn">Inf</span>),</span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Peruskoulu tai alempi"</span>, <span class="st">"Keskiaste"</span>, <span class="st">"Korkea-aste"</span>)</span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Koulutusaste <span class="sc">+</span> Sukupuoli, <span class="at">data =</span> malliaineisto)</span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(malli, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a>Koulutusasteen kertoimet kuvaavat onnellisuuden keskiarvoeroja mallin vertailuryhmään nähden, kun sukupuoli vakioidaan. Vertailuryhmän nimi selviää muuttujan faktoritasojen järjestyksestä.</span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ryhmäkeskiarvot ja yhdysvaikutus</span></span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a>Muodosta koulutusvuosista samat kolme koulutusastetta kuin osan 2 harjoituksessa ja tarkastele onnellisuuden keskiarvoja sukupuolen ja koulutusasteen mukaan. Sovita tämän jälkeen malli, jossa on myös sukupuolen ja koulutusasteen yhdysvaikutus. Vertaa tuloksia <span class="co">[</span><span class="ot">ANOVA-luvun</span><span class="co">](18-anova.qmd)</span> tapaan.</span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> ...</span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="sc">|&gt;</span></span>
+<span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Sukupuoli, Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">Keskiarvo =</span> <span class="fu">mean</span>(C1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Sukupuoli <span class="sc">*</span> Koulutusaste, <span class="at">data =</span> malliaineisto)</span>
+<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">joint_tests</span>(malli)</span>
+<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(malli, <span class="sc">~</span> Sukupuoli <span class="sc">|</span> Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb17-117"><a href="#cb17-117" aria-hidden="true" tabindex="-1"></a>    emmeans<span class="sc">::</span><span class="fu">contrast</span>(<span class="at">method =</span> <span class="st">"pairwise"</span>)</span>
+<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-120"><a href="#cb17-120" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
+<span id="cb17-121"><a href="#cb17-121" aria-hidden="true" tabindex="-1"></a><span class="fu">## Malliratkaisu</span></span>
+<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a>        <span class="at">F15_luokka =</span> <span class="fu">na_if</span>(<span class="fu">as.numeric</span>(F15), <span class="dv">5555</span>),</span>
+<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> <span class="fu">cut</span>(</span>
+<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a>            F15_luokka,</span>
+<span id="cb17-132"><a href="#cb17-132" aria-hidden="true" tabindex="-1"></a>            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="cn">Inf</span>),</span>
+<span id="cb17-133"><a href="#cb17-133" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Peruskoulu tai alempi"</span>, <span class="st">"Keskiaste"</span>, <span class="st">"Korkea-aste"</span>)</span>
+<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-136"><a href="#cb17-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-137"><a href="#cb17-137" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="sc">|&gt;</span></span>
+<span id="cb17-138"><a href="#cb17-138" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Sukupuoli, Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb17-139"><a href="#cb17-139" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb17-140"><a href="#cb17-140" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb17-141"><a href="#cb17-141" aria-hidden="true" tabindex="-1"></a>        <span class="at">Keskiarvo =</span> <span class="fu">mean</span>(C1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb17-142"><a href="#cb17-142" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb17-143"><a href="#cb17-143" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-144"><a href="#cb17-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-145"><a href="#cb17-145" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">lm</span>(C1 <span class="sc">~</span> Sukupuoli <span class="sc">*</span> Koulutusaste, <span class="at">data =</span> malliaineisto)</span>
+<span id="cb17-146"><a href="#cb17-146" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">joint_tests</span>(malli)</span>
+<span id="cb17-147"><a href="#cb17-147" aria-hidden="true" tabindex="-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(malli, <span class="sc">~</span> Sukupuoli <span class="sc">|</span> Koulutusaste) <span class="sc">|&gt;</span></span>
+<span id="cb17-148"><a href="#cb17-148" aria-hidden="true" tabindex="-1"></a>    emmeans<span class="sc">::</span><span class="fu">contrast</span>(<span class="at">method =</span> <span class="st">"pairwise"</span>)</span>
+<span id="cb17-149"><a href="#cb17-149" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-150"><a href="#cb17-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-151"><a href="#cb17-151" aria-hidden="true" tabindex="-1"></a>Keskiarvotaulukko kuvaa ryhmien havaittuja eroja. Yhdysvaikutustermi testaa, vaihteleeko sukupuolten välinen ero koulutusasteen mukaan. Parivertailujen tulkinnassa huomioi, että testejä tehdään useita.</span>
+<span id="cb17-152"><a href="#cb17-152" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-153"><a href="#cb17-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a><span class="fu">## Logistinen regressio</span></span>
+<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-156"><a href="#cb17-156" aria-hidden="true" tabindex="-1"></a>Muodosta muuttujasta <span class="in">`C1`</span> kaksiluokkainen onnellisuusmuuttuja: arvot 0–8 ovat "Ei kovin onnellinen" ja 9–10 "Onnellinen". Sovita logistinen regressiomalli sukupuolen ja koulutusasteen avulla. Tulosta kertoimet vetosuhteina luottamusväleineen ja tulkitse, mitä vetosuhde yli yhden tarkoittaa.</span>
+<span id="cb17-157"><a href="#cb17-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-160"><a href="#cb17-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-161"><a href="#cb17-161" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb17-162"><a href="#cb17-162" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb17-163"><a href="#cb17-163" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb17-164"><a href="#cb17-164" aria-hidden="true" tabindex="-1"></a>        <span class="at">Onnellinen =</span> ...,</span>
+<span id="cb17-165"><a href="#cb17-165" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb17-166"><a href="#cb17-166" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> ...</span>
+<span id="cb17-167"><a href="#cb17-167" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-168"><a href="#cb17-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-169"><a href="#cb17-169" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb17-170"><a href="#cb17-170" aria-hidden="true" tabindex="-1"></a>    Onnellinen <span class="sc">~</span> Sukupuoli <span class="sc">+</span> Koulutusaste,</span>
+<span id="cb17-171"><a href="#cb17-171" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> malliaineisto,</span>
+<span id="cb17-172"><a href="#cb17-172" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)</span>
+<span id="cb17-173"><a href="#cb17-173" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-174"><a href="#cb17-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-175"><a href="#cb17-175" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(malli, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-176"><a href="#cb17-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-177"><a href="#cb17-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-178"><a href="#cb17-178" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
+<span id="cb17-179"><a href="#cb17-179" aria-hidden="true" tabindex="-1"></a><span class="fu">## Malliratkaisu</span></span>
+<span id="cb17-180"><a href="#cb17-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-183"><a href="#cb17-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-184"><a href="#cb17-184" aria-hidden="true" tabindex="-1"></a>malliaineisto <span class="ot">&lt;-</span> ESS2023 <span class="sc">|&gt;</span></span>
+<span id="cb17-185"><a href="#cb17-185" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb17-186"><a href="#cb17-186" aria-hidden="true" tabindex="-1"></a>        <span class="at">Onnellinen =</span> <span class="fu">cut</span>(</span>
+<span id="cb17-187"><a href="#cb17-187" aria-hidden="true" tabindex="-1"></a>            C1,</span>
+<span id="cb17-188"><a href="#cb17-188" aria-hidden="true" tabindex="-1"></a>            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="dv">8</span>, <span class="cn">Inf</span>),</span>
+<span id="cb17-189"><a href="#cb17-189" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Ei kovin onnellinen"</span>, <span class="st">"Onnellinen"</span>)</span>
+<span id="cb17-190"><a href="#cb17-190" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb17-191"><a href="#cb17-191" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sukupuoli =</span> <span class="fu">as_factor</span>(Sukupuoli),</span>
+<span id="cb17-192"><a href="#cb17-192" aria-hidden="true" tabindex="-1"></a>        <span class="at">F15_luokka =</span> <span class="fu">na_if</span>(<span class="fu">as.numeric</span>(F15), <span class="dv">5555</span>),</span>
+<span id="cb17-193"><a href="#cb17-193" aria-hidden="true" tabindex="-1"></a>        <span class="at">Koulutusaste =</span> <span class="fu">cut</span>(</span>
+<span id="cb17-194"><a href="#cb17-194" aria-hidden="true" tabindex="-1"></a>            F15_luokka,</span>
+<span id="cb17-195"><a href="#cb17-195" aria-hidden="true" tabindex="-1"></a>            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="cn">Inf</span>),</span>
+<span id="cb17-196"><a href="#cb17-196" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Peruskoulu tai alempi"</span>, <span class="st">"Keskiaste"</span>, <span class="st">"Korkea-aste"</span>)</span>
+<span id="cb17-197"><a href="#cb17-197" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-198"><a href="#cb17-198" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-199"><a href="#cb17-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-200"><a href="#cb17-200" aria-hidden="true" tabindex="-1"></a>malli <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb17-201"><a href="#cb17-201" aria-hidden="true" tabindex="-1"></a>    Onnellinen <span class="sc">~</span> Sukupuoli <span class="sc">+</span> Koulutusaste,</span>
+<span id="cb17-202"><a href="#cb17-202" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> malliaineisto,</span>
+<span id="cb17-203"><a href="#cb17-203" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)</span>
+<span id="cb17-204"><a href="#cb17-204" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-205"><a href="#cb17-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-206"><a href="#cb17-206" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(malli, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-207"><a href="#cb17-207" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-208"><a href="#cb17-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-209"><a href="#cb17-209" aria-hidden="true" tabindex="-1"></a>Varmista ensin, että selitettävässä muuttujassa on kaksi luokkaa. Vetosuhde yli yhden tarkoittaa suurempaa onnellisuuden vetoa vertailuryhmään nähden; vetosuhde alle yhden tarkoittaa pienempää vetoa. Vetosuhde ei ole suoraan todennäköisyyden muutos.</span>
+<span id="cb17-210"><a href="#cb17-210" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Kopioi leikepöydälle" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

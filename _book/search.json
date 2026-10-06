@@ -10,6 +10,16 @@
     ]
   },
   {
+    "objectID": "index.html#aineisto",
+    "href": "index.html#aineisto",
+    "title": "R-opas",
+    "section": "",
+    "text": "ESS2023 &lt;- read_sav(\"data/ESS2023_Suomi.sav\")\n\n\n\nLisenssi ja käyttöehdot\nAlkuperäinen European Social Survey -aineisto on lisensoitu CC BY-NC-SA 4.0 -lisenssillä, ja siihen liittyvä dokumentaatio (mm. koodikirjat) CC BY-SA 4.0 -lisenssillä. Koska tämän oppaan aineisto ja koodikirja ovat muokattuja/käännettyjä versioita alkuperäisestä, ne jaetaan tässä samalla lisenssillä (CC BY-NC-SA 4.0) - eli myös näitä versioita saa vapaasti käyttää, muokata ja jakaa edelleen ei-kaupallisiin tarkoituksiin, kunhan alkuperäiseen viitataan ja oma versio pysyy samalla lisenssillä.\nAlkuperäiseen aineistoon viitataan seuraavasti (ESS:n oman ohjeistuksen mukaisesti muokatuille/käännetyille aineistoille):\n\nAdapted from: European Social Survey European Research Infrastructure (ESS ERIC) (2024) ESS11 - integrated file, edition 1.0 [Data set]. Sikt - Norwegian Agency for Shared Services in Education and Research.\n\nLisätietoa käyttöehdoista: https://www.europeansocialsurvey.org/data/conditions-of-use",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Lukijalle</span>"
+    ]
+  },
+  {
     "objectID": "index.html#tarvittavat-ohjelmat",
     "href": "index.html#tarvittavat-ohjelmat",
     "title": "R-opas",
@@ -505,7 +515,29 @@
     "href": "osa2-harjoitukset.html",
     "title": "Osa 2: Harjoitustehtävät",
     "section": "",
-    "text": "Tämä luku on valmisteilla.",
+    "text": "Muuttujien muuntaminen ja tarkistaminen\nSeuraavissa tehtävissä käytetään oppaan yhteistä ESS 2023 -aineistoa. Tehtävät kertaavat muuttujamuunnoksia ja kuvailevia analyysejä.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Osa 2: Harjoitustehtävät</span>"
+    ]
+  },
+  {
+    "objectID": "osa2-harjoitukset.html#muuttujien-muuntaminen-ja-tarkistaminen",
+    "href": "osa2-harjoitukset.html#muuttujien-muuntaminen-ja-tarkistaminen",
+    "title": "Osa 2: Harjoitustehtävät",
+    "section": "",
+    "text": "Koulutusluokkien ryhmittely\nMuodosta muuttujasta F15 kolmiluokkainen Koulutusaste yhdistämällä alkuperäiset luokat 1–3, 4–8 ja 9–14. Tarkista luokkien vastaajamäärät. Aineistossa arvo 5555 tarkoittaa vastausta “Jokin muu”, joten jätä se luokittelun ulkopuolelle.\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(Koulutusaste = ...)\n\nESS2023 |&gt; count(Koulutusaste)\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(\n        F15_luokka = na_if(as.numeric(F15), 5555),\n        Koulutusaste = cut(\n            F15_luokka,\n            breaks = c(0, 3, 8, Inf),\n            labels = c(\"Peruskoulu tai alempi\", \"Keskiaste\", \"Korkea-aste\")\n        )\n    )\n\nESS2023 |&gt; count(Koulutusaste)\n\n# A tibble: 4 × 2\n  Koulutusaste              n\n  &lt;fct&gt;                 &lt;int&gt;\n1 Peruskoulu tai alempi   253\n2 Keskiaste               715\n3 Korkea-aste             593\n4 &lt;NA&gt;                      2\n\n\nTarkistuksessa pitäisi näkyä kolme koottua koulutusastetta sekä puuttuvien määrä. “Jokin muu” jää luokittelun ulkopuolelle, koska se ei kuulu alkuperäiseen järjestykseen 1–14.\n\n\n\n\n\nPuolueen kannatus ja pienet ryhmät\nMuuta B14 luokitelluksi muuttujaksi, kokoa harvinaisimmat vastaukset yhteen ja järjestä luokat yleisimmästä harvinaisimpaan. Kuinka monta vastausta jää “Muu puolue” -luokkaan?\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(Puolue = ...)\n\nESS2023 |&gt; count(Puolue, sort = TRUE)\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(\n        Puolue = B14 |&gt;\n            as_factor() |&gt;\n            fct_lump(n = 8, other_level = \"Muu puolue\") |&gt;\n            fct_infreq()\n    )\n\nESS2023 |&gt; count(Puolue, sort = TRUE)\n\n# A tibble: 10 × 2\n   Puolue                                  n\n   &lt;fct&gt;                               &lt;int&gt;\n 1 &lt;NA&gt;                                  386\n 2 Suomen Sosialidemokraattinen Puolue   293\n 3 Kansallinen Kokoomus                  257\n 4 Perussuomalaiset                      176\n 5 Vihreä liitto                         117\n 6 Suomen Keskusta                       106\n 7 Vasemmistoliitto                       73\n 8 Suomen ruotsalainen kansanpuolue       58\n 9 Suomen Kristillisdemokraatit           56\n10 Muu puolue                             41\n\n\nRatkaisu säilyttää kahdeksan yleisintä puoluetta ja kokoaa loput yhteen. Puuttuvat vastaukset pysyvät puuttuvina.\n\n\n\n\n\nRistiintaulukko\nTee koulutusasteen ja sukupuolen ristiintaulukko. Laske osuudet sukupuoliryhmien sisällä: kuinka koulutusasteet jakautuvat kussakin ryhmässä?\n\nESS2023 |&gt;\n    tabyl(Koulutusaste, Sukupuoli, show_na = FALSE) |&gt;\n    adorn_percentages(\"col\") |&gt;\n    adorn_pct_formatting(digits = 1) |&gt;\n    as_tibble()\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\nKoulutusaste muodostettiin ensimmäisessä tehtävässä. Muunna sukupuoli luokitelluksi ennen taulukointia:\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(Sukupuoli = as_factor(Sukupuoli))\n\nESS2023 |&gt;\n    tabyl(Koulutusaste, Sukupuoli, show_na = FALSE) |&gt;\n    adorn_percentages(\"col\") |&gt;\n    adorn_pct_formatting(digits = 1) |&gt;\n    as_tibble()\n\n# A tibble: 3 × 3\n  Koulutusaste          Mies  Nainen\n  &lt;fct&gt;                 &lt;chr&gt; &lt;chr&gt; \n1 Peruskoulu tai alempi 16.4% 16.0% \n2 Keskiaste             49.7% 42.0% \n3 Korkea-aste           33.9% 41.9% \n\n\nJokaisen sukupuolisarakkeen prosenttien summa on 100 % lukuun ottamatta pyöristyseroa. Sarakeprosentit vastaavat kysymykseen koulutusasteiden jakaumasta sukupuoliryhmittäin.",
+    "crumbs": [
+      "Osa 2: Aineiston käsittely",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Osa 2: Harjoitustehtävät</span>"
+    ]
+  },
+  {
+    "objectID": "osa2-harjoitukset.html#painotettu-keskiarvo",
+    "href": "osa2-harjoitukset.html#painotettu-keskiarvo",
+    "title": "Osa 2: Harjoitustehtävät",
+    "section": "Painotettu keskiarvo",
+    "text": "Painotettu keskiarvo\nESS-aineiston analyysipaino_suomi korjaa aineiston painotusta. Laske onnellisuuden (C1) painottamaton ja analyysipainolla painotettu keskiarvo. Vertaa lukuja ja pohdi, muuttaako painotus arviota paljon.\n\nESS2023 |&gt;\n    summarise(\n        Painottamaton = ...,\n        Painotettu = ...\n    )\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nESS2023 |&gt;\n    summarise(\n        Painottamaton = mean(C1, na.rm = TRUE),\n        Painotettu = weighted.mean(C1, analyysipaino_suomi, na.rm = TRUE)\n    ) |&gt;\n    mutate(across(where(is.numeric), ~ round(.x, 2)))\n\n# A tibble: 1 × 2\n  Painottamaton Painotettu\n          &lt;dbl&gt;      &lt;dbl&gt;\n1          8.07       8.04\n\n\nTässä aineistossa painottamaton keskiarvo on noin 8,07 ja painotettu noin 8,04. Yksinkertainen painotus näyttää piste-estimaatin eron, mutta tämä lasku ei yksin huomioi monimutkaisen otanta-asetelman vaikutusta keskivirheisiin. Lue lisää painottamisesta.",
     "crumbs": [
       "Osa 2: Aineiston käsittely",
       "<span class='chapter-number'>11</span>  <span class='chapter-title'>Osa 2: Harjoitustehtävät</span>"
@@ -776,22 +808,11 @@
     ]
   },
   {
-    "objectID": "16-useita-muuttujia.html#patchwork-kuvioiden-yhdistäminen",
-    "href": "16-useita-muuttujia.html#patchwork-kuvioiden-yhdistäminen",
+    "objectID": "16-useita-muuttujia.html#hajontamatriisi-ggpairs-funktiolla",
+    "href": "16-useita-muuttujia.html#hajontamatriisi-ggpairs-funktiolla",
     "title": "Useita muuttujia samassa kuviossa",
-    "section": "Patchwork: kuvioiden yhdistäminen",
-    "text": "Patchwork: kuvioiden yhdistäminen\nToisin kuin edelliset tekniikat, patchwork-paketti ei yhdistä usean muuttujan tietoa samaan paneeliin, vaan liittää valmiiksi piirrettyjä, erillisiä kuvio-olioita yhdeksi kokonaisuudeksi. Tämä on kätevää esimerkiksi silloin, kun eri kuviot eivät sovi samaan ggplot()-kutsuun (esimerkiksi eri asteikot tai kuviotyypit).\n\nlibrary(patchwork)\nkuvio1 &lt;- ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +\n  geom_point() +\n  theme_minimal()\n\nkuvio2 &lt;- ggplot(ESS2023, aes(x = C1)) +\n  geom_histogram() +\n  theme_minimal()\n\nwrap_plots(kuvio1, kuvio2)\n\n\n\n\n\n\n\n\nKuviot asettuvat oletuksena vierekkäin - kuvio1 / kuvio2 asettaisi ne päällekkäin, ja monimutkaisempia asetteluja saa plot_layout()-komennolla.",
-    "crumbs": [
-      "Osa 3: Kuviot",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
-    ]
-  },
-  {
-    "objectID": "16-useita-muuttujia.html#sirontamatriisi-ggpairs-funktiolla",
-    "href": "16-useita-muuttujia.html#sirontamatriisi-ggpairs-funktiolla",
-    "title": "Useita muuttujia samassa kuviossa",
-    "section": "Sirontamatriisi ggpairs-funktiolla",
-    "text": "Sirontamatriisi ggpairs-funktiolla",
+    "section": "Hajontamatriisi ggpairs-funktiolla",
+    "text": "Hajontamatriisi ggpairs-funktiolla\nKun halutaan tarkastella useamman muuttujan välisiä yhteyksiä kaikkina pareina kerralla, GGally-paketin ggpairs() on kätevä - se piirtää sirontakuviot muuttujaparien välille, jakaumat diagonaalille ja korrelaatiokertoimet yläkolmioon. Mukaan voi ottaa myös luokitellun muuttujan väripohjaiseksi ryhmittelyksi.\n\nlibrary(GGally)\nESS2023 |&gt;\n  select(C1, Syntymävuosi, Sukupuoli) |&gt;\n  ggpairs(mapping = aes(color = as_factor(Sukupuoli))) +\n  theme_minimal()",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
@@ -809,11 +830,44 @@
     ]
   },
   {
+    "objectID": "16-useita-muuttujia.html#patchwork-kuvioiden-yhdistäminen",
+    "href": "16-useita-muuttujia.html#patchwork-kuvioiden-yhdistäminen",
+    "title": "Useita muuttujia samassa kuviossa",
+    "section": "Patchwork: kuvioiden yhdistäminen",
+    "text": "Patchwork: kuvioiden yhdistäminen\nToisin kuin edelliset tekniikat, patchwork-paketti ei yhdistä usean muuttujan tietoa samaan paneeliin, vaan liittää valmiiksi piirrettyjä, erillisiä kuvio-olioita yhdeksi kokonaisuudeksi. Tämä on kätevää esimerkiksi silloin, kun eri kuviot eivät sovi samaan ggplot()-kutsuun (esimerkiksi eri asteikot tai kuviotyypit).\n\nlibrary(patchwork)\nkuvio1 &lt;- ggplot(ESS2023, aes(x = Syntymävuosi, y = C1)) +\n  geom_point() +\n  theme_minimal()\n\nkuvio2 &lt;- ggplot(ESS2023, aes(x = C1)) +\n  geom_histogram() +\n  theme_minimal()\n\nwrap_plots(kuvio1, kuvio2)\n\n\n\n\n\n\n\n\nKuviot asettuvat oletuksena vierekkäin - kuvio1 / kuvio2 asettaisi ne päällekkäin, ja monimutkaisempia asetteluja saa plot_layout()-komennolla.",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
+    ]
+  },
+  {
     "objectID": "osa3-harjoitukset.html",
     "href": "osa3-harjoitukset.html",
     "title": "Osa 3: Harjoitustehtävät",
     "section": "",
-    "text": "Tämä luku on valmisteilla.",
+    "text": "Jakaumat\nTee jokainen kuvio itse ennen kuin avaat malliratkaisun. Kiinnitä huomiota siihen, mitä kuvio tekee näkyväksi ja mitä se jättää piiloon. Tehtävissä käytetään ggplot2:n perusteita, pylväskuvioita, sirontakuvioita ja usean muuttujan kuvioita.",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Osa 3: Harjoitustehtävät</span>"
+    ]
+  },
+  {
+    "objectID": "osa3-harjoitukset.html#jakaumat",
+    "href": "osa3-harjoitukset.html#jakaumat",
+    "title": "Osa 3: Harjoitustehtävät",
+    "section": "",
+    "text": "Onnellisuuden histogrammi\nPiirrä muuttujan C1 histogrammi. Nimeä akselit ja tarkista, miltä jakauma näyttää. ESS:n asteikolla arvot ovat 0–10.\n\nggplot(ESS2023, aes(x = C1)) +\n    geom_histogram() +\n    labs(x = \"Onnellisuus\", y = \"Vastaajien määrä\")\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nggplot(ESS2023, aes(x = C1)) +\n    geom_histogram(binwidth = 1, boundary = -0.5) +\n    scale_x_continuous(breaks = 0:10) +\n    labs(x = \"Onnellisuus (0–10)\", y = \"Vastaajien määrä\")\n\n\n\n\n\n\n\n\nTarkista, että pylväät vastaavat yksittäisiä asteikon arvoja ja akseli kattaa arvot 0–10. Pohdi, painottuvatko vastaukset asteikon ala- vai yläpäähän.\n\n\n\n\n\nPolitiikasta kiinnostuneiden vastaukset\nPiirrä muuttujan B1 pylväskuvio. Muunna se ensin luokitelluksi, jotta akselilla näkyvät vastausluokat numeroarvojen sijaan. Lisää selkeä otsikko ja akselien nimet.\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(Politiikkakiinnostus = as_factor(B1))\n\nggplot(ESS2023, aes(x = Politiikkakiinnostus)) +\n    geom_bar() +\n    ...\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(Politiikkakiinnostus = as_factor(B1))\n\nggplot(ESS2023, aes(x = Politiikkakiinnostus)) +\n    geom_bar() +\n    labs(\n        x = \"Kiinnostus politiikkaan\",\n        y = \"Vastaajien määrä\",\n        title = \"Politiikasta kiinnostuminen\"\n    )\n\n\n\n\n\n\n\n\nPylväiden korkeuksien pitäisi vastata count(Politiikkakiinnostus)-taulukon määriä. Puuttuva vastaus ei näy omana pylväänään.",
+    "crumbs": [
+      "Osa 3: Kuviot",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Osa 3: Harjoitustehtävät</span>"
+    ]
+  },
+  {
+    "objectID": "osa3-harjoitukset.html#yhteys-kahden-muuttujan-välillä",
+    "href": "osa3-harjoitukset.html#yhteys-kahden-muuttujan-välillä",
+    "title": "Osa 3: Harjoitustehtävät",
+    "section": "Yhteys kahden muuttujan välillä",
+    "text": "Yhteys kahden muuttujan välillä\n\nKoulutusaste ja onnellisuus\nMuodosta F15-muuttujasta kolme koulutusastetta yhdistämällä alkuperäiset luokat 1–3, 4–8 ja 9–14. Arvo 5555 tarkoittaa “Jokin muu” -vastausta, joten jätä se pois. Piirrä onnellisuuden (C1) jakauma koulutusasteittain laatikkokuviona ja nimeä akselit.\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(Koulutusaste = ...)\n\nggplot(ESS2023, aes(x = Koulutusaste, y = C1)) +\n    geom_boxplot() +\n    labs(x = \"Koulutusaste\", y = \"Onnellisuus (0–10)\")\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(\n        Koulutusaste = cut(\n            na_if(as.numeric(F15), 5555),\n            breaks = c(0, 3, 8, Inf),\n            labels = c(\"Peruskoulu tai alempi\", \"Keskiaste\", \"Korkea-aste\")\n        )\n    )\n\nggplot(ESS2023, aes(x = Koulutusaste, y = C1)) +\n    geom_boxplot() +\n    labs(x = \"Koulutusaste\", y = \"Onnellisuus (0–10)\")\n\n\n\n\n\n\n\n\nLaatikon keskiviiva kuvaa mediaania ja laatikko keskimmäistä puolikasta havainnoista. Ryhmien jakaumia vertaillessa huomaa sekä mediaanien erot että hajonnan; kuvio ei yksin osoita syy-seuraussuhdetta.\n\n\n\n\n\nPolitiikkakiinnostus sukupuolittain\nPiirrä 100 prosentin pinottu pylväskuvio politiikkakiinnostuksesta sukupuoliryhmittäin. Käytä x-akselilla kiinnostuksen luokkaa ja täyttövärinä sukupuolta. Mitä vertailu näyttää paremmin kuin vastaajamäärien kuvio?\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(\n        Politiikkakiinnostus = as_factor(B1),\n        Sukupuoli = as_factor(Sukupuoli)\n    )\n\nggplot(ESS2023, aes(x = Politiikkakiinnostus, fill = Sukupuoli)) +\n    geom_bar(position = \"fill\") +\n    ...\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nESS2023 &lt;- ESS2023 |&gt;\n    mutate(\n        Politiikkakiinnostus = as_factor(B1),\n        Sukupuoli = as_factor(Sukupuoli)\n    )\n\nggplot(ESS2023, aes(x = Politiikkakiinnostus, fill = Sukupuoli)) +\n    geom_bar(position = \"fill\", na.rm = TRUE) +\n    scale_y_continuous(labels = scales::label_percent()) +\n    labs(\n        x = \"Kiinnostus politiikkaan\",\n        y = \"Osuus vastaajista\",\n        fill = \"Sukupuoli\"\n    )\n\n\n\n\n\n\n\n\nJokainen pylväs ulottuu 100 prosenttiin. Näin sukupuoliryhmien suhteellisia osuuksia voi verrata kiinnostusluokan sisällä, vaikka ryhmien vastaajamäärät eroaisivat.",
     "crumbs": [
       "Osa 3: Kuviot",
       "<span class='chapter-number'>19</span>  <span class='chapter-title'>Osa 3: Harjoitustehtävät</span>"
@@ -923,7 +977,7 @@
     "href": "18-anova.html#tulosten-raportointi-testisuureet-ja-selitysosuus",
     "title": "Varianssianalyysi",
     "section": "Tulosten raportointi: testisuureet ja selitysosuus",
-    "text": "Tulosten raportointi: testisuureet ja selitysosuus\nVarianssianalyysissa on tapana raportoida myös kunkin selittäjän tilastollinen merkitsevyys ja selitysosuus (eta neliö) yhdessä pelkkien regressiokertoimien lisäksi tai sijasta. emmeans-paketin joint_tests() laskee tyypin III -tyyppiset F-testit suoraan - toisin kuin car::Anova(type=3), se ei vaadi erillistä kontrastien asettamista, koska testit perustuvat mallin ennusteisiin (estimoituihin ryhmäkeskiarvoihin), ei suoraan mallin kertoimiin.\n\nmalli2 |&gt; emmeans::joint_tests() |&gt;\n  as_tibble() |&gt;\n  rename(term = 1) |&gt;\n  mutate(eta2_partial = (F.ratio * df1) / (F.ratio * df1 + df2)) |&gt;\n  select(term, df1, df2, F.ratio, p.value, eta2_partial) |&gt;\n  mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))\n\n# A tibble: 3 × 6\n  term                     df1   df2 F.ratio p.value eta2_partial\n  &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;\n1 Sukupuoli                  1  1552    2.59    0.11         0   \n2 Koulutusaste               2  1552    5.49    0            0.01\n3 Sukupuoli:Koulutusaste     2  1552    0.16    0.86         0   \n\n\nOsittainen eta neliö lasketaan tässä suoraan F-testisuureesta ja vapausasteista: \\(\\eta^2_{\\text{osittainen}} = (F \\cdot df_1) / (F \\cdot df_1 + df_2)\\).\nAPAn mukainen tapa raportoida tulos tekstissä on muotoa: testisuure(vapausasteet muuttujassa, vapausasteet residuaaleissa) = testisuureen arvo, p = tarkka arvo tai &lt; .001, selitysosuus = partial eta squared. Esimerkiksi sukupuolen päävaikutuksen osalta tämä voisi olla muotoa F(1, 1557) = 3.86, p = .050, η² = .002.",
+    "text": "Tulosten raportointi: testisuureet ja selitysosuus\nVarianssianalyysissa on tapana raportoida myös kunkin selittäjän tilastollinen merkitsevyys ja selitysosuus (eta neliö) yhdessä pelkkien regressiokertoimien lisäksi tai sijasta. emmeans-paketin joint_tests() laskee tyypin III -tyyppiset F-testit suoraan - toisin kuin car::Anova(type=3), se ei vaadi erillistä kontrastien asettamista, koska testit perustuvat mallin ennusteisiin (estimoituihin ryhmäkeskiarvoihin), ei suoraan mallin kertoimiin.\n\nmalli2 |&gt; emmeans::joint_tests() |&gt;\n  as_tibble() |&gt;\n  rename(term = 1) |&gt;\n  mutate(eta2_partial = (F.ratio * df1) / (F.ratio * df1 + df2)) |&gt;\n  select(term, df1, df2, F.ratio, p.value, eta2_partial) |&gt;\n  mutate(across(where(is.numeric), ~ round_half_up(.x, 3)))\n\n# A tibble: 3 × 6\n  term                     df1   df2 F.ratio p.value eta2_partial\n  &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;\n1 Sukupuoli                  1  1552   2.59    0.108        0.002\n2 Koulutusaste               2  1552   5.49    0.004        0.007\n3 Sukupuoli:Koulutusaste     2  1552   0.156   0.856        0    \n\n\nOsittainen eta neliö lasketaan tässä suoraan F-testisuureesta ja vapausasteista: \\(\\eta^2_{\\text{osittainen}} = (F \\cdot df_1) / (F \\cdot df_1 + df_2)\\).\nAPAn mukainen tapa raportoida tulos tekstissä on muotoa: testisuure(vapausasteet muuttujassa, vapausasteet residuaaleissa) = testisuureen arvo, p = tarkka arvo tai &lt; .001, selitysosuus = partial eta squared. Esimerkiksi sukupuolen päävaikutuksen osalta tämä voisi olla muotoa F(1, 1557) = 3.86, p = .050, η² = .002.",
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>Varianssianalyysi</span>"
@@ -1033,7 +1087,7 @@
     "href": "20-logistinen-regressio.html#vetosuhteet",
     "title": "Logistinen regressioanalyysi",
     "section": "Vetosuhteet",
-    "text": "Vetosuhteet\nsummary() antaa mallin kertoimet logaritmisella asteikolla ja niitä on hankala tulkita suoraan. Vetosuhteet (ja niiden luottamusvälit) saa tidy()-komennolla asettamalla exponentiate = TRUE.\n\nm1 |&gt; tidy(exponentiate = TRUE, conf.int = TRUE) |&gt;\n  mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))\n\n# A tibble: 2 × 7\n  term        estimate std.error statistic p.value conf.low conf.high\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)     0.43      0.15     -5.61       0     0.32      0.57\n2 Ikä             1.01      0         4.01       0     1.01      1.02\n\n\nVetosuhde alle yhden tarkoittaa, että veto pienenee selittäjän kasvaessa (tai verrattuna vertailuryhmään), ja yli yhden, että veto kasvaa. Esimerkiksi jos iän vetosuhde on 1.02, ikävuoden lisäys kasvattaa vetoa 2 %:lla.",
+    "text": "Vetosuhteet\nsummary() antaa mallin kertoimet logaritmisella asteikolla ja niitä on hankala tulkita suoraan. Vetosuhteet (ja niiden luottamusvälit) saa tidy()-komennolla asettamalla exponentiate = TRUE.\n\nm1 |&gt; tidy(exponentiate = TRUE, conf.int = TRUE) |&gt;\n  mutate(across(where(is.numeric), ~ round_half_up(.x, 2)))\n\n# A tibble: 2 × 7\n  term        estimate std.error statistic p.value conf.low conf.high\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)     0.43      0.15     -5.61       0     0.32      0.57\n2 Ikä             1.01      0         4.01       0     1.01      1.02\n\n\nVetosuhde alle yhden tarkoittaa, että veto pienenee selittäjän kasvaessa (tai verrattuna vertailuryhmään), ja yli yhden, että veto kasvaa. Esimerkiksi jos iän vetosuhde on 1.01, ikävuoden lisäys kasvattaa vetoa 2 %:lla.",
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>Logistinen regressioanalyysi</span>"
@@ -1077,31 +1131,54 @@
     "href": "osa4-harjoitukset.html",
     "title": "Osa 4: Harjoitustehtävät",
     "section": "",
-    "text": "Tämä luku on valmisteilla.",
+    "text": "Faktorianalyysi\nTehtävissä käytetään regressioanalyysin, varianssianalyysin, faktorianalyysin ja logistisen regression menetelmiä. Jokainen malliratkaisu toimii itsenäisesti tämän sivun alussa ladatulla ESS-aineistolla.\nESS-aineiston H-alkuiset muuttujat mittaavat Schwartzin perusarvoja. Tee niille neljän faktorin suurimman uskottavuuden faktorianalyysi varimax-rotaatiolla. Tulosta vähintään 0,30:n lataukset ja nimeä faktorit niiden latautuvien väittämien sisällön perusteella.\nfaktorianalyysi &lt;- fa(\n    ESS2023 |&gt; select(starts_with(\"H\")),\n    nfactors = 4,\n    fm = \"ml\",\n    rotate = \"varimax\"\n)\n\nfaktorianalyysi |&gt; fa.sort() |&gt; print(cut = 0.3)",
     "crumbs": [
       "Osa 4: Analyysimenetelmät",
       "<span class='chapter-number'>24</span>  <span class='chapter-title'>Osa 4: Harjoitustehtävät</span>"
     ]
   },
   {
-    "objectID": "index.html#aineisto",
-    "href": "index.html#aineisto",
-    "title": "R-opas",
+    "objectID": "osa4-harjoitukset.html#faktorianalyysi",
+    "href": "osa4-harjoitukset.html#faktorianalyysi",
+    "title": "Osa 4: Harjoitustehtävät",
     "section": "",
-    "text": "ESS2023 &lt;- read_sav(\"data/ESS2023_Suomi.sav\")\n\n\n\nLisenssi ja käyttöehdot\nAlkuperäinen European Social Survey -aineisto on lisensoitu CC BY-NC-SA 4.0 -lisenssillä, ja siihen liittyvä dokumentaatio (mm. koodikirjat) CC BY-SA 4.0 -lisenssillä. Koska tämän oppaan aineisto ja koodikirja ovat muokattuja/käännettyjä versioita alkuperäisestä, ne jaetaan tässä samalla lisenssillä (CC BY-NC-SA 4.0) - eli myös näitä versioita saa vapaasti käyttää, muokata ja jakaa edelleen ei-kaupallisiin tarkoituksiin, kunhan alkuperäiseen viitataan ja oma versio pysyy samalla lisenssillä.\nAlkuperäiseen aineistoon viitataan seuraavasti (ESS:n oman ohjeistuksen mukaisesti muokatuille/käännetyille aineistoille):\n\nAdapted from: European Social Survey European Research Infrastructure (ESS ERIC) (2024) ESS11 - integrated file, edition 1.0 [Data set]. Sikt - Norwegian Agency for Shared Services in Education and Research.\n\nLisätietoa käyttöehdoista: https://www.europeansocialsurvey.org/data/conditions-of-use",
+    "text": "HuomautusMalliratkaisu\n\n\n\n\n\n\nfaktorianalyysi &lt;- fa(\n    ESS2023 |&gt; select(starts_with(\"H\")),\n    nfactors = 4,\n    fm = \"ml\",\n    rotate = \"varimax\"\n)\n\nfaktorianalyysi |&gt; fa.sort() |&gt; print(cut = 0.3)\n\nFactor Analysis using method =  ml\nCall: fa(r = select(ESS2023, starts_with(\"H\")), nfactors = 4, rotate = \"varimax\", \n    fm = \"ml\")\nStandardized loadings (pattern matrix) based upon correlation matrix\n      ML3   ML2   ML1   ML4   h2   u2 com\nH1m  0.74                   0.62 0.38 1.2\nH1d  0.67                   0.47 0.53 1.1\nH1q  0.55                   0.40 0.60 1.6\nH1b  0.54                   0.36 0.64 1.4\nH1p        0.68             0.47 0.53 1.0\nH1g        0.56             0.33 0.67 1.1\nH1e        0.52             0.27 0.73 1.1\nH1n        0.43             0.25 0.75 1.6\nH1i        0.38             0.17 0.83 1.3\nH1t        0.36             0.16 0.84 1.5\nH1u              0.73       0.58 0.42 1.2\nH1j              0.71       0.55 0.45 1.2\nH1o  0.37        0.48       0.46 0.54 2.7\nH1f              0.42  0.37 0.43 0.57 3.2\nH1k                         0.11 0.89 1.9\nH1h                    0.60 0.37 0.63 1.1\nH1c                    0.54 0.31 0.69 1.1\nH1l                    0.52 0.37 0.63 1.7\nH1s                    0.48 0.25 0.75 1.2\nH1r        0.30        0.38 0.30 0.70 2.7\nH1a                    0.36 0.26 0.74 2.6\n\n                       ML3  ML2  ML1  ML4\nSS loadings           2.04 1.91 1.79 1.75\nProportion Var        0.10 0.09 0.09 0.08\nCumulative Var        0.10 0.19 0.27 0.36\nProportion Explained  0.27 0.25 0.24 0.23\nCumulative Proportion 0.27 0.53 0.77 1.00\n\nMean item complexity =  1.6\nTest of the hypothesis that 4 factors are sufficient.\n\ndf null model =  210  with the objective function =  4.77 with Chi Square =  7406.61\ndf of  the model are 132  and the objective function was  0.49 \n\nThe root mean square of the residuals (RMSR) is  0.03 \nThe df corrected root mean square of the residuals is  0.04 \n\nThe harmonic n.obs is  1519 with the empirical chi square  336.91  with prob &lt;  7.2e-20 \nThe total n.obs was  1563  with Likelihood Chi Square =  756.25  with prob &lt;  3.1e-88 \n\nTucker Lewis Index of factoring reliability =  0.862\nRMSEA index =  0.055  and the 90 % confidence intervals are  0.051 0.059\nBIC =  -214.52\nFit based upon off diagonal values = 0.97\nMeasures of factor score adequacy             \n                                                   ML3  ML2  ML1  ML4\nCorrelation of (regression) scores with factors   0.87 0.86 0.85 0.83\nMultiple R square of scores with factors          0.76 0.74 0.71 0.68\nMinimum correlation of possible factor scores     0.52 0.47 0.43 0.37\n\n\nRatkaisu näyttää H-muuttujien lataukset faktoreittain. Faktorien nimet eivät seuraa suoraan analyysistä, vaan ne perustellaan latautuvien väittämien yhteisellä sisällöllä. Latausten merkit voivat vaihtua faktoriratkaisujen välillä; tulkitse niiden suuruutta ja keskinäistä rakennetta.",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Lukijalle</span>"
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Osa 4: Harjoitustehtävät</span>"
     ]
   },
   {
-    "objectID": "16-useita-muuttujia.html#hajontamatriisi-ggpairs-funktiolla",
-    "href": "16-useita-muuttujia.html#hajontamatriisi-ggpairs-funktiolla",
-    "title": "Useita muuttujia samassa kuviossa",
-    "section": "Hajontamatriisi ggpairs-funktiolla",
-    "text": "Hajontamatriisi ggpairs-funktiolla\nKun halutaan tarkastella useamman muuttujan välisiä yhteyksiä kaikkina pareina kerralla, GGally-paketin ggpairs() on kätevä - se piirtää sirontakuviot muuttujaparien välille, jakaumat diagonaalille ja korrelaatiokertoimet yläkolmioon. Mukaan voi ottaa myös luokitellun muuttujan väripohjaiseksi ryhmittelyksi.\n\nlibrary(GGally)\nESS2023 |&gt;\n  select(C1, Syntymävuosi, Sukupuoli) |&gt;\n  ggpairs(mapping = aes(color = as_factor(Sukupuoli))) +\n  theme_minimal()",
+    "objectID": "osa4-harjoitukset.html#lineaarinen-regressio",
+    "href": "osa4-harjoitukset.html#lineaarinen-regressio",
+    "title": "Osa 4: Harjoitustehtävät",
+    "section": "Lineaarinen regressio",
+    "text": "Lineaarinen regressio\nTarkastele, miten koulutusaste ja sukupuoli liittyvät onnellisuuteen (C1). Muodosta malli, jossa molemmat ovat selittäjinä. Muodosta koulutusaste ryhmittelemällä F15-muuttujan luokat 1–3, 4–8 ja 9–14. Arvo 5555 tarkoittaa “Jokin muu” -vastausta, joten jätä se pois. Tulosta kertoimet luottamusväleineen ja tulkitse koulutusryhmien kertoimet vertailuryhmään nähden.\n\nmalliaineisto &lt;- ESS2023 |&gt;\n    mutate(\n        Koulutusaste = ...,\n        Sukupuoli = as_factor(Sukupuoli)\n    )\n\nmalli &lt;- lm(C1 ~ Koulutusaste + Sukupuoli, data = malliaineisto)\ntidy(malli, conf.int = TRUE)\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nmalliaineisto &lt;- ESS2023 |&gt;\n    mutate(\n        Sukupuoli = as_factor(Sukupuoli)\n    )\n\nmalliaineisto &lt;- malliaineisto |&gt;\n    mutate(\n        Koulutusaste = cut(\n            na_if(as.numeric(F15), 5555),\n            breaks = c(0, 3, 8, Inf),\n            labels = c(\"Peruskoulu tai alempi\", \"Keskiaste\", \"Korkea-aste\")\n        )\n    )\n\nmalli &lt;- lm(C1 ~ Koulutusaste + Sukupuoli, data = malliaineisto)\ntidy(malli, conf.int = TRUE)\n\n# A tibble: 4 × 7\n  term                   estimate std.error statistic p.value conf.low conf.high\n  &lt;chr&gt;                     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)               7.85     0.1000    78.5   0         7.65       8.04 \n2 KoulutusasteKeskiaste     0.102    0.108      0.950 0.342    -0.109      0.314\n3 KoulutusasteKorkea-as…    0.319    0.111      2.88  0.00403   0.102      0.536\n4 SukupuoliNainen           0.114    0.0748     1.53  0.127    -0.0325     0.261\n\n\nKoulutusasteen kertoimet kuvaavat onnellisuuden keskiarvoeroja mallin vertailuryhmään nähden, kun sukupuoli vakioidaan. Vertailuryhmän nimi selviää muuttujan faktoritasojen järjestyksestä.",
     "crumbs": [
-      "Osa 3: Kuviot",
-      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Useita muuttujia samassa kuviossa</span>"
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Osa 4: Harjoitustehtävät</span>"
+    ]
+  },
+  {
+    "objectID": "osa4-harjoitukset.html#ryhmäkeskiarvot-ja-yhdysvaikutus",
+    "href": "osa4-harjoitukset.html#ryhmäkeskiarvot-ja-yhdysvaikutus",
+    "title": "Osa 4: Harjoitustehtävät",
+    "section": "Ryhmäkeskiarvot ja yhdysvaikutus",
+    "text": "Ryhmäkeskiarvot ja yhdysvaikutus\nMuodosta koulutusvuosista samat kolme koulutusastetta kuin osan 2 harjoituksessa ja tarkastele onnellisuuden keskiarvoja sukupuolen ja koulutusasteen mukaan. Sovita tämän jälkeen malli, jossa on myös sukupuolen ja koulutusasteen yhdysvaikutus. Vertaa tuloksia ANOVA-luvun tapaan.\n\nmalliaineisto &lt;- ESS2023 |&gt;\n    mutate(\n        Sukupuoli = as_factor(Sukupuoli),\n        Koulutusaste = ...\n    )\n\nmalliaineisto |&gt;\n    group_by(Sukupuoli, Koulutusaste) |&gt;\n    summarise(n = n(), Keskiarvo = mean(C1, na.rm = TRUE))\n\nmalli &lt;- lm(C1 ~ Sukupuoli * Koulutusaste, data = malliaineisto)\nemmeans::joint_tests(malli)\nemmeans::emmeans(malli, ~ Sukupuoli | Koulutusaste) |&gt;\n    emmeans::contrast(method = \"pairwise\")\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nmalliaineisto &lt;- ESS2023 |&gt;\n    mutate(\n        Sukupuoli = as_factor(Sukupuoli),\n        F15_luokka = na_if(as.numeric(F15), 5555),\n        Koulutusaste = cut(\n            F15_luokka,\n            breaks = c(0, 3, 8, Inf),\n            labels = c(\"Peruskoulu tai alempi\", \"Keskiaste\", \"Korkea-aste\")\n        )\n    )\n\nmalliaineisto |&gt;\n    group_by(Sukupuoli, Koulutusaste) |&gt;\n    summarise(\n        n = n(),\n        Keskiarvo = mean(C1, na.rm = TRUE),\n        .groups = \"drop\"\n    )\n\n# A tibble: 8 × 4\n  Sukupuoli Koulutusaste              n Keskiarvo\n  &lt;fct&gt;     &lt;fct&gt;                 &lt;int&gt;     &lt;dbl&gt;\n1 Mies      Peruskoulu tai alempi   126      7.8 \n2 Mies      Keskiaste               382      7.96\n3 Mies      Korkea-aste             261      8.18\n4 Mies      &lt;NA&gt;                      1      7   \n5 Nainen    Peruskoulu tai alempi   127      8.01\n6 Nainen    Keskiaste               333      8.06\n7 Nainen    Korkea-aste             332      8.27\n8 Nainen    &lt;NA&gt;                      1     10   \n\nmalli &lt;- lm(C1 ~ Sukupuoli * Koulutusaste, data = malliaineisto)\nemmeans::joint_tests(malli)\n\n model term             df1  df2 F.ratio p.value\n Sukupuoli                1 1552   2.588  0.1079\n Koulutusaste             2 1552   5.494  0.0042\n Sukupuoli:Koulutusaste   2 1552   0.156  0.8556\n\nemmeans::emmeans(malli, ~ Sukupuoli | Koulutusaste) |&gt;\n    emmeans::contrast(method = \"pairwise\")\n\nKoulutusaste = Peruskoulu tai alempi:\n contrast      estimate    SE   df t.ratio p.value\n Mies - Nainen  -0.2079 0.185 1552  -1.122  0.2621\n\nKoulutusaste = Keskiaste:\n contrast      estimate    SE   df t.ratio p.value\n Mies - Nainen  -0.1017 0.110 1552  -0.922  0.3569\n\nKoulutusaste = Korkea-aste:\n contrast      estimate    SE   df t.ratio p.value\n Mies - Nainen  -0.0888 0.122 1552  -0.729  0.4658\n\n\nKeskiarvotaulukko kuvaa ryhmien havaittuja eroja. Yhdysvaikutustermi testaa, vaihteleeko sukupuolten välinen ero koulutusasteen mukaan. Parivertailujen tulkinnassa huomioi, että testejä tehdään useita.",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Osa 4: Harjoitustehtävät</span>"
+    ]
+  },
+  {
+    "objectID": "osa4-harjoitukset.html#logistinen-regressio",
+    "href": "osa4-harjoitukset.html#logistinen-regressio",
+    "title": "Osa 4: Harjoitustehtävät",
+    "section": "Logistinen regressio",
+    "text": "Logistinen regressio\nMuodosta muuttujasta C1 kaksiluokkainen onnellisuusmuuttuja: arvot 0–8 ovat “Ei kovin onnellinen” ja 9–10 “Onnellinen”. Sovita logistinen regressiomalli sukupuolen ja koulutusasteen avulla. Tulosta kertoimet vetosuhteina luottamusväleineen ja tulkitse, mitä vetosuhde yli yhden tarkoittaa.\n\nmalliaineisto &lt;- ESS2023 |&gt;\n    mutate(\n        Onnellinen = ...,\n        Sukupuoli = as_factor(Sukupuoli),\n        Koulutusaste = ...\n    )\n\nmalli &lt;- glm(\n    Onnellinen ~ Sukupuoli + Koulutusaste,\n    data = malliaineisto,\n    family = binomial(link = \"logit\")\n)\n\ntidy(malli, exponentiate = TRUE, conf.int = TRUE)\n\n\n\n\n\n\n\nHuomautusMalliratkaisu\n\n\n\n\n\n\nmalliaineisto &lt;- ESS2023 |&gt;\n    mutate(\n        Onnellinen = cut(\n            C1,\n            breaks = c(-Inf, 8, Inf),\n            labels = c(\"Ei kovin onnellinen\", \"Onnellinen\")\n        ),\n        Sukupuoli = as_factor(Sukupuoli),\n        F15_luokka = na_if(as.numeric(F15), 5555),\n        Koulutusaste = cut(\n            F15_luokka,\n            breaks = c(0, 3, 8, Inf),\n            labels = c(\"Peruskoulu tai alempi\", \"Keskiaste\", \"Korkea-aste\")\n        )\n    )\n\nmalli &lt;- glm(\n    Onnellinen ~ Sukupuoli + Koulutusaste,\n    data = malliaineisto,\n    family = binomial(link = \"logit\")\n)\n\ntidy(malli, exponentiate = TRUE, conf.int = TRUE)\n\n# A tibble: 4 × 7\n  term                   estimate std.error statistic p.value conf.low conf.high\n  &lt;chr&gt;                     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;\n1 (Intercept)               0.574     0.140    -3.97  7.06e-5    0.436     0.753\n2 SukupuoliNainen           1.31      0.103     2.59  9.68e-3    1.07      1.60 \n3 KoulutusasteKeskiaste     1.15      0.150     0.908 3.64e-1    0.855     1.54 \n4 KoulutusasteKorkea-as…    1.21      0.153     1.27  2.05e-1    0.900     1.64 \n\n\nVarmista ensin, että selitettävässä muuttujassa on kaksi luokkaa. Vetosuhde yli yhden tarkoittaa suurempaa onnellisuuden vetoa vertailuryhmään nähden; vetosuhde alle yhden tarkoittaa pienempää vetoa. Vetosuhde ei ole suoraan todennäköisyyden muutos.",
+    "crumbs": [
+      "Osa 4: Analyysimenetelmät",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Osa 4: Harjoitustehtävät</span>"
     ]
   }
 ]
