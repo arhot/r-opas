@@ -11,20 +11,218 @@ source("_common.R")
 
 Tutkimuksessa on joskus tarpeen antaa yksittäiselle vastaajalle suurempi tai pienempi paino kuin muille. Ensimmäinen - ja tärkeämpi - syy on se, että aineiston otosrakenne on sellainen, että kaikilla populaation osilla ei ole yhtä suurta todennäköisyyttä tulla valituksi otokseen. Kaikkialla ei esimerkiksi ole selvää väestörekisteriä, josta otantaa tehdä, tai joskus halutaan varmistaa, että joku väestönosa tai vähemmistö tulee edustetuksi aineistossa, vaikka analyysin halutaankin vastaavan koko väestöä. Tällöin painotetaan, jotta saadaan otos vastaamaan paremmin populaatiota. Tätä painoa kutsutaan *asetelmapainoksi*. Tällainen paino täytyy aina huomioida tai analyysi vääristyy.
 
-Toinen syy painottamiseen on se, että vaikka otannassa kuka tahansa voi tulla poimituksi, vastauskato ei jakaudu tasaisesti väestöryhmien kesken. Esimerkiksi kyselytutkimuksessa nuoret miehet saattavat vastata harvemmin kuin muut. Tällöin voidaan tehdä oletus, että sellainen nuori mies joka on vastannut on samanlainen kuin sellainen nuori mies joka ei vastannut. Jos oletus pätee, voidaan laskea otannan ja toteutuneen aineiston perusteella painokerroin, joka antaa vastanneelle nuorelle miehelle suuremman painoin kuin muille. Tätä painoa kutsutaan *analyysipainoksi*. Tällaisten painojen käytöstä on erilaisia koulukuntia. 
+Toinen syy painottamiseen on se, että vaikka otannassa kuka tahansa voi tulla poimituksi, vastauskato ei jakaudu tasaisesti väestöryhmien kesken. Esimerkiksi kyselytutkimuksessa nuoret miehet saattavat vastata harvemmin kuin muut. Tällöin voidaan tehdä oletus, että sellainen nuori mies joka on vastannut on samanlainen kuin sellainen nuori mies joka ei vastannut. Jos oletus pätee, voidaan laskea otannan ja toteutuneen aineiston perusteella painokerroin, joka antaa vastanneelle nuorelle miehelle suuremman painon kuin muille. Tätä painoa kutsutaan *analyysipainoksi*. Tällaisten painojen käytöstä on erilaisia koulukuntia.
 
-Henkilökohtaisesti tämän oppaan kirjoittaja ei yleensä käytä tällaisia painoja - Andrew Gelmanin sanoin "Survey Weighting is a mess" (Gelman 2007): useimmissa tutkimusmenetelmissä painon huomiointi on yllättävän hankalaa, ja oletus siitä, että muutaman demografisen tekijän osalta samanlainen vastaaja on samanlainen kuin vastaamatta jättänyt, pitää harvoin paikkaansa. Lisäksi painotettaessa pitäisi huomioida se, että keskivirheet pitäisi laskea eri tavalla, mitä esimerkiksi SPSS:n painotus ei tee.
+Henkilökohtaisesti tämän oppaan kirjoittaja ei yleensä käytä tällaisia analyysipainoja - Andrew Gelmanin sanoin "Survey Weighting is a mess" (Gelman 2007): useimmissa tutkimusmenetelmissä painon huomiointi on yllättävän hankalaa, ja oletus siitä, että muutaman demografisen tekijän osalta samanlainen vastaaja on samanlainen kuin vastaamatta jättänyt, pitää harvoin paikkaansa. Useimmiten vastaavat tulokset saa huomioimalla painottavat muuttujat analyysissa (esimerkiksi vakioimalla regressiossa). Jos painoja käyttää, ne on kuitenkin syytä käyttää oikein, ja siihen tämä luku antaa ohjeet.
 
-## Painomuuttuja ESS-aineistossa
+## Painottaminen R-ympäristössä
 
-European Social Survey (ESS) Suomi 2023 -aineistossa on kaksi painomuuttujaa: asetelmapaino, jonka arvo on kaikille vastaajille 1 (koska Suomessa on helppo tehdä väestörekisteristä edustava otanta) sekä analyysipaino, joka on laskettu ikäryhmän, sukupuolen, koulutustason ja asuinalueen perusteella.
+Jos päädyt painottamaan, suositeltavin tapa on käyttää pakettia, joka tekee painot oikein kaikissa analyyseissa. Tässä oppaassa käytetään `srvyr`-pakettia, joka tuo Thomas Lumleyn `survey`-paketin toiminnot oppaassa käytettyyn tidyverse-tyyliin.
 
-Asetelmapainoa ei tarvitse huomioida, koska se on kaikille sama, mutta analyysipainoa voi halutessaan käyttää. 
+`srvyr`-paketti asentuu tavalliseen tapaan, ja se asentaa samalla `survey`-paketin, jota se käyttää taustalla.
 
-R:ssä painot voidaan huomioida useammalla eri tavalla: monessa tavallisessa komennossa on argumentti, jolla voidaan huomioida yksinkertainen tapausten painotus. Tämä vastaa SPSS:n painotusta. Yleensä tämä argumentti on nimeltään `weight=analyysipaino` tai `wt=analyysipaino`, mutta jokaisen komennon osalta pitää tarkistaa oikea argumentti dokumentaatiosta. 
+```{r}
+#| eval: false
+install.packages("srvyr")
+```
 
-Toinen tapa huomioida painot on käyttää `svydesign`-pakettia, joka on suunniteltu erityisesti painotettujen aineistojen analysointiin. Tällä voidaan huomioida monimutkaiset ryväsotannat ja vastaavat asetelmat tavalla, joka huomioi keskivirheiden laskun asiallisesti. 
+```{r}
+library(srvyr)
+```
+
+Ensin aineistosta tehdään *asetelmaobjekti* `as_survey_design()`-komennolla. Siinä kerrotaan, mikä muuttuja sisältää painot. Monimutkaisemmissa otanta-asetelmissa annettaisiin lisäksi ryvästen (`ids`) ja ositteiden (`strata`) muuttujat. Esimerkissä käytetty ESS on yksinkertainen satunnaisotanta, jossa analyysipaino korjaa katoa muutaman taustatekijän perusteella. ESS-aineistossa analyysipaino on muuttujassa `analyysipaino_suomi`. Sen keskiarvo on 1, joten painotetun aineiston koko on sama kuin vastaajien määrä. (Asetelmapaino on Suomessa kaikille 1, joten sitä ei tarvitse huomioida.)
+
+Tehdään ensin samat muuttujamuunnokset kuin muissa luvuissa, ja määritellään asetelma vasta sen jälkeen, jotta uudet muuttujat ovat mukana. Numeerisina käytettävistä muuttujista (tässä onnellisuus `C1`) poistetaan SPSS:n arvoselitteet `zap_labels()`-komennolla, koska `survey`-paketin laskutoimitukset eivät kaikilta osin toimi arvoselitteellisten muuttujien kanssa.
+
+```{r}
+ESS2023 <- ESS2023 |>
+  mutate(
+    Sukupuoli = as_factor(Sukupuoli),
+    `Kiinnostus politiikkaan` = as_factor(B1),
+    C1 = zap_labels(C1),
+    Ikä = 2023 - Syntymävuosi,
+    Koulutusaste = cut(F15,
+                       breaks = c(0, 3, 8, 15),
+                       labels = c("1. aste", "2. aste", "3. aste tai korkeampi"))
+  )
+
+ESS2023_painotettu <- ESS2023 |>
+  as_survey_design(weights = analyysipaino_suomi)
+```
+
+Jatkossa painotetut analyysit tehdään `ESS2023_painotettu`-objektilla ja painottamattomat tavalliseen tapaan `ESS2023`-aineistolla. Jos aineistoon tekee myöhemmin muutoksia, ne voi tehdä myös suoraan asetelmaobjektiin `mutate()`-komennolla.
+
+## Painotetut tunnusluvut
+
+Painotetut tunnusluvut lasketaan `summarise()`-komennolla kuten luvussa @sec-tunnuslukutaulukko, mutta tavallisten komentojen sijaan käytetään `survey_*`-alkuisia komentoja: `survey_mean()`, `survey_median()`, `survey_sd()`, `survey_total()` ja niin edelleen. Ne laskevat estimaatin lisäksi keskivirheen (sarake `_se`). Argumentilla `vartype = "ci"` saa keskivirheen sijaan luottamusvälin.
+
+```{r}
+ESS2023_painotettu |>
+  summarise(
+    keskiarvo = survey_mean(C1, na.rm = TRUE, vartype = "ci"),
+    keskihajonta = survey_sd(C1, na.rm = TRUE)
+  )
+```
+
+Ryhmittäiset tunnusluvut saa tuttuun tapaan `group_by()`-komennolla.
+
+```{r}
+ESS2023_painotettu |>
+  group_by(Sukupuoli) |>
+  summarise(
+    n = unweighted(n()),
+    keskiarvo = survey_mean(C1, na.rm = TRUE, vartype = "ci")
+  )
+```
+
+`unweighted(n())` laskee kunkin ryhmän todellisen vastaajamäärän. Se kannattaa raportoida painotettujen lukujen rinnalla.
+
+Painottamattoman ja painotetun keskiarvon voi verrata esimerkiksi näin:
+
+```{r}
+bind_rows(
+  Painottamaton = ESS2023 |>
+    summarise(keskiarvo = mean(C1, na.rm = TRUE)),
+  Painotettu = ESS2023_painotettu |>
+    summarise(keskiarvo = survey_mean(C1, na.rm = TRUE)),
+  .id = "Estimaatti"
+)
+```
+
+## Painotettu frekvenssi- ja ristiintaulukko
+
+Painotetut prosenttiosuudet saa `survey_prop()`-komennolla. Se laskee osuudet viimeisimmän `group_by()`-muuttujan sisällä, joten yhden muuttujan jakaumaa varten ryhmitellään kyseisellä muuttujalla. `proportion = TRUE` laskee luottamusvälit tavalla, joka sopii osuuksille (väli ei mene alle nollan tai yli yhden).
+
+```{r}
+taulukko_painotettu <- ESS2023_painotettu |>
+  filter(!is.na(`Kiinnostus politiikkaan`)) |>
+  group_by(`Kiinnostus politiikkaan`) |>
+  summarise(
+    n = unweighted(n()),
+    osuus = survey_prop(vartype = "ci", proportion = TRUE)
+  ) |>
+  mutate(across(starts_with("osuus"), ~ round_half_up(.x * 100, 1)))
+
+taulukko_painotettu
+```
+
+Ristiintaulukossa ryhmitellään kahdella muuttujalla. Ensimmäinen muuttuja on se, jonka sisällä prosentit lasketaan (vastaa sarakeprosentteja luvun @sec-ristiintaulukko ristiintaulukossa), ja jälkimmäinen se, jonka jakauma lasketaan.
+
+```{r}
+ristiintaulukko_painotettu <- ESS2023_painotettu |>
+  filter(!is.na(`Kiinnostus politiikkaan`), !is.na(Sukupuoli)) |>
+  group_by(Sukupuoli, `Kiinnostus politiikkaan`) |>
+  summarise(osuus = survey_prop(vartype = NULL)) |>
+  mutate(osuus = round_half_up(osuus * 100, 1)) |>
+  pivot_wider(names_from = Sukupuoli, values_from = osuus)
+
+ristiintaulukko_painotettu
+```
+
+Ristiintaulukon riippumattomuutta voi testata painotetulla khiin neliö -testillä `svychisq()`. Testi huomioi painotuksen (Rao-Scottin korjaus), toisin kuin tavallinen `chisq.test()` painotetuille frekvensseille.
+
+```{r}
+svychisq(~ Sukupuoli + `Kiinnostus politiikkaan`, design = ESS2023_painotettu)
+```
+
+Taulukot voi tallentaa Excel-muotoon `write_xlsx()`-komennolla kuten muutkin taulukot.
+
+## Painotettu regressioanalyysi
+
+Regressioanalyysi tehdään `svyglm()`-komennolla. Kaava kirjoitetaan kuten `lm()`-komennossa (ks. luku [Regressioanalyysi](17-regressio.qmd)), mutta aineiston sijaan annetaan `design`-argumentti.
+
+`svyglm` on `survey`-paketissa ja sitä kannattaa kutsua muodossa `survey::svyglm()` sen sijaan, että paketin lataisi `library(survey)`-komennolla. `survey` lataa mukanaan `Matrix`-paketin, joka peittää tidyverse-paketin `tidyr` komennot `expand()`, `pack()` ja `unpack()`.
+
+```{r}
+malli_painotettu <- survey::svyglm(C1 ~ Ikä + Sukupuoli + Koulutusaste,
+                                   design = ESS2023_painotettu)
+
+summary(malli_painotettu)
+```
+
+Tulostaulukon saa `tidy()`-komennolla samaan tapaan kuin tavallisesta regressiomallista.
+
+```{r}
+malli_painotettu |>
+  tidy(conf.int = TRUE) |>
+  mutate(across(where(is.numeric), ~ round_half_up(.x, 3)))
+```
+
+Painotettu malli ei anna selitysastetta R² samaan tapaan kuin `lm()`, koska tavallinen R² ei ota huomioon otanta-asetelmaa.
+
+### Miksi ei `lm(weights = )`?
+
+Verrataan samaa mallia kolmella tavalla: painottamattomana, `lm()`-komennon `weights`-argumentilla ja `svyglm()`-komennolla.
+
+```{r}
+malli_painottamaton <- lm(C1 ~ Ikä + Sukupuoli + Koulutusaste, data = ESS2023)
+malli_lm_painot <- lm(C1 ~ Ikä + Sukupuoli + Koulutusaste, data = ESS2023,
+                      weights = analyysipaino_suomi)
+
+vertailu <- bind_rows(
+  Painottamaton = tidy(malli_painottamaton),
+  `lm(weights)` = tidy(malli_lm_painot),
+  svyglm = tidy(malli_painotettu),
+  .id = "malli"
+)
+
+# Regressiokertoimet
+vertailu |>
+  select(malli, term, estimate) |>
+  mutate(estimate = round_half_up(estimate, 3)) |>
+  pivot_wider(names_from = malli, values_from = estimate)
+
+# Keskivirheet
+vertailu |>
+  select(malli, term, std.error) |>
+  mutate(std.error = round_half_up(std.error, 3)) |>
+  pivot_wider(names_from = malli, values_from = std.error)
+```
+
+`lm(weights = )` ja `svyglm()` antavat täsmälleen samat regressiokertoimet, mutta keskivirheet ovat erilaiset. `lm()` olettaa painojen kertovan havaintojen mittaustarkkuudesta, kun taas `svyglm()` laskee keskivirheet otanta-asetelman mukaisesti. Ero voi yleisesti olla kumpaan suuntaan tahansa, ja sen koko riippuu aineistosta ja painoista. Tässä aineistossa `svyglm()`:n keskivirheet ovat noin 10–45 % suuremmat, eli `lm(weights = )` antaisi tuloksista liian varman kuvan: esimerkiksi koulutuksen yhteys onnellisuuteen näyttäisi tilastollisesti merkitsevämmältä kuin se on.
+
+SPSS:n tavallinen painotus (Data → Weight Cases) toimii samalla tavalla väärin: se käsittelee painoa frekvenssipainona, eli olettaa jokaisen vastaajan edustavan painonsa verran identtisiä vastaajia, ja laskee keskivirheet ikään kuin painotettu aineisto olisi tavallinen otos. Oikein painotetut keskivirheet SPSS:ssä saa vain erillisellä Complex Samples -lisämoduulilla.
+
+## Painotettu logistinen regressio
+
+Logistinen regressio (ks. luku [Logistinen regressio](20-logistinen-regressio.qmd)) tehdään samalla `svyglm()`-komennolla, ja `family`-argumentiksi annetaan `quasibinomial()`. Painotetussa aineistossa käytetään `binomial()`-perheen sijaan `quasibinomial()`-perhettä, koska painot eivät ole kokonaislukuja ja `binomial()` antaisi siitä varoituksia. Kertoimet ja keskivirheet ovat samat kuin `binomial()`-perheellä.
+
+```{r}
+ESS2023_painotettu <- ESS2023_painotettu |>
+  mutate(Onnellinen = cut(C1,
+                          breaks = c(-Inf, 8, Inf),
+                          labels = c("Ei kovin onnellinen", "Onnellinen")))
+
+logit_painotettu <- survey::svyglm(Onnellinen ~ Ikä + Sukupuoli + Koulutusaste,
+                                   design = ESS2023_painotettu,
+                                   family = quasibinomial(link = "logit"))
+
+logit_painotettu |>
+  tidy(conf.int = TRUE, exponentiate = TRUE) |>
+  mutate(across(where(is.numeric), ~ round_half_up(.x, 3)))
+```
+
+`exponentiate = TRUE` muuttaa kertoimet vetosuhteiksi kuten tavallisessa logistisessa regressiossa.
+
+## Milloin yksinkertainen painotus riittää?
+
+Jos tarvitset pelkän painotetun piste-estimaatin, kuten keskiarvon tai prosenttiosuuden ilman keskivirheitä tai testejä, sen saa myös ilman asetelmaobjektia:
+
+```{r}
+ESS2023 |>
+  summarise(painotettu_keskiarvo = weighted.mean(C1, analyysipaino_suomi, na.rm = TRUE))
+
+ESS2023 |>
+  filter(!is.na(`Kiinnostus politiikkaan`)) |>
+  count(`Kiinnostus politiikkaan`, wt = analyysipaino_suomi) |>
+  mutate(osuus = round_half_up(n / sum(n) * 100, 1))
+```
+
+Näillä komennoilla laskettuja frekvenssejä ei kuitenkaan pidä käyttää keskivirheiden, luottamusvälien tai testien laskemiseen. Niihin käytetään `srvyr`-pakettia.
+
 
 ## Viitteet
 
-Gelman, A. (2007). Struggles with Survey Weighting and Regression Modeling. Statistical Science, 153-164.
+Gelman, A. (2007). Struggles with Survey Weighting and Regression Modeling. *Statistical Science*, 22(2), 153–164.
+
+Lumley, T. (2010). *Complex Surveys: A Guide to Analysis Using R*. Wiley.
